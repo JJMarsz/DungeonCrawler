@@ -1,1 +1,4 @@
 # DungeonCrawler
+
+CREDITS:
+SDL LIBRARY
