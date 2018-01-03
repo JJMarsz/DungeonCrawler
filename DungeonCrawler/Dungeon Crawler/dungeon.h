@@ -1,8 +1,7 @@
 #ifndef DUNGEON_H
 #define DUNGEON_H
 
-#include <vector>
-#include <unordered_map>
+#include "lib.h"
 
 enum Encounter {
 	NONE,
@@ -52,4 +51,5 @@ private:
 };
 
 std::unordered_map<Difficulty, int> typeMap;
+
 #endif

@@ -1,447 +1,14 @@
 #include "SDL.h"
-//#include "party.h"
-//#include "dungeon.h"
+#include "LButton.h"
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-#include <stdio.h>
-#include <vector>
-#include <string>
-#include <unordered_map>
-#include <iostream>
-
-
-
-
-
-//Screen dimension constants
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 720;
-
-//Textbox start
-const int TEXT_X = 0;
-const int TEXT_Y = 600;
-
-//button constants
-const int BUTTON_WIDTH = 60;
-const int BUTTON_HEIGHT = 60;
-const int TOTAL_BUTTONS = 12;
-const int BUTTON_Y = SCREEN_HEIGHT - BUTTON_HEIGHT - 5;
-const int BUTTON_ONE_X = SCREEN_WIDTH - BUTTON_WIDTH - 18;
-const int BUTTON_TWO_X = SCREEN_WIDTH - 2 * BUTTON_WIDTH - 22;
-const int BUTTON_THREE_X = SCREEN_WIDTH - 3 * BUTTON_WIDTH - 26;
-const int BUTTON_FOUR_X = SCREEN_WIDTH - 4 * BUTTON_WIDTH - 30;
-const int BUTTON_FIVE_X = SCREEN_WIDTH - 5 * BUTTON_WIDTH - 34;
-const int BUTTON_SIX_X = SCREEN_WIDTH - 6 * BUTTON_WIDTH - 38;
-const int BUTTON_SEVEN_X = SCREEN_WIDTH - 7 * BUTTON_WIDTH - 42;
-const int BUTTON_EIGHT_X = SCREEN_WIDTH - 8 * BUTTON_WIDTH - 46;
-const int BUTTON_NINE_X = SCREEN_WIDTH - 9 * BUTTON_WIDTH - 50;
-const int BUTTON_TEN_X = SCREEN_WIDTH - 10 * BUTTON_WIDTH - 54;
-const int BUTTON_ELEVEN_X = SCREEN_WIDTH - 11 * BUTTON_WIDTH - 58;
-const int BUTTON_TWELVE_X = SCREEN_WIDTH - 12 * BUTTON_WIDTH - 62;
-
-enum LButtonSprite
-{
-	BUTTON_SPRITE_MOUSE_OUT = 0,
-	BUTTON_SPRITE_MOUSE_OVER_MOTION = 1,
-	BUTTON_SPRITE_MOUSE_DOWN = 2,
-	BUTTON_SPRITE_MOUSE_UP = 3,
-	BUTTON_SPRITE_TOTAL = 4
-};
-enum ScreenState
-{
-	MAIN_MENU,
-	LOAD_GAME,
-	PICK_CHAR1,
-	PICK_CHAR2,
-	PICK_CHAR3,
-	NEW_GAME,
-	TRAVEL,
-	ROOM_MAIN,
-	ROOM_MAP
-};
-enum RoomSize
-{
-	SMALL,
-	MED,
-	LARGE
-};
-
-#define TOTAL_MENU_BUTTONS	1
-//Starts up SDL and creates window
-bool init();
-
-//Loads media
-bool loadMedia();
-
-//Frees media and shuts down SDL
-void close();
-
-//Loads individual image as texture
-SDL_Texture* loadTexture(std::string path);
-
-//Used to draw background for a room
-bool drawRoom(RoomSize size);
-
-//Used to draw menu
-void drawMenu();
-
-//used to draw the main menu
-void drawMainMenu();
-
-
-class LTexture
-{
-public:
-	//Initializes variables
-	LTexture();
-
-	//Deallocates memory
-	~LTexture();
-
-	//Loads image at specified path
-	bool loadFromFile(std::string path);
-
-	//Creates image from font string
-	bool loadFromRenderedText(std::string textureText, SDL_Color textColor);
-
-	//Deallocates texture
-	void free();
-
-	//Renders texture at given point
-	void render(int x, int y, SDL_Rect* clip = NULL);
-
-	//Gets image dimensions
-	int getWidth();
-	int getHeight();
-
-private:
-	//The actual hardware texture
-	SDL_Texture * mTexture;
-
-	//Image dimensions
-	int mWidth;
-	int mHeight;
-};
-
-//The mouse button
-class LButton
-{
-public:
-	//Initializes internal variables
-	LButton();
-
-	//Sets top left position
-	void setPosition(int x, int y);
-
-	//Handles mouse event
-	void handleEvent(SDL_Event* e);
-
-	//Allows you to set button sprite
-	void setSprite(LButtonSprite newsprite);
-
-	//Shows button sprite
-	void render();
-
-	//set button clicked handler
-	void setHandler(void(*new_handler)(void));
-
-	//set size
-	void setConstraints(int w, int h);
-
-	//getters
-	int getWidth();
-	int getHeight();
-
-private:
-	//Top left position
-	SDL_Point mPosition;
-
-	//contraints
-	int width, height;
-
-	//Currently used global sprite
-	LButtonSprite mCurrentSprite;
-
-	//Button Clicked
-	bool MouseDown, MouseUp;
-
-	//Button Clicked function handler
-	void(*handler)(void);
-
-	//disabled
-	bool disabled;
-
-	//what to display on button
-	std::string buttonText;
-	LTexture buttonImage;
-};
-
-void menuClicked(void);
-
-void emptyHandler(void);
-//The window renderer
 SDL_Renderer* gRenderer = NULL;
-
-//Character spritesheet along with clips
-LTexture spriteSheetTexture;
-std::vector<SDL_Rect> spriteClips;
-
-//button spritesheet along with clips
-LTexture buttonSpriteSheetTexture;
-LTexture mainMenu;
-std::vector<SDL_Rect> buttonSpriteClips;
-std::vector<LButton> Buttons;
-std::vector<LButton> menuButtons;
-//Globally used font
 TTF_Font *gFont = NULL;
-
-//Rendered texts
-LTexture buttonOneText;
-LTexture buttonTwoText;
-LTexture buttonThreeText;
-//The window we'll be rendering to
 SDL_Window* gWindow = NULL;
 
+std::vector<SDL_Rect> spriteClips;
+std::vector<SDL_Rect> buttonSpriteClips;
 std::unordered_map<RoomSize, int> room_map;
 ScreenState state;
-
-
-
-
-/* Texture class defenitions */
-LTexture::LTexture()
-{
-	//Initialize
-	mTexture = NULL;
-	mWidth = 0;
-	mHeight = 0;
-}
-
-LTexture::~LTexture()
-{
-	//Deallocate
-	free();
-}
-
-bool LTexture::loadFromFile(std::string path)
-{
-	//Get rid of preexisting texture
-	free();
-
-	//The final texture
-	SDL_Texture* newTexture = NULL;
-
-	//Load image at specified path
-	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-	if (loadedSurface == NULL)
-	{
-		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
-	}
-	else
-	{
-		//Color key image
-		SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 255, 150, 200));
-
-		//Create texture from surface pixels
-		newTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
-		if (newTexture == NULL)
-		{
-			printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-		}
-		else
-		{
-			//Get image dimensions
-			mWidth = loadedSurface->w;
-			mHeight = loadedSurface->h;
-		}
-
-		//Get rid of old loaded surface
-		SDL_FreeSurface(loadedSurface);
-	}
-
-	//Return success
-	mTexture = newTexture;
-	return mTexture != NULL;
-}
-
-bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor){
-	//Get rid of preexisting texture
-	free();
-
-	//Render text surface
-	SDL_Surface* textSurface = TTF_RenderText_Solid(gFont, textureText.c_str(), textColor);
-	if (textSurface == NULL)
-	{
-		printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());
-	}
-	else
-	{
-		//Create texture from surface pixels
-		mTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
-		if (mTexture == NULL)
-		{
-			printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
-		}
-		else
-		{
-			//Get image dimensions
-			mWidth = textSurface->w;
-			mHeight = textSurface->h;
-		}
-
-		//Get rid of old surface
-		SDL_FreeSurface(textSurface);
-	}
-
-	//Return success
-	return mTexture != NULL;
-}
-
-void LTexture::free()
-{
-	//Free texture if it exists
-	if (mTexture != NULL)
-	{
-		SDL_DestroyTexture(mTexture);
-		mTexture = NULL;
-		mWidth = 0;
-		mHeight = 0;
-	}
-}
-
-void LTexture::render(int x, int y, SDL_Rect* clip)
-{
-	//Set rendering space and render to screen
-	SDL_Rect renderQuad = { x, y, mWidth, mHeight };
-
-	//Set clip rendering dimensions
-	if (clip != NULL){
-		renderQuad.w = clip->w;
-		renderQuad.h = clip->h;
-	}
-
-	SDL_RenderCopy(gRenderer, mTexture, clip, &renderQuad);
-}
-
-int LTexture::getWidth()
-{
-	return mWidth;
-}
-
-int LTexture::getHeight()
-{
-	return mHeight;
-}
-
-
-
-
-
-/* Button class defenitions */
-LButton::LButton()
-{
-	mPosition.x = 0;
-	mPosition.y = 0;
-	MouseDown = false;
-	MouseUp = false;
-	disabled = false;
-	mCurrentSprite = BUTTON_SPRITE_MOUSE_OUT;
-	handler = emptyHandler;
-	buttonText = "";
-}
-
-void LButton::setPosition(int x, int y)
-{
-	mPosition.x = x;
-	mPosition.y = y;
-}
-
-void LButton::handleEvent(SDL_Event* e){
-	//If mouse event happened
-	if (e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP)
-	{
-		//Get mouse position
-		int x, y;
-		SDL_GetMouseState(&x, &y);
-		//Check if mouse is in button
-		bool inside = true;
-
-		//Mouse is outside of the button
-		if (x < mPosition.x || x > mPosition.x + width || y < mPosition.y || y > mPosition.y + height){
-			inside = false;
-		}//Mouse is outside button
-		if (!inside){
-			mCurrentSprite = BUTTON_SPRITE_MOUSE_OUT;
-			MouseUp = false;
-			MouseDown = false;
-		}
-		//Mouse is inside button
-		else{
-			//Set mouse over sprite
-			switch (e->type){
-			case SDL_MOUSEMOTION:
-				if (mCurrentSprite != BUTTON_SPRITE_MOUSE_DOWN)
-					mCurrentSprite = BUTTON_SPRITE_MOUSE_OVER_MOTION;
-				break;
-
-			case SDL_MOUSEBUTTONDOWN:
-				mCurrentSprite = BUTTON_SPRITE_MOUSE_DOWN;
-				MouseDown = true;
-				break;
-
-			case SDL_MOUSEBUTTONUP:
-				mCurrentSprite = BUTTON_SPRITE_MOUSE_UP;
-				MouseUp = true;
-				break;
-			}
-		}
-		//button was clicked
-		if (MouseDown == true && MouseUp == true) {
-			handler();
-		}
-	}
-}
-
-void LButton::setSprite(LButtonSprite newsprite) {
-	mCurrentSprite = newsprite;
-}
-
-void LButton::render(){
-	//Show current button sprite
-	buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite]);
-}
-
-void LButton::setHandler(void(*new_handler)(void)) {
-	handler = new_handler;
-}
-
-void LButton::setConstraints(int w, int h) {
-	width = w;
-	height = h;
-}
-
-int LButton::getWidth() {
-	return width;
-}
-
-int LButton::getHeight() {
-	return height;
-}
-
-//different button clicked function handlers
-void menuClicked(void) {
-	//generateDungeon();
-	state = TRAVEL;
-}
-
-void emptyHandler(void) {
-	return;
-}
-
-
-
 
 /* SDL functions */
 bool init()
@@ -508,7 +75,7 @@ bool init()
 	menuButtons.resize(1);
 	menuButtons[0].setHandler(menuClicked);
 
-	for(int i=0;i<TOTAL_BUTTONS;i++)
+	for (int i = 0; i<TOTAL_BUTTONS; i++)
 		Buttons[i].setConstraints(BUTTON_WIDTH, BUTTON_HEIGHT);
 	menuButtons[0].setConstraints(200, BUTTON_HEIGHT);
 	//8,6 small
@@ -529,16 +96,16 @@ bool loadMedia()
 
 	//Open the font
 	gFont = TTF_OpenFont("PT_sans.ttf", 18);
-	if (gFont == NULL){
+	if (gFont == NULL) {
 		printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
 		success = false;
 	}
-	else{
-		
+	else {
+
 	}
 
 	//Load spritesheet texture
-	if (!spriteSheetTexture.loadFromFile("sprites.png")){
+	if (!spriteSheetTexture.loadFromFile("sprites.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
@@ -597,7 +164,7 @@ bool loadMedia()
 		Buttons[10].setPosition(BUTTON_ELEVEN_X, BUTTON_Y);
 		Buttons[11].setPosition(BUTTON_TWELVE_X, BUTTON_Y);
 
-		menuButtons[0].setPosition(SCREEN_WIDTH/2 - menuButtons[0].getWidth()/2, SCREEN_HEIGHT/2 + menuButtons[0].getHeight() / 2);
+		menuButtons[0].setPosition(SCREEN_WIDTH / 2 - menuButtons[0].getWidth() / 2, SCREEN_HEIGHT / 2 + menuButtons[0].getHeight() / 2);
 	}
 	if (!mainMenu.loadFromFile("mainmenu.png")) {
 		printf("Failed to load texture image!\n");
@@ -606,11 +173,11 @@ bool loadMedia()
 	return success;
 }
 
-void close(){
+void close() {
 	//Free loaded images
-	buttonOneText.free();
-	buttonTwoText.free();
-	buttonThreeText.free();
+	//buttonOneText.free();
+	//buttonTwoText.free();
+	//buttonThreeText.free();
 
 	//Free global font
 	TTF_CloseFont(gFont);
@@ -660,9 +227,6 @@ SDL_Texture* loadTexture(std::string path)
 }
 
 
-
-
-
 /* drawing helper functions */
 bool drawRoom(RoomSize size) {
 	int width, height;
@@ -682,7 +246,7 @@ bool drawRoom(RoomSize size) {
 	topViewport.h = SCREEN_HEIGHT - 120;
 	SDL_RenderSetViewport(gRenderer, &topViewport);
 	//make it gray
-	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
 	SDL_SetRenderDrawColor(gRenderer, 0xA0, 0xA0, 0xA0, 0xFF);
 	SDL_RenderFillRect(gRenderer, &barRect);
 
@@ -702,7 +266,7 @@ bool drawRoom(RoomSize size) {
 	//Draw black horizontal line
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 	SDL_RenderDrawLine(gRenderer, 0, 0, SCREEN_WIDTH, 0);
-	for(int i=1;i< height;i++)
+	for (int i = 1; i< height; i++)
 		SDL_RenderDrawLine(gRenderer, 0, i*hor_off, SCREEN_WIDTH, i*hor_off);
 	SDL_RenderDrawLine(gRenderer, 0, SCREEN_HEIGHT - 121, SCREEN_WIDTH, SCREEN_HEIGHT - 121);
 
@@ -745,7 +309,7 @@ void drawMenu() {
 
 	SDL_RenderDrawLine(gRenderer, 0, BUTTON_Y - 5, SCREEN_WIDTH, BUTTON_Y - 5);
 	SDL_RenderDrawLine(gRenderer, 0, BUTTON_Y - 6, SCREEN_WIDTH, BUTTON_Y - 6);
-	SDL_RenderDrawLine(gRenderer, 0, SCREEN_HEIGHT-120, SCREEN_WIDTH, SCREEN_HEIGHT-120);
+	SDL_RenderDrawLine(gRenderer, 0, SCREEN_HEIGHT - 120, SCREEN_WIDTH, SCREEN_HEIGHT - 120);
 	SDL_RenderDrawLine(gRenderer, 0, BUTTON_Y - 6, SCREEN_WIDTH, BUTTON_Y - 6);
 	//Render buttons
 	for (int i = 0; i < TOTAL_BUTTONS; ++i) {
@@ -787,123 +351,5 @@ void drawTextInBox(int x, int y, int w, int h) {
 void generateDungeon() {
 	//this creates a dungeon stored in a global variable
 
-}
-
-
-int main(int argc, char* args[])
-{
-	//Start up SDL and create window
-	if (!init())
-	{
-		printf("Failed to initialize!\n");
-	}
-	else
-	{
-		//Load media
-		if (!loadMedia())
-		{
-			printf("Failed to load media!\n");
-		}
-		else
-		{
-			//Main loop flag
-			bool quit = false;
-
-			//Event handler
-			SDL_Event e;
-
-			//While application is running
-			while (!quit)
-			{
-				//Handle events on queue
-				while (SDL_PollEvent(&e) != 0)
-				{
-					//User requests quit
-					if (e.type == SDL_QUIT)
-					{
-						quit = true;
-					}
-					switch (state) {
-					case MAIN_MENU:
-						//Handle button events
-						for (int i = 0; i < TOTAL_MENU_BUTTONS; ++i)
-						{
-							menuButtons[i].handleEvent(&e);
-						}
-						break;
-					case ROOM_MAIN:
-						//Handle button events
-						for (int i = 0; i < TOTAL_BUTTONS; ++i)
-						{
-							Buttons[i].handleEvent(&e);
-						}
-						break;
-					default:
-						break;
-					}
-
-
-				}
-
-				//Clear screen
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
-				SDL_RenderClear(gRenderer);
-
-				//Poll keyboard state
-				const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
-				switch (state) {
-				case MAIN_MENU:
-					drawMainMenu();
-					break;
-				case PICK_CHAR1:
-
-					break;
-				case PICK_CHAR2:
-
-					break;
-				case PICK_CHAR3:
-
-					break;
-				case NEW_GAME:
-
-					break;
-				case TRAVEL:
-					drawTravel();
-					break;
-				case ROOM_MAIN:
-					//Draw menu bar
-					drawMenu();
-					//for testing
-					RoomSize size = LARGE;
-					drawRoom(size);
-					switch (size) {
-					case LARGE:
-						//render sprite
-						spriteSheetTexture.render(40, 40, &(spriteClips[2]));
-						spriteSheetTexture.render(80, 80, &(spriteClips[3]));
-
-						break;
-					case MED:
-						//render sprite
-						spriteSheetTexture.render(50, 50, &(spriteClips[0]));
-						spriteSheetTexture.render(100, 100, &(spriteClips[1]));
-						break;
-
-					case SMALL:
-						break;
-					}
-					break;
-				}
-				
-				//Update screen
-				SDL_RenderPresent(gRenderer);
-			}
-		}
-	}
-
-	//Free resources and close SDL
-	close();
-
-	return 0;
 }
 

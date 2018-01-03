@@ -1,9 +1,5 @@
 #include "party.h"
 
-#include <vector>
-#include <string>
-#include <unordered_map>
-
 bool Party::addChar(Character newChar) {
 	if (numChar < 3)
 		charList.push_back(newChar);

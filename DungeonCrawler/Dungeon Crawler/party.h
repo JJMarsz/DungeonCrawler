@@ -1,9 +1,9 @@
+
+
 #ifndef PARTY_H
 #define PARTY_H
 
-#include <vector>
-#include <string>
-#include <unordered_map>
+#include "lib.h"
 
 #define MAX_STAT	20;
 
