@@ -1,5 +1,6 @@
 #include "SDL.h"
 #include "LButton.h"
+#include "dungeon.h"
 
 SDL_Renderer* gRenderer = NULL;
 TTF_Font *gFont = NULL;
@@ -226,7 +227,6 @@ SDL_Texture* loadTexture(std::string path)
 	return newTexture;
 }
 
-
 /* drawing helper functions */
 bool drawRoom(RoomSize size) {
 	int width, height;
@@ -246,7 +246,7 @@ bool drawRoom(RoomSize size) {
 	topViewport.h = SCREEN_HEIGHT - 120;
 	SDL_RenderSetViewport(gRenderer, &topViewport);
 	//make it gray
-	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_SetRenderDrawColor(gRenderer, 0xA0, 0xA0, 0xA0, 0xFF);
 	SDL_RenderFillRect(gRenderer, &barRect);
 
@@ -344,12 +344,6 @@ void drawTravel() {
 }
 
 void drawTextInBox(int x, int y, int w, int h) {
-
-}
-
-/* dungeon helper functions */
-void generateDungeon() {
-	//this creates a dungeon stored in a global variable
 
 }
 

@@ -2,9 +2,11 @@
 #define DUNGEON_H
 
 #include "lib.h"
+#include "LButton.h"
 
 enum Encounter {
 	NONE,
+	PATH,
 	ITEM,
 	INFO,
 	BOSS,
@@ -15,6 +17,12 @@ enum Difficulty {
 	EASY,
 	MEDIUM,
 	HARD
+};
+
+enum Direction {
+	LEFT,
+	UP,
+	RIGHT
 };
 
 class Tile {
@@ -50,6 +58,12 @@ private:
 	std::vector<Tile> dungMap;
 };
 
-std::unordered_map<Difficulty, int> typeMap;
+class Tile {
+public:
+	Tile(Encounter type_);
+
+private:
+	Encounter type;
+};
 
 #endif
