@@ -50,7 +50,10 @@ extern LTexture spriteSheetTexture;
 
 //button spritesheet along with clips
 extern LTexture buttonSpriteSheetTexture;
+
 extern LTexture mainMenu;
+
+extern LTexture tileSST;
 
 #endif
 

@@ -22,21 +22,27 @@ enum Difficulty {
 enum Direction {
 	LEFT,
 	UP,
-	RIGHT
+	RIGHT,
+	DOWN
 };
 
 class Tile {
 public:
-
+	Tile(Encounter type_);
+	Tile();
+	void setPrev(Tile* prev_);
+	Encounter getType();
 private:
 	Encounter type;
+	Tile* prev;
 	bool access;
 	//moblist
 };
 
 class DisjointSets {
 public:
-	//DisjointSets();
+	DisjointSets();
+	void flush();
 	void addelements(int num);
 	int find(int elem);
 	void setunion(int a, int b);
@@ -48,22 +54,24 @@ private:
 
 class Dungeon {
 public:
+	Dungeon();
 	Dungeon(Difficulty type);
+	void setTile(int RMO_index, Tile newTile);
+	bool canTravel(int x, int y, Direction dir);
+	Tile getTile(int RMO_index);
+	int getWidth();
+	int getHeight();
 
 private:
-	void setTile(int x, int y, Tile newTile);
-	int width, height;
 	//use RMO to access
 	//x + width*y
 	std::vector<Tile> dungMap;
+	DisjointSets mapSet;
+	int width, height;
+	int start_x, start_y;
+	int end_x, end_y;
+	int path_length;
 };
 
-class Tile {
-public:
-	Tile(Encounter type_);
-
-private:
-	Encounter type;
-};
-
+extern Dungeon current_dungeon;
 #endif

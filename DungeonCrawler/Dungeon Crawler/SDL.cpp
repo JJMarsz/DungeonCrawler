@@ -8,6 +8,7 @@ SDL_Window* gWindow = NULL;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> buttonSpriteClips;
+std::vector<SDL_Rect> tileSpriteClips;
 std::unordered_map<RoomSize, int> room_map;
 ScreenState state;
 
@@ -72,6 +73,7 @@ bool init()
 	//set up relevant data structures
 	spriteClips.resize(6);
 	buttonSpriteClips.resize(4);
+	tileSpriteClips.resize(2);
 	Buttons.resize(12);
 	menuButtons.resize(1);
 	menuButtons[0].setHandler(menuClicked);
@@ -87,6 +89,8 @@ bool init()
 	room_map[MED] = (16 << 16) + 12;
 	room_map[SMALL] = (8 << 16) + 6;
 	state = MAIN_MENU;
+
+	current_dungeon = Dungeon(HARD);
 	return success;
 }
 
@@ -171,6 +175,21 @@ bool loadMedia()
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
+	if (!tileSST.loadFromFile("dungeontiles.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		tileSpriteClips[0].x = 0;
+		tileSpriteClips[0].y = 0;
+		tileSpriteClips[0].w = 50;
+		tileSpriteClips[0].h = 50;
+
+		tileSpriteClips[1].x = 0;
+		tileSpriteClips[1].y = 50;
+		tileSpriteClips[1].w = 50;
+		tileSpriteClips[1].h = 50;
+	}
 	return success;
 }
 
@@ -187,6 +206,7 @@ void close() {
 	//Free Textures
 	spriteSheetTexture.free();
 	buttonSpriteSheetTexture.free();
+	tileSST.free();
 	mainMenu.free();
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
@@ -347,3 +367,27 @@ void drawTextInBox(int x, int y, int w, int h) {
 
 }
 
+void drawDungeon() {/**/
+	SDL_Rect topViewport;
+	topViewport.x = 0;
+	topViewport.y = 0;
+	topViewport.w = SCREEN_WIDTH;
+	topViewport.h = SCREEN_HEIGHT;
+	SDL_RenderSetViewport(gRenderer, &topViewport);
+	//make it gray
+	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	SDL_SetRenderDrawColor(gRenderer, 0xA0, 0xA0, 0xA0, 0xFF);
+	SDL_RenderFillRect(gRenderer, &barRect);
+	for (int x = 0; x < current_dungeon.getWidth(); x++) {
+		for (int y = 0; y < current_dungeon.getHeight(); y++) {
+			if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == PATH) {
+				tileSST.render(x * 50, y * 50, &tileSpriteClips[1]);
+
+
+			}
+			else
+				tileSST.render(x * 50, y * 50, &tileSpriteClips[0]);
+
+		}
+	}
+}

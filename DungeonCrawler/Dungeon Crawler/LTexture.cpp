@@ -4,6 +4,7 @@
 LTexture buttonSpriteSheetTexture;
 LTexture mainMenu;
 LTexture spriteSheetTexture;
+LTexture tileSST;
 
 /* Texture class defenitions */
 LTexture::LTexture()
