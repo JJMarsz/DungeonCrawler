@@ -10,7 +10,8 @@ enum Encounter {
 	ITEM,
 	INFO,
 	BOSS,
-	MOBS
+	MOBS,
+	DEADEND
 };
 
 enum Difficulty {
@@ -31,11 +32,16 @@ public:
 	Tile(Encounter type_);
 	Tile();
 	void setPrev(Tile* prev_);
+	Tile* getPrev();
 	Encounter getType();
+	void setType(Encounter type_);
+	int getX();
+	int getY();
+	void setPos(int x_, int y_);
 private:
 	Encounter type;
 	Tile* prev;
-	bool access;
+	int x, y;
 	//moblist
 };
 
@@ -45,7 +51,7 @@ public:
 	void flush();
 	void addelements(int num);
 	int find(int elem);
-	void setunion(int a, int b);
+	bool setunion(int a, int b);
 	//int size(elem);
 
 private:

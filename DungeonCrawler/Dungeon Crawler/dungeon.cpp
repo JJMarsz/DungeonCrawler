@@ -19,7 +19,7 @@ int DisjointSets::find(int elem) {
 	}
 }
 
-void DisjointSets::setunion(int a, int b) {
+bool DisjointSets::setunion(int a, int b) {
 	int parentA, parentB;
 	if (set[a] < 0)
 		parentA = a;
@@ -29,6 +29,8 @@ void DisjointSets::setunion(int a, int b) {
 		parentB = b;
 	else
 		parentB = find(b);
+	if (parentA == parentB)
+		return false;
 	int newSize = set[parentA] + set[parentB];
 	if (set[parentA] < set[parentB]) {
 		set[parentB] = parentA;
@@ -38,6 +40,7 @@ void DisjointSets::setunion(int a, int b) {
 		set[parentA] = parentB;
 		set[parentB] = newSize;
 	}
+	return true;
 }
 
 DisjointSets::DisjointSets() {
@@ -61,22 +64,26 @@ Dungeon::Dungeon(Difficulty type) {
 	Tile emptyTile(NONE);
 	Tile newTile(PATH);
 	Direction dir;
+	int dead_count;
 	while (1) {
 		switch (type) {
 		case EASY:
-			//4x4 to 6x6
-			width = 4 + rand() % 3;
-			height = 4 + rand() % 3;
+			//8x8 to 9x9
+			width = 8 + rand() % 2;
+			height = 8 + rand() % 2;
+			dead_count = 2;
 			break;
 		case MEDIUM:
-			//7x7 to 9x9
-			width = 7 + rand() % 3;
-			height = 7 + rand() % 3;
+			//10x10 to 11x11
+			width = 10 + rand() % 2;
+			height = 10 + rand() % 2;
+			dead_count = 3;
 			break;
 		case HARD:
-			//10x10 to 12x12
-			width = 10 + rand() % 3;
-			height = 10 + rand() % 3;
+			//12x12 to 13x13
+			width = 12 + rand() % 2;
+			height = 12 + rand() % 2;
+			dead_count = 4;
 			break;
 		default:
 			//problemmmmm
@@ -90,12 +97,13 @@ Dungeon::Dungeon(Difficulty type) {
 		mapSet.addelements(width*height);
 
 		for (i = 0; (int)i < width*height; i++) {
+			emptyTile.setPos(i % width, i / width);
 			setTile(i, emptyTile);
 		}
 		x = start_x;
 		y = start_y;
 		setTile(x + y * width, newTile);
-		path_length = 0;
+		path_length = 1;
 		down_count = height / 2;
 		timeout = 0;
 		while (y != 0) {
@@ -114,19 +122,22 @@ Dungeon::Dungeon(Difficulty type) {
 					if (down_count > 0) {
 						y++;
 						down_count--;
+						break;
 					}
-					break;
+					continue;
 				case RIGHT:
 					x++;
 					break;
 				default:
-					continue;
+					while(1);
 				}
 				newTile.setPrev(&dungMap[prev_y*width + prev_x]);
+				newTile.setPos(x, y);
 				setTile(y*width + x, newTile);
-				mapSet.setunion(prev_y*width + prev_x, y*width + x);
-				path_length++;
+				if(mapSet.setunion(prev_y*width + prev_x, y*width + x))
+					path_length++;
 			}
+			//literally duct tape
 			timeout++;
 			if (timeout > 300)
 				break;
@@ -135,11 +146,48 @@ Dungeon::Dungeon(Difficulty type) {
 			continue;
 		end_x = x;
 		end_y = y;
-		if (path_length > 2*height - height/2)
+		//require a longish path
+		if (path_length > 2*height && path_length < 3*height)
 			break;
 	}
-	
+	Tile* trav = dungMap[end_x + end_y * width].getPrev();
 	//generate dead ends
+	/*
+	int path_count = 0;
+	while (dead_count || trav != NULL) {
+		timeout = 0;
+		if (rand() % 100 + 1 < (dead_count) * 20 + path_count * 5) {
+			//allowing a dead to be created, check which adjacent tile
+			dir = (Direction)(rand() % 4);
+			while (!canTravel(trav->getX(), trav->getY(), dir)) {
+				dir = (Direction)(rand() % 4);
+				timeout++;
+				if (timeout > 300)
+					break;
+			}
+			if (canTravel(trav->getX(), trav->getY(), dir)) {
+				dead_count--;
+				path_count = 0;
+				switch (dir) {
+				case UP:
+					dungMap[trav->getX() + (trav->getY() - 1)*width].setType(DEADEND);
+					break;
+				case LEFT:
+					dungMap[trav->getX() - 1 + (trav->getY())*width].setType(DEADEND);
+					break;
+				case DOWN:
+					dungMap[trav->getX() + (trav->getY() + 1)*width].setType(DEADEND);
+					break;
+				case RIGHT:
+					dungMap[trav->getX() - 1 + (trav->getY())*width].setType(DEADEND);
+					break;
+				default:
+					continue;
+				}
+			}
+		}
+		path_count++;
+	}*/
 }
 
 bool Dungeon::canTravel(int curr_x, int curr_y, Direction dir) {
@@ -212,18 +260,23 @@ int Dungeon::getHeight() { return height; }
 Tile::Tile(Encounter type_) {
 	type = type_;
 	prev = NULL;
+	x = -1;
+	y = -1;
 }
 
 Tile::Tile() {
 	type = NONE;
 	prev = NULL;
+	x = -1;
+	y = -1;
 }
 
-void Tile::setPrev(Tile* prev_) {
-	prev = prev_;
-}
+Tile* Tile::getPrev() { return prev; }
+void Tile::setPrev(Tile* prev_) {prev = prev_;}
 
+int Tile::getX() { return x; }
+int Tile::getY() { return y; }
+void Tile::setPos(int x_, int y_) {x = x_;y = y_;}
 
-Encounter Tile::getType() {
-	return type;
-}
+Encounter Tile::getType() {return type;}
+void Tile::setType(Encounter type_) { type = type_; }

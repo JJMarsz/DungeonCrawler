@@ -73,7 +73,7 @@ bool init()
 	//set up relevant data structures
 	spriteClips.resize(6);
 	buttonSpriteClips.resize(4);
-	tileSpriteClips.resize(2);
+	tileSpriteClips.resize(3);
 	Buttons.resize(12);
 	menuButtons.resize(1);
 	menuButtons[0].setHandler(menuClicked);
@@ -189,6 +189,11 @@ bool loadMedia()
 		tileSpriteClips[1].y = 50;
 		tileSpriteClips[1].w = 50;
 		tileSpriteClips[1].h = 50;
+
+		tileSpriteClips[2].x = 0;
+		tileSpriteClips[2].y = 100;
+		tileSpriteClips[2].w = 50;
+		tileSpriteClips[2].h = 50;
 	}
 	return success;
 }
@@ -385,6 +390,8 @@ void drawDungeon() {/**/
 
 
 			}
+			/*else if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == DEADEND)
+				;*/
 			else
 				tileSST.render(x * 50, y * 50, &tileSpriteClips[0]);
 
