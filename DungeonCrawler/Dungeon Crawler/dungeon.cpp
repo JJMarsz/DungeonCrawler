@@ -152,9 +152,9 @@ Dungeon::Dungeon(Difficulty type) {
 	}
 	Tile* trav = dungMap[end_x + end_y * width].getPrev();
 	//generate dead ends
-	
+	/*
 	int path_count = 0;
-	while (dead_count > 0 && trav != NULL) {
+	while (dead_count || trav != NULL) {
 		timeout = 0;
 		if (rand() % 100 + 1 < (dead_count) * 20 + path_count * 5) {
 			//allowing a dead to be created, check which adjacent tile
@@ -187,7 +187,7 @@ Dungeon::Dungeon(Difficulty type) {
 			}
 		}
 		path_count++;
-	}
+	}*/
 }
 
 bool Dungeon::canTravel(int curr_x, int curr_y, Direction dir) {
@@ -248,8 +248,11 @@ Tile Dungeon::getTile(int RMO_index) {
 	return dungMap[RMO_index];
 }
 
+
 int Dungeon::getWidth() { return width; }
 int Dungeon::getHeight() { return height; }
+
+
 
 /* Tile class defenitions */
 //Tile defines each individual (x,y) location in the map

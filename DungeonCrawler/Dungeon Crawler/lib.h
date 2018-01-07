@@ -1,0 +1,69 @@
+#ifndef LIB_H
+#define LIB_H
+
+#include <stdio.h>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <iostream>
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
+
+#define TOTAL_MENU_BUTTONS	1
+
+//Screen dimension constants
+#define SCREEN_WIDTH	800
+#define SCREEN_HEIGHT	720
+
+//Textbox start
+#define TEXT_X			0
+#define TEXT_Y 			600
+
+//button constants
+#define BUTTON_WIDTH	60
+#define BUTTON_HEIGHT	60
+#define TOTAL_BUTTONS	12
+
+const int BUTTON_Y = SCREEN_HEIGHT - BUTTON_HEIGHT - 5;
+const int BUTTON_ONE_X = SCREEN_WIDTH - BUTTON_WIDTH - 18;
+const int BUTTON_TWO_X = SCREEN_WIDTH - 2 * BUTTON_WIDTH - 22;
+const int BUTTON_THREE_X = SCREEN_WIDTH - 3 * BUTTON_WIDTH - 26;
+const int BUTTON_FOUR_X = SCREEN_WIDTH - 4 * BUTTON_WIDTH - 30;
+const int BUTTON_FIVE_X = SCREEN_WIDTH - 5 * BUTTON_WIDTH - 34;
+const int BUTTON_SIX_X = SCREEN_WIDTH - 6 * BUTTON_WIDTH - 38;
+const int BUTTON_SEVEN_X = SCREEN_WIDTH - 7 * BUTTON_WIDTH - 42;
+const int BUTTON_EIGHT_X = SCREEN_WIDTH - 8 * BUTTON_WIDTH - 46;
+const int BUTTON_NINE_X = SCREEN_WIDTH - 9 * BUTTON_WIDTH - 50;
+const int BUTTON_TEN_X = SCREEN_WIDTH - 10 * BUTTON_WIDTH - 54;
+const int BUTTON_ELEVEN_X = SCREEN_WIDTH - 11 * BUTTON_WIDTH - 58;
+const int BUTTON_TWELVE_X = SCREEN_WIDTH - 12 * BUTTON_WIDTH - 62;
+
+enum LButtonSprite
+{
+	BUTTON_SPRITE_MOUSE_OUT = 0,
+	BUTTON_SPRITE_MOUSE_OVER_MOTION = 1,
+	BUTTON_SPRITE_MOUSE_DOWN = 2,
+	BUTTON_SPRITE_MOUSE_UP = 3,
+	BUTTON_SPRITE_TOTAL = 4
+};
+enum ScreenState
+{
+	MAIN_MENU,
+	LOAD_GAME,
+	PICK_CHAR1,
+	PICK_CHAR2,
+	PICK_CHAR3,
+	NEW_GAME,
+	TRAVEL,
+	ROOM_MAIN,
+	ROOM_MAP,
+	DUNGEON
+};
+enum RoomSize
+{
+	SMALL,
+	MED,
+	LARGE
+};
+
+#endif
