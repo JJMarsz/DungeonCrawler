@@ -1,2 +1,3 @@
-﻿  SDL.cpp
+﻿  dungeon.cpp
+c:\users\jj\desktop\dungeoncrawler\dungeoncrawler\dungeon crawler\dungeon.cpp(59): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Dungeon Crawler.vcxproj -> C:\Users\JJ\Desktop\DungeonCrawler\DungeonCrawler\Debug\Dungeon Crawler.exe

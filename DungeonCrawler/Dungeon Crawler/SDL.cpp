@@ -33,7 +33,7 @@ bool init()
 		}
 
 		//Create window
-		gWindow = SDL_CreateWindow("SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		gWindow = SDL_CreateWindow("Party Saves Town (TM)", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 		if (gWindow == NULL)
 		{
 			printf("Window could not be created! SDL Error: %s\n", SDL_GetError());
@@ -72,7 +72,7 @@ bool init()
 
 	//set up relevant data structures
 	spriteClips.resize(6);
-	buttonSpriteClips.resize(4);
+	buttonSpriteClips.resize(8);
 	tileSpriteClips.resize(3);
 	Buttons.resize(12);
 	menuButtons.resize(1);
@@ -154,7 +154,13 @@ bool loadMedia()
 			buttonSpriteClips[i].w = BUTTON_WIDTH;
 			buttonSpriteClips[i].h = BUTTON_HEIGHT;
 		}
-
+		for (int i = 0; i < BUTTON_SPRITE_TOTAL; ++i)
+		{
+			buttonSpriteClips[i+4].x = 0;
+			buttonSpriteClips[i+4].y = (i+4) * 60;
+			buttonSpriteClips[i+4].w = 2*BUTTON_WIDTH;
+			buttonSpriteClips[i+4].h = BUTTON_HEIGHT;
+		}
 		//Set buttons to locations
 		Buttons[0].setPosition(BUTTON_ONE_X, BUTTON_Y);
 		Buttons[1].setPosition(BUTTON_TWO_X, BUTTON_Y);
@@ -361,6 +367,7 @@ void drawMainMenu() {
 	SDL_RenderFillRect(gRenderer, &barRect);
 
 	mainMenu.render(0, 0, NULL);
+	//buttonSpriteSheetTexture.render(SCREEN_WIDTH / 2 - menuButtons[0].getWidth() / 2, SCREEN_HEIGHT / 2 + menuButtons[0].getHeight() / 2);
 	menuButtons[0].render();
 }
 
@@ -385,13 +392,10 @@ void drawDungeon() {/**/
 	SDL_RenderFillRect(gRenderer, &barRect);
 	for (int x = 0; x < current_dungeon.getWidth(); x++) {
 		for (int y = 0; y < current_dungeon.getHeight(); y++) {
-			if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == PATH) {
+			if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == PATH) 
 				tileSST.render(x * 50, y * 50, &tileSpriteClips[1]);
-
-
-			}
-			/*else if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == DEADEND)
-				;*/
+			else if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == DEADEND)
+				tileSST.render(x * 50, y * 50, &tileSpriteClips[2]);
 			else
 				tileSST.render(x * 50, y * 50, &tileSpriteClips[0]);
 
