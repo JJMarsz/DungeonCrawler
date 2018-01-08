@@ -60,7 +60,7 @@ Dungeon::Dungeon(Difficulty type) {
 
 	unsigned i;
 	int x, y, prev_x, prev_y, down_count;
-	int timeout;
+	int timeout, mult;
 	Tile emptyTile(NONE);
 	Tile newTile(PATH);
 	Direction dir;
@@ -72,18 +72,21 @@ Dungeon::Dungeon(Difficulty type) {
 			width = 8 + rand() % 2;
 			height = 8 + rand() % 2;
 			dead_count = 2;
+			mult = 10;
 			break;
 		case MEDIUM:
 			//10x10 to 11x11
 			width = 10 + rand() % 2;
 			height = 10 + rand() % 2;
 			dead_count = 3;
+			mult = 5;
 			break;
 		case HARD:
 			//12x12 to 13x13
 			width = 12 + rand() % 2;
 			height = 12 + rand() % 2;
 			dead_count = 4;
+			mult = 2;
 			break;
 		default:
 			//problemmmmm
@@ -131,11 +134,11 @@ Dungeon::Dungeon(Difficulty type) {
 				default:
 					while(1);
 				}
+				mapSet.setunion(prev_y*width + prev_x, y*width + x);
 				newTile.setPrev(&dungMap[prev_y*width + prev_x]);
 				newTile.setPos(x, y);
 				setTile(y*width + x, newTile);
-				if(mapSet.setunion(prev_y*width + prev_x, y*width + x))
-					path_length++;
+				path_length++;
 			}
 			//literally duct tape
 			timeout++;
@@ -152,42 +155,107 @@ Dungeon::Dungeon(Difficulty type) {
 	}
 	Tile* trav = dungMap[end_x + end_y * width].getPrev();
 	//generate dead ends
-	/*
+	
 	int path_count = 0;
-	while (dead_count || trav != NULL) {
-		timeout = 0;
+	while (dead_count > 0 && trav != NULL) {
+		newTile.setType(DEADEND);
 		if (rand() % 100 + 1 < (dead_count) * 20 + path_count * 5) {
+			timeout = 0;
 			//allowing a dead to be created, check which adjacent tile
 			dir = (Direction)(rand() % 4);
-			while (!canTravel(trav->getX(), trav->getY(), dir)) {
-				dir = (Direction)(rand() % 4);
-				timeout++;
-				if (timeout > 300)
-					break;
-			}
-			if (canTravel(trav->getX(), trav->getY(), dir)) {
+			if (canTravel(trav->getX(), trav->getY(), dir) && trav->getY() > 1) {
+				timeout = 0;
 				dead_count--;
 				path_count = 0;
 				switch (dir) {
 				case UP:
 					dungMap[trav->getX() + (trav->getY() - 1)*width].setType(DEADEND);
+					dungMap[trav->getX() + (trav->getY() - 1)*width].setPrev(trav);
+					mapSet.setunion(trav->getX() + trav->getY()*width, trav->getX() + (trav->getY() - 1)*width);
+					x = trav->getX();
+					y = trav->getY() - 1;
 					break;
 				case LEFT:
 					dungMap[trav->getX() - 1 + (trav->getY())*width].setType(DEADEND);
+					dungMap[trav->getX() - 1 + (trav->getY())*width].setPrev(trav);
+					mapSet.setunion(trav->getX() + trav->getY()*width, trav->getX() - 1 + (trav->getY())*width);
+					x = trav->getX() - 1;
+					y = trav->getY();
 					break;
 				case DOWN:
 					dungMap[trav->getX() + (trav->getY() + 1)*width].setType(DEADEND);
+					dungMap[trav->getX() + (trav->getY() + 1)*width].setPrev(trav);
+					mapSet.setunion(trav->getX() + trav->getY()*width, trav->getX() + (trav->getY() + 1)*width);
+					x = trav->getX();
+					y = trav->getY() + 1;
 					break;
 				case RIGHT:
-					dungMap[trav->getX() - 1 + (trav->getY())*width].setType(DEADEND);
+					dungMap[trav->getX() + 1 + (trav->getY())*width].setType(DEADEND);
+					dungMap[trav->getX() + 1 + (trav->getY())*width].setPrev(trav);
+					mapSet.setunion(trav->getX() + trav->getY()*width, trav->getX() + 1 + (trav->getY())*width);
+					x = trav->getX() + 1;
+					y = trav->getY();
 					break;
 				default:
 					continue;
 				}
+				//generate the deadend path
+				prev_x = trav->getX();
+				prev_y = trav->getY();
+				int path_limit = height / 2;
+				while (1) {
+					while (1) {
+						dir = (Direction)(rand() % 4);
+						timeout++;
+						if (y == 1 && dir == UP)
+							continue;
+						if (canTravel(x, y, dir))
+							break;
+						if (timeout > 300)
+							break;
+					}
+					if (timeout > 300) {
+						timeout = 0;
+						break;
+					}
+					//by this point, a valid direction is selected
+
+					if (canTravel(x, y, dir)) {
+						path_limit--;
+						prev_x = x;
+						prev_y = y;
+						switch (dir) {
+						case UP:
+							y--;
+							break;
+						case LEFT:
+							x--;
+							break;
+						case DOWN:
+							y++;
+							break;
+						case RIGHT:
+							x++;
+							break;
+						default:
+							while (1);
+						}
+						mapSet.setunion(prev_y*width + prev_x, y*width + x);
+						newTile.setPrev(&dungMap[prev_y*width + prev_x]);
+						newTile.setPos(x, y);
+						setTile(y*width + x, newTile);
+					}
+					if (path_limit < 1)
+						break;
+				}
 			}
+			trav = trav->getPrev();
+			timeout++;
+			if (timeout > 300)
+				break;
 		}
 		path_count++;
-	}*/
+	}
 }
 
 bool Dungeon::canTravel(int curr_x, int curr_y, Direction dir) {
@@ -216,6 +284,8 @@ bool Dungeon::canTravel(int curr_x, int curr_y, Direction dir) {
 		break;
 	}
 	if (x < 0 || x >= width || y < 0 || y >= height)
+		return false;
+	if (mapSet.find(x + y * width) == mapSet.find(curr_x + curr_y * width))
 		return false;
 	std::unordered_map<int, bool> comp;
 	if (y < height - 1)
@@ -280,3 +350,10 @@ void Tile::setPos(int x_, int y_) {x = x_;y = y_;}
 
 Encounter Tile::getType() {return type;}
 void Tile::setType(Encounter type_) { type = type_; }
+
+void Tile::operator=(const Tile& t) {
+	type = t.type;
+	prev = t.prev;
+	x = t.x;
+	y = t.y;
+}

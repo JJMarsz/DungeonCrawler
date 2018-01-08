@@ -31,6 +31,7 @@ class Tile {
 public:
 	Tile(Encounter type_);
 	Tile();
+	void operator=(const Tile& t);
 	void setPrev(Tile* prev_);
 	Tile* getPrev();
 	Encounter getType();

@@ -394,11 +394,9 @@ void drawDungeon() {/**/
 		for (int y = 0; y < current_dungeon.getHeight(); y++) {
 			if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == PATH) {
 				tileSST.render(x * 50, y * 50, &tileSpriteClips[1]);
-
-
 			}
-			/*else if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == DEADEND)
-				;*/
+			else if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == DEADEND)
+				tileSST.render(x * 50, y * 50, &tileSpriteClips[2]);
 			else
 				tileSST.render(x * 50, y * 50, &tileSpriteClips[0]);
 
