@@ -1,14 +1,12 @@
 #include "SDL.h"
 #include "LButton.h"
 #include "dungeon.h"
+#include "party.h"
 
 SDL_Renderer* gRenderer = NULL;
 TTF_Font *gFont = NULL;
 SDL_Window* gWindow = NULL;
 
-std::vector<SDL_Rect> spriteClips;
-std::vector<SDL_Rect> buttonSpriteClips;
-std::vector<SDL_Rect> tileSpriteClips;
 std::unordered_map<RoomSize, int> room_map;
 ScreenState state;
 
@@ -72,15 +70,20 @@ bool init()
 
 	//set up relevant data structures
 	spriteClips.resize(6);
-	buttonSpriteClips.resize(8);
+	buttonSpriteClips.resize(12);
 	tileSpriteClips.resize(3);
+	charClips.resize(NUM_CHAR);
 	Buttons.resize(12);
+	charButtons.resize(3);
 	menuButtons.resize(1);
 	menuButtons[0].setHandler(menuClicked);
 
 	for (int i = 0; i<TOTAL_BUTTONS; i++)
 		Buttons[i].setConstraints(BUTTON_WIDTH, BUTTON_HEIGHT);
-	menuButtons[0].setConstraints(200, BUTTON_HEIGHT);
+	menuButtons[0].setConstraints(2*BUTTON_WIDTH, BUTTON_HEIGHT);
+	charButtons[0].setConstraints(CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	charButtons[1].setConstraints(CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	charButtons[2].setConstraints(CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
 	//8,6 small
 	//16,12 med
 	//20, 15 large
@@ -91,6 +94,7 @@ bool init()
 	state = MAIN_MENU;
 
 	current_dungeon = Dungeon(HARD);
+	chars = CharList(NULL);
 	return success;
 }
 
@@ -161,6 +165,13 @@ bool loadMedia()
 			buttonSpriteClips[i+4].w = 2*BUTTON_WIDTH;
 			buttonSpriteClips[i+4].h = BUTTON_HEIGHT;
 		}
+		for (int i = 0; i < BUTTON_SPRITE_TOTAL; ++i) 
+		{
+			buttonSpriteClips[i+8].x = 2 * BUTTON_WIDTH + (i)*200;
+			buttonSpriteClips[i+8].y = 0;
+			buttonSpriteClips[i+8].w = CHAR_BUTTON_WIDTH;
+			buttonSpriteClips[i+8].h = CHAR_BUTTON_HEIGHT;
+		}
 		//Set buttons to locations
 		Buttons[0].setPosition(BUTTON_ONE_X, BUTTON_Y);
 		Buttons[1].setPosition(BUTTON_TWO_X, BUTTON_Y);
@@ -176,6 +187,9 @@ bool loadMedia()
 		Buttons[11].setPosition(BUTTON_TWELVE_X, BUTTON_Y);
 
 		menuButtons[0].setPosition(SCREEN_WIDTH / 2 - menuButtons[0].getWidth() / 2, SCREEN_HEIGHT / 2 + menuButtons[0].getHeight() / 2);
+		charButtons[0].setPosition(50, 50);
+		charButtons[1].setPosition(300, 50);
+		charButtons[2].setPosition(550, 50);
 	}
 	if (!mainMenu.loadFromFile("mainmenu.png")) {
 		printf("Failed to load texture image!\n");
@@ -201,6 +215,19 @@ bool loadMedia()
 		tileSpriteClips[2].w = 50;
 		tileSpriteClips[2].h = 50;
 	}
+	if (!charSST.loadFromFile("charicons.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		for (int i = 0; i < NUM_CHAR; i++) {
+			charClips[i].x = i*200;
+			charClips[i].y = 0;
+			charClips[i].w = 200;
+			charClips[i].h = 200;
+		}
+
+	}
 	return success;
 }
 
@@ -218,6 +245,7 @@ void close() {
 	spriteSheetTexture.free();
 	buttonSpriteSheetTexture.free();
 	tileSST.free();
+	charSST.free();
 	mainMenu.free();
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
@@ -401,5 +429,24 @@ void drawDungeon() {/**/
 				tileSST.render(x * 50, y * 50, &tileSpriteClips[0]);
 
 		}
+	}
+}
+
+void drawCharScreen() {
+	int i;
+	srand(time(NULL));
+	SDL_Rect topViewport;
+	topViewport.x = 0;
+	topViewport.y = 0;
+	topViewport.w = SCREEN_WIDTH;
+	topViewport.h = SCREEN_HEIGHT;
+	SDL_RenderSetViewport(gRenderer, &topViewport);
+	//make it gray
+	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	SDL_SetRenderDrawColor(gRenderer, 0xA0, 0xA0, 0xA0, 0xFF);
+	SDL_RenderFillRect(gRenderer, &barRect);
+	for (i = 0; i < 3; i++) {
+		charButtons[i].render();
+		displayList[i].render(50 + 250 * i, 50);
 	}
 }

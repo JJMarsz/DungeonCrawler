@@ -137,6 +137,9 @@
     <ClInclude Include="party.h" />
     <ClInclude Include="SDL.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="char_info.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

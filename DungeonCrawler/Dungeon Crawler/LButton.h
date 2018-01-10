@@ -4,6 +4,7 @@
 #include "LTexture.h"
 #include "lib.h"
 
+
 //The mouse button
 class LButton
 {
@@ -15,7 +16,7 @@ public:
 	void setPosition(int x, int y);
 
 	//Handles mouse event
-	void handleEvent(SDL_Event* e);
+	void handleEvent(SDL_Event* e, int index);
 
 	//Allows you to set button sprite
 	void setSprite(LButtonSprite newsprite);
@@ -24,7 +25,7 @@ public:
 	void render();
 
 	//set button clicked handler
-	void setHandler(void(*new_handler)(void));
+	void setHandler(void(*new_handler)(int index));
 
 	//set size
 	void setConstraints(int w, int h);
@@ -47,18 +48,22 @@ private:
 	bool MouseDown, MouseUp;
 
 	//Button Clicked function handler
-	void(*handler)(void);
+	void(*handler)(int index);
 
 	//disabled
 	bool disabled;
 
 };
 
-void menuClicked(void);
+void menuClicked(int index);
+void char1Clicked(int index);
+void char2Clicked(int index);
+void char3Clicked(int index);
 
-void emptyHandler(void);
+void emptyHandler(int index);
 
 extern std::vector<LButton> Buttons;
 extern std::vector<LButton> menuButtons;
+extern std::vector<LButton> charButtons;
 
 #endif

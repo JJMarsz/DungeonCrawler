@@ -1,3 +1,2 @@
-﻿  dungeon.cpp
-c:\users\jj\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(59): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+﻿  LButton.cpp
   Dungeon Crawler.vcxproj -> C:\Users\JJ\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe

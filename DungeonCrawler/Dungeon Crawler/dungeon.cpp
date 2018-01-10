@@ -203,10 +203,13 @@ Dungeon::Dungeon(Difficulty type) {
 				prev_x = trav->getX();
 				prev_y = trav->getY();
 				int path_limit = height / 2;
+				int d_count = 2;
 				while (1) {
 					while (1) {
 						dir = (Direction)(rand() % 4);
 						timeout++;
+						if (dir == DOWN && d_count < 1)
+							continue;
 						if (y == 1 && dir == UP)
 							continue;
 						if (canTravel(x, y, dir))
@@ -233,6 +236,7 @@ Dungeon::Dungeon(Difficulty type) {
 							break;
 						case DOWN:
 							y++;
+							d_count--;
 							break;
 						case RIGHT:
 							x++;

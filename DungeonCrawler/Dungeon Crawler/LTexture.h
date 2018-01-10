@@ -55,5 +55,12 @@ extern LTexture mainMenu;
 
 extern LTexture tileSST;
 
+extern LTexture charSST;
+
+extern std::vector<SDL_Rect> spriteClips;
+extern std::vector<SDL_Rect> buttonSpriteClips;
+extern std::vector<SDL_Rect> tileSpriteClips;
+extern std::vector<SDL_Rect> charClips;
+
 #endif
 

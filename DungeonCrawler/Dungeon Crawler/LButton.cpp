@@ -1,9 +1,10 @@
 #include "LButton.h"
-
+#include "party.h"
 
 
 std::vector<LButton> Buttons;
 std::vector<LButton> menuButtons;
+std::vector<LButton> charButtons;
 
 /* Button class defenitions */
 LButton::LButton()
@@ -24,7 +25,7 @@ void LButton::setPosition(int x, int y)
 	mPosition.y = y;
 }
 
-void LButton::handleEvent(SDL_Event* e) {
+void LButton::handleEvent(SDL_Event* e, int index) {
 	//If mouse event happened
 	if (e->type == SDL_MOUSEMOTION || e->type == SDL_MOUSEBUTTONDOWN || e->type == SDL_MOUSEBUTTONUP)
 	{
@@ -65,7 +66,9 @@ void LButton::handleEvent(SDL_Event* e) {
 		}
 		//button was clicked
 		if (MouseDown == true && MouseUp == true) {
-			handler();
+			MouseDown = false;
+			MouseUp = false;
+			handler(index);
 		}
 	}
 }
@@ -78,12 +81,14 @@ void LButton::render() {
 	//Show current button sprite
 	if(state == ROOM_MAIN)
 		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite]);
-	else
+	else if(state == MAIN_MENU)
 		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite+4]);
+	else
+		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite + 8]);
 
 }
 
-void LButton::setHandler(void(*new_handler)(void)) {
+void LButton::setHandler(void(*new_handler)(int index)) {
 	handler = new_handler;
 }
 
@@ -101,11 +106,43 @@ int LButton::getHeight() {
 }
 
 //different button clicked function handlers
-void menuClicked(void) {
-	//generateDungeon();
-	state = DUNGEON;
+void menuClicked(int index) {
+	charButtons[0].setHandler(char1Clicked);
+	charButtons[1].setHandler(char1Clicked);
+	charButtons[2].setHandler(char1Clicked);
+	//generate chars
+	chars.unshowChar();
+	chars.getChars();
+	state = PICK_CHAR1;
 }
 
-void emptyHandler(void) {
+void char1Clicked(int index) {
+	charButtons[0].setHandler(char2Clicked);
+	charButtons[1].setHandler(char2Clicked);
+	charButtons[2].setHandler(char2Clicked);
+	chars.unshowChar();
+	chars.pickChar(chars.getIndex(displayList[index].getName()));
+	//generate chars
+	chars.getChars();
+	state = PICK_CHAR2;
+}
+
+void char2Clicked(int index) {
+	charButtons[0].setHandler(char3Clicked);
+	charButtons[1].setHandler(char3Clicked);
+	charButtons[2].setHandler(char3Clicked);
+	chars.unshowChar();
+	chars.pickChar(chars.getIndex(displayList[index].getName()));
+	//generate chars
+	chars.getChars();
+	state = PICK_CHAR3;
+}
+
+void char3Clicked(int index) {
+	chars.pickChar(chars.getIndex(displayList[index].getName()));
+	state = TOWN;
+}
+
+void emptyHandler(int index) {
 	return;
 }

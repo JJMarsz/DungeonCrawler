@@ -46,14 +46,29 @@ int main(int argc, char* args[])
 						//Handle button events
 						for (int i = 0; i < TOTAL_MENU_BUTTONS; ++i)
 						{
-							menuButtons[i].handleEvent(&e);
+							menuButtons[i].handleEvent(&e, i);
+						}
+						break;
+					case PICK_CHAR1:
+						for (int i = 0; i < 3; ++i){
+							charButtons[i].handleEvent(&e, i);
+						}
+						break;
+					case PICK_CHAR2:
+						for (int i = 0; i < 3; ++i) {
+							charButtons[i].handleEvent(&e, i);
+						}
+						break;
+					case PICK_CHAR3:
+						for (int i = 0; i < 3; ++i) {
+							charButtons[i].handleEvent(&e, i);
 						}
 						break;
 					case ROOM_MAIN:
 						//Handle button events
 						for (int i = 0; i < TOTAL_BUTTONS; ++i)
 						{
-							Buttons[i].handleEvent(&e);
+							Buttons[i].handleEvent(&e, i);
 						}
 						break;
 					default:
@@ -74,13 +89,13 @@ int main(int argc, char* args[])
 					drawMainMenu();
 					break;
 				case PICK_CHAR1:
-
+					drawCharScreen();
 					break;
 				case PICK_CHAR2:
-
+					drawCharScreen();
 					break;
 				case PICK_CHAR3:
-
+					drawCharScreen();
 					break;
 				case NEW_GAME:
 

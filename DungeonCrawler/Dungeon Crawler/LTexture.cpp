@@ -5,6 +5,12 @@ LTexture buttonSpriteSheetTexture;
 LTexture mainMenu;
 LTexture spriteSheetTexture;
 LTexture tileSST;
+LTexture charSST;
+
+std::vector<SDL_Rect> spriteClips;
+std::vector<SDL_Rect> buttonSpriteClips;
+std::vector<SDL_Rect> tileSpriteClips;
+std::vector<SDL_Rect> charClips;
 
 /* Texture class defenitions */
 LTexture::LTexture()

@@ -30,11 +30,11 @@ void drawMainMenu();
 //used to draw the dungeon
 void drawDungeon();
 
+//used to draw and pick the characters
+void drawCharScreen();
+
 //The window renderer
 extern SDL_Renderer* gRenderer;
-extern std::vector<SDL_Rect> spriteClips;
-extern std::vector<SDL_Rect> buttonSpriteClips;
-extern std::vector<SDL_Rect> tileSpriteClips;
 //Globally used font
 extern TTF_Font *gFont;
 //The window we'll be rendering to
