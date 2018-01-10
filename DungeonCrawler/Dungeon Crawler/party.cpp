@@ -1,4 +1,5 @@
 #include "party.h"
+#include "LTexture.h"
 
 
 Party gParty;
@@ -38,12 +39,18 @@ int Character::getCha() { return cha; }
 int Character::getMove() { return move; }
 int Character::getHP() { return health; }
 int Character::getAC() { return AC; }
+std::string Character::getName() { return name; }
+
+void Character::setTextIndex(int index) { textIndex = index; }
+int Character::getTextIndex() { return textIndex; }
 
 //used to draw character info during character selection state
 void Character::render(int x, int y) {
 	//draw sprite
 	charSST.render(x, y, &sprite);
-	//generate text and whatnot
+	texts[textIndex]->render(x + 10, y + 200);
+
+
 
 }
 
@@ -82,7 +89,6 @@ bool Party::moveParty(int x, int y) {
 	return true;
 }
 
-std::string Character::getName() { return name;}
 
 CharList::CharList() {
 	//quell compiler bitching
@@ -150,6 +156,8 @@ CharList::CharList(int magic) {
 		14	//AC
 	}
 	};
+}
+void CharList::loadSprites() {
 	//Go through each character to set sprites and info texts
 	picked.resize(NUM_CHAR);
 	showed.resize(NUM_CHAR);
@@ -159,7 +167,7 @@ CharList::CharList(int magic) {
 	showed[0] = false;
 	charList[0].setClip(charClips[0]);
 	charList[0].setInfo(
-	"Temp text for now, Figther."
+		"Temp text for now, Figther."
 	);
 
 	//Barb
@@ -183,7 +191,7 @@ CharList::CharList(int magic) {
 	showed[3] = false;
 	charList[3].setClip(charClips[3]);
 	charList[3].setInfo(
-		"Temp text for now, Ranger."
+		"Temp text for now, Rogue."
 	);
 
 	//Ranger
@@ -193,8 +201,35 @@ CharList::CharList(int magic) {
 	charList[4].setInfo(
 		"Temp text for now, Ranger."
 	);
+	//generate text and whatnot
+	int count = (CHAR_BUTTON_WIDTH - 20) / 2;
+	int i;
+	std::string displayText = "";
+	int w;
+	for (i = 0; i < NUM_CHAR; i++) {
+		const char* cstr = charList[i].getName().c_str();
+		TTF_SizeText(gFont, cstr, &w, NULL);
+		displayText = "";
+		count -= (w / 2);
+		for (int i = 0; i < count; i++) {
+			displayText += " ";
+		}
+		std::stringstream buf;
+		buf << charList[i].getName() << "\n" << std::endl;
+		buf << "Strength: " << charList[i].getStr() << "\n";
+		buf << "Dexterity: " << charList[i].getDex() << "\n";
+		buf << "Constitution: " << charList[i].getCon() << "\n";
+		buf << "Intelligence: " << charList[i].getInt() << "\n";
+		buf << "Wisdom: " << charList[i].getWis() << "\n";
+		buf << "Charisma: " << charList[i].getCha() << "\n";
+		buf << "Speed: " << charList[i].getMove() << "\n";
+		buf << "Health: " << charList[i].getHP() << "\n";
+		buf << "AC: " << charList[i].getAC() << "\n";
+		buf << "Info: " << charList[i].getInfo() << "\n";
 
-
+		//store index into text texture vector
+		charList[i].setTextIndex(loadText(CHAR_BUTTON_WIDTH, buf.str()));
+	}
 }
 /* Check to see if a character is available to be displayed */
 bool CharList::isAvailable(int index) { return (picked[index] || showed[index]); }
@@ -231,5 +266,5 @@ int CharList::getIndex(std::string name) {
 		if (charList[i].getName() == name)
 			return i;
 	}
-
+	return -1;
 }

@@ -1,7 +1,4 @@
 #include "SDL.h"
-#include "LButton.h"
-#include "dungeon.h"
-#include "party.h"
 
 SDL_Renderer* gRenderer = NULL;
 TTF_Font *gFont = NULL;
@@ -72,6 +69,7 @@ bool init()
 	spriteClips.resize(6);
 	buttonSpriteClips.resize(12);
 	tileSpriteClips.resize(3);
+	texts.reserve(50);
 	charClips.resize(NUM_CHAR);
 	Buttons.resize(12);
 	charButtons.resize(3);
@@ -94,7 +92,7 @@ bool init()
 	state = MAIN_MENU;
 
 	current_dungeon = Dungeon(HARD);
-	chars = CharList(NULL);
+	chars = CharList(MAGIC_NUM);
 	return success;
 }
 
@@ -104,7 +102,7 @@ bool loadMedia()
 	bool success = true;
 
 	//Open the font
-	gFont = TTF_OpenFont("PT_sans.ttf", 18);
+	gFont = TTF_OpenFont("PT_sans.ttf", TEXT_SIZE);
 	if (gFont == NULL) {
 		printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
 		success = false;
@@ -228,6 +226,7 @@ bool loadMedia()
 		}
 
 	}
+	chars.loadSprites();
 	return success;
 }
 
@@ -236,7 +235,11 @@ void close() {
 	//buttonOneText.free();
 	//buttonTwoText.free();
 	//buttonThreeText.free();
-
+	//free all dynamically text generated
+	int i;
+	for (i = 0; i < texts.size(); i++) {
+		texts[i]->free();
+	}
 	//Free global font
 	TTF_CloseFont(gFont);
 	gFont = NULL;
@@ -403,8 +406,17 @@ void drawTravel() {
 
 }
 
-void drawTextInBox(int x, int y, int w, int h) {
 
+int loadText(int w, std::string text) {
+	SDL_Color textColor = { 255, 255, 255 };
+	LTexture* newText = new LTexture;
+	if (!newText->loadFromRenderedText(text, textColor)){
+		//failure
+	}
+	else {
+		texts.push_back(newText);
+	}
+	return (texts.size() - 1);
 }
 
 void drawDungeon() {/**/

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
+#include <sstream>
 
 #define TOTAL_MENU_BUTTONS	1
 
@@ -18,6 +19,11 @@
 //Textbox start
 #define TEXT_X			0
 #define TEXT_Y 			600
+
+//crucial
+#define MAGIC_NUM		123456789
+
+#define TEXT_SIZE		20
 
 //button constants
 #define BUTTON_WIDTH	60

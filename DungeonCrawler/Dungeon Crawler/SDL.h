@@ -5,6 +5,10 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include "lib.h"
+#include "LButton.h"
+#include "dungeon.h"
+#include "party.h"
+#include "LTexture.h"
 
 //Starts up SDL and creates window
 bool init();
@@ -17,6 +21,9 @@ void close();
 
 //Loads individual image as texture
 SDL_Texture* loadTexture(std::string path);
+
+//helper to draw text within constraints
+int loadText(int w, std::string text);
 
 //Used to draw background for a room
 bool drawRoom(RoomSize size);

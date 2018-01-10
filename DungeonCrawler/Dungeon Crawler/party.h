@@ -43,7 +43,8 @@ public:
 	int getMove();
 	int getHP();
 	int getAC();
-
+	int getTextIndex();
+	void setTextIndex(int index);
 	void render(int x, int y);
 	//Hit(int atk_roll, int dmg_roll);
 	//Attack()
@@ -64,7 +65,8 @@ private:
 	//somehow maintain lvlups
 	//items and whatnot
 	SDL_Rect sprite;
-	std::string info;
+	std::string info; 
+	int textIndex;
 };
 
 class Party {
@@ -92,6 +94,7 @@ public:
 	void unpickChar(int index);
 	void getChars();
 	int getIndex(std::string);
+	void loadSprites();
 private:
 	std::vector<Character> charList;
 	std::vector<bool> picked;

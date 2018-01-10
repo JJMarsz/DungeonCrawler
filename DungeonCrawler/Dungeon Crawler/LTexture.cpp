@@ -11,6 +11,7 @@ std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> buttonSpriteClips;
 std::vector<SDL_Rect> tileSpriteClips;
 std::vector<SDL_Rect> charClips;
+std::vector<LTexture*> texts;
 
 /* Texture class defenitions */
 LTexture::LTexture()
@@ -73,7 +74,7 @@ bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 	free();
 
 	//Render text surface
-	SDL_Surface* textSurface = TTF_RenderText_Solid(gFont, textureText.c_str(), textColor);
+	SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(gFont, textureText.c_str(), textColor, 180);
 	if (textSurface == NULL)
 	{
 		printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());

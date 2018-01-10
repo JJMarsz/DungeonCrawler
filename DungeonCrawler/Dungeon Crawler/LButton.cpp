@@ -140,7 +140,7 @@ void char2Clicked(int index) {
 
 void char3Clicked(int index) {
 	chars.pickChar(chars.getIndex(displayList[index].getName()));
-	state = TOWN;
+	state = ROOM_MAIN;
 }
 
 void emptyHandler(int index) {
