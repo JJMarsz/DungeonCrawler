@@ -23,14 +23,22 @@
 //crucial
 #define MAGIC_NUM		123456789
 
-#define TEXT_SIZE		20
+#define TEXT_SIZE		15
 
 //button constants
 #define BUTTON_WIDTH	60
 #define BUTTON_HEIGHT	60
 #define TOTAL_BUTTONS	12
 #define CHAR_BUTTON_WIDTH	200
-#define CHAR_BUTTON_HEIGHT	620
+#define CHAR_BUTTON_HEIGHT	520
+
+//quest stuff
+#define QUEST_Y				280
+#define QUEST_ONE_X			200
+#define QUEST_TWO_X			360
+#define QUEST_THREE_X		520
+#define QUEST_PAGE_WIDTH	80
+#define QUEST_PAGE_HEIGHT	115
 
 const int BUTTON_Y = SCREEN_HEIGHT - BUTTON_HEIGHT - 5;
 const int BUTTON_ONE_X = SCREEN_WIDTH - BUTTON_WIDTH - 18;
@@ -66,7 +74,9 @@ enum ScreenState
 	ROOM_MAIN,
 	ROOM_MAP,
 	DUNGEON,
-	TOWN
+	TOWN_QUEST_BOARD,
+	TOWN_SHOP,
+	TOWN_CHAR_UP
 };
 enum RoomSize
 {

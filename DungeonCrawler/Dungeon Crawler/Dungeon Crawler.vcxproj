@@ -128,6 +128,7 @@
     <ClCompile Include="party.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SDL.cpp" />
+    <ClCompile Include="Town.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dungeon.h" />
@@ -136,6 +137,7 @@
     <ClInclude Include="LTexture.h" />
     <ClInclude Include="party.h" />
     <ClInclude Include="SDL.h" />
+    <ClInclude Include="Town.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="char_info.txt" />

@@ -50,17 +50,17 @@ extern LTexture spriteSheetTexture;
 
 //button spritesheet along with clips
 extern LTexture buttonSpriteSheetTexture;
-
 extern LTexture mainMenu;
-
 extern LTexture tileSST;
-
 extern LTexture charSST;
+extern LTexture questboard;
+extern LTexture questSST;
 
 extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> buttonSpriteClips;
 extern std::vector<SDL_Rect> tileSpriteClips;
 extern std::vector<SDL_Rect> charClips;
+extern std::vector<SDL_Rect> questPageClips;
 
 extern std::vector<LTexture*> texts;
 

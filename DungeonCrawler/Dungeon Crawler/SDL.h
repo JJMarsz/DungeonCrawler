@@ -40,6 +40,9 @@ void drawDungeon();
 //used to draw and pick the characters
 void drawCharScreen();
 
+//draw quests and quest board
+void drawQuestBoard();
+
 //The window renderer
 extern SDL_Renderer* gRenderer;
 //Globally used font

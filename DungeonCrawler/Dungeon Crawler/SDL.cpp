@@ -75,13 +75,17 @@ bool init()
 	charButtons.resize(3);
 	menuButtons.resize(1);
 	menuButtons[0].setHandler(menuClicked);
-
-	for (int i = 0; i<TOTAL_BUTTONS; i++)
+	questButtons.resize(3);
+	questPageClips.resize(4);
+	int i;
+	for (i = 0; i<TOTAL_BUTTONS; i++)
 		Buttons[i].setConstraints(BUTTON_WIDTH, BUTTON_HEIGHT);
 	menuButtons[0].setConstraints(2*BUTTON_WIDTH, BUTTON_HEIGHT);
-	charButtons[0].setConstraints(CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
-	charButtons[1].setConstraints(CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
-	charButtons[2].setConstraints(CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	for (i = 0; i < 3; i++) 
+		charButtons[i].setConstraints(CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
+	for (i = 0; i < 3; i++)
+		questButtons[i].setConstraints(QUEST_PAGE_WIDTH, QUEST_PAGE_HEIGHT);
+	
 	//8,6 small
 	//16,12 med
 	//20, 15 large
@@ -224,9 +228,28 @@ bool loadMedia()
 			charClips[i].w = 200;
 			charClips[i].h = 200;
 		}
-
+		questButtons[0].setPosition(QUEST_ONE_X, QUEST_Y);
+		questButtons[1].setPosition(QUEST_TWO_X, QUEST_Y);
+		questButtons[2].setPosition(QUEST_THREE_X, QUEST_Y);
 	}
 	chars.loadSprites();
+	if (!questboard.loadFromFile("questboard.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	if (!questSST.loadFromFile("quest.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		for (int i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
+			questPageClips[i].x = QUEST_PAGE_WIDTH * i;
+			questPageClips[i].y = 0;
+			questPageClips[i].w = QUEST_PAGE_WIDTH;
+			questPageClips[i].h = QUEST_PAGE_HEIGHT;
+		}
+
+	}
 	return success;
 }
 
@@ -250,6 +273,8 @@ void close() {
 	tileSST.free();
 	charSST.free();
 	mainMenu.free();
+	questboard.free();
+	questSST.free();
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
@@ -461,4 +486,21 @@ void drawCharScreen() {
 		charButtons[i].render();
 		displayList[i].render(50 + 250 * i, 50);
 	}
+}
+
+void drawQuestBoard() {
+	SDL_Rect topViewport;
+	topViewport.x = 0;
+	topViewport.y = 0;
+	topViewport.w = SCREEN_WIDTH;
+	topViewport.h = SCREEN_HEIGHT;
+	SDL_RenderSetViewport(gRenderer, &topViewport);
+	//make it gray
+	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	SDL_SetRenderDrawColor(gRenderer, 0xA0, 0xA0, 0xA0, 0xFF);
+	SDL_RenderFillRect(gRenderer, &barRect);
+
+	questboard.render(0, 0, NULL);
+	for (int i = 0; i < 3; i++)
+		questButtons[i].render();
 }

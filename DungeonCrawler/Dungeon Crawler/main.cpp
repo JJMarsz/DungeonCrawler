@@ -10,6 +10,7 @@
 
 int main(int argc, char* args[])
 {
+	int i;
 	//Start up SDL and create window
 	if (!init())
 	{
@@ -44,28 +45,38 @@ int main(int argc, char* args[])
 					switch (state) {
 					case MAIN_MENU:
 						//Handle button events
-						for (int i = 0; i < TOTAL_MENU_BUTTONS; ++i)
+						for (i = 0; i < TOTAL_MENU_BUTTONS; ++i)
 						{
 							menuButtons[i].handleEvent(&e, i);
 						}
 						break;
 					case PICK_CHAR1:
-						for (int i = 0; i < 3; ++i){
+						for (i = 0; i < 3; ++i){
 							charButtons[i].handleEvent(&e, i);
 						}
 						break;
 					case PICK_CHAR2:
-						for (int i = 0; i < 3; ++i) {
+						for (i = 0; i < 3; ++i) {
 							charButtons[i].handleEvent(&e, i);
 						}
 						break;
 					case PICK_CHAR3:
-						for (int i = 0; i < 3; ++i) {
+						for (i = 0; i < 3; ++i) {
 							charButtons[i].handleEvent(&e, i);
 						}
 						break;
+					case TOWN_QUEST_BOARD:
+						for (i = 0; i < 3; ++i) {
+							questButtons[i].handleEvent(&e, i);
+						}
+						break;
+					case TOWN_CHAR_UP:
+
+						break;
+					case TOWN_SHOP:
+
+						break;
 					case ROOM_MAIN:
-						//Handle button events
 						for (int i = 0; i < TOTAL_BUTTONS; ++i)
 						{
 							Buttons[i].handleEvent(&e, i);
@@ -98,6 +109,15 @@ int main(int argc, char* args[])
 					drawCharScreen();
 					break;
 				case NEW_GAME:
+
+					break;
+				case TOWN_QUEST_BOARD:
+					drawQuestBoard();
+					break;
+				case TOWN_CHAR_UP:
+
+					break;
+				case TOWN_SHOP:
 
 					break;
 				case TRAVEL:

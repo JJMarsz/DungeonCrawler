@@ -5,6 +5,7 @@
 std::vector<LButton> Buttons;
 std::vector<LButton> menuButtons;
 std::vector<LButton> charButtons;
+std::vector<LButton> questButtons;
 
 /* Button class defenitions */
 LButton::LButton()
@@ -79,10 +80,12 @@ void LButton::setSprite(LButtonSprite newsprite) {
 
 void LButton::render() {
 	//Show current button sprite
-	if(state == ROOM_MAIN)
+	if (state == ROOM_MAIN)
 		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite]);
-	else if(state == MAIN_MENU)
-		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite+4]);
+	else if (state == MAIN_MENU)
+		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite + 4]);
+	else if (state == TOWN_QUEST_BOARD)
+		questSST.render(mPosition.x, mPosition.y, &questPageClips[mCurrentSprite]);
 	else
 		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite + 8]);
 
@@ -116,6 +119,7 @@ void menuClicked(int index) {
 	state = PICK_CHAR1;
 }
 
+/* Character selection */
 void char1Clicked(int index) {
 	charButtons[0].setHandler(char2Clicked);
 	charButtons[1].setHandler(char2Clicked);
@@ -140,9 +144,24 @@ void char2Clicked(int index) {
 
 void char3Clicked(int index) {
 	chars.pickChar(chars.getIndex(displayList[index].getName()));
-	state = ROOM_MAIN;
+	//initTown();
+	state = TOWN_QUEST_BOARD;
 }
 
+/* Town transition functions */
+void gotoQuest(int index) {
+	state = TOWN_QUEST_BOARD;
+}
+
+void gotoCharUp(int index) {
+	state = TOWN_CHAR_UP;
+}
+
+void gotoShop(int index) {
+	state = TOWN_SHOP;
+}
+
+/* Used primarily for testing */
 void emptyHandler(int index) {
 	return;
 }
