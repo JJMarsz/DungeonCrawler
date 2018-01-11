@@ -75,6 +75,10 @@ bool init()
 	charButtons.resize(3);
 	menuButtons.resize(1);
 	menuButtons[0].setHandler(menuClicked);
+	townButtons.resize(2);
+	townButtons[0].setHandler(gotoShop);
+	townButtons[1].setHandler(gotoCharUp);
+	townButtonClips.resize(8);
 	questButtons.resize(3);
 	questPageClips.resize(4);
 	int i;
@@ -85,6 +89,8 @@ bool init()
 		charButtons[i].setConstraints(CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
 	for (i = 0; i < 3; i++)
 		questButtons[i].setConstraints(QUEST_PAGE_WIDTH, QUEST_PAGE_HEIGHT);
+	for (i = 0; i < 2; i++)
+		townButtons[i].setConstraints(TOWN_BUTTON_WIDTH, TOWN_BUTTON_HEIGHT);
 	
 	//8,6 small
 	//16,12 med
@@ -102,6 +108,7 @@ bool init()
 
 bool loadMedia()
 {
+	int i;
 	//Loading success flag
 	bool success = true;
 
@@ -153,21 +160,21 @@ bool loadMedia()
 	}
 	else {
 		//Set sprites
-		for (int i = 0; i < BUTTON_SPRITE_TOTAL; ++i)
+		for (i = 0; i < BUTTON_SPRITE_TOTAL; ++i)
 		{
 			buttonSpriteClips[i].x = 0;
 			buttonSpriteClips[i].y = i * 60;
 			buttonSpriteClips[i].w = BUTTON_WIDTH;
 			buttonSpriteClips[i].h = BUTTON_HEIGHT;
 		}
-		for (int i = 0; i < BUTTON_SPRITE_TOTAL; ++i)
+		for (i = 0; i < BUTTON_SPRITE_TOTAL; ++i)
 		{
 			buttonSpriteClips[i+4].x = 0;
 			buttonSpriteClips[i+4].y = (i+4) * 60;
 			buttonSpriteClips[i+4].w = 2*BUTTON_WIDTH;
 			buttonSpriteClips[i+4].h = BUTTON_HEIGHT;
 		}
-		for (int i = 0; i < BUTTON_SPRITE_TOTAL; ++i) 
+		for (i = 0; i < BUTTON_SPRITE_TOTAL; ++i) 
 		{
 			buttonSpriteClips[i+8].x = 2 * BUTTON_WIDTH + (i)*200;
 			buttonSpriteClips[i+8].y = 0;
@@ -222,7 +229,7 @@ bool loadMedia()
 		success = false;
 	}
 	else {
-		for (int i = 0; i < NUM_CHAR; i++) {
+		for (i = 0; i < NUM_CHAR; i++) {
 			charClips[i].x = i*200;
 			charClips[i].y = 0;
 			charClips[i].w = 200;
@@ -232,7 +239,33 @@ bool loadMedia()
 		questButtons[1].setPosition(QUEST_TWO_X, QUEST_Y);
 		questButtons[2].setPosition(QUEST_THREE_X, QUEST_Y);
 	}
-	chars.loadSprites();
+	chars.loadSprites(); 
+	if (!townmenu.loadFromFile("townmenu.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	if (!townButtonSST.loadFromFile("townbuttons.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		//left button
+		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
+			townButtonClips[i].x = 0;
+			townButtonClips[i].y = i * 50;
+			townButtonClips[i].w = 100;
+			townButtonClips[i].h = 50;
+		}
+		//right button
+		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
+			townButtonClips[i+4].x = 100;
+			townButtonClips[i+4].y = i * 50;
+			townButtonClips[i+4].w = 100;
+			townButtonClips[i+4].h = 50;
+		}
+		townButtons[0].setPosition(25, SCREEN_HEIGHT - 60);
+		townButtons[1].setPosition(SCREEN_WIDTH - 125, SCREEN_HEIGHT - 60);
+	}
 	if (!questboard.loadFromFile("questboard.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
@@ -242,7 +275,7 @@ bool loadMedia()
 		success = false;
 	}
 	else {
-		for (int i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
+		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
 			questPageClips[i].x = QUEST_PAGE_WIDTH * i;
 			questPageClips[i].y = 0;
 			questPageClips[i].w = QUEST_PAGE_WIDTH;
@@ -255,9 +288,6 @@ bool loadMedia()
 
 void close() {
 	//Free loaded images
-	//buttonOneText.free();
-	//buttonTwoText.free();
-	//buttonThreeText.free();
 	//free all dynamically text generated
 	int i;
 	for (i = 0; i < texts.size(); i++) {
@@ -273,6 +303,8 @@ void close() {
 	tileSST.free();
 	charSST.free();
 	mainMenu.free();
+	townmenu.free();
+	townButtonSST.free();
 	questboard.free();
 	questSST.free();
 	//Destroy window	
@@ -312,6 +344,19 @@ SDL_Texture* loadTexture(std::string path)
 	}
 
 	return newTexture;
+}
+
+
+int loadText(int w, std::string text) {
+	SDL_Color textColor = { 255, 255, 255 };
+	LTexture* newText = new LTexture;
+	if (!newText->loadFromRenderedText(text, textColor)) {
+		//failure
+	}
+	else {
+		texts.push_back(newText);
+	}
+	return (texts.size() - 1);
 }
 
 /* drawing helper functions */
@@ -427,23 +472,6 @@ void drawMainMenu() {
 	menuButtons[0].render();
 }
 
-void drawTravel() {
-
-}
-
-
-int loadText(int w, std::string text) {
-	SDL_Color textColor = { 255, 255, 255 };
-	LTexture* newText = new LTexture;
-	if (!newText->loadFromRenderedText(text, textColor)){
-		//failure
-	}
-	else {
-		texts.push_back(newText);
-	}
-	return (texts.size() - 1);
-}
-
 void drawDungeon() {/**/
 	SDL_Rect topViewport;
 	topViewport.x = 0;
@@ -503,4 +531,30 @@ void drawQuestBoard() {
 	questboard.render(0, 0, NULL);
 	for (int i = 0; i < 3; i++)
 		questButtons[i].render();
+}
+
+void drawShop() {
+
+}
+
+void drawCharUp() {
+
+}
+
+void drawPartyUp() {
+
+}
+
+void drawTownMenu() {
+	int i;
+	townmenu.render(0, SCREEN_HEIGHT - 60, NULL);
+	state = TOWN_BUTTON_LEFT;
+	townButtons[0].render();
+	state = TOWN_BUTTON_RIGHT;
+	townButtons[1].render();
+	//render text gold amount, xp amount, and completed dungeons
+
+
+
+	//render character icons for selected characters
 }

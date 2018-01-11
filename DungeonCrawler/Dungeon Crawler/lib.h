@@ -32,6 +32,10 @@
 #define CHAR_BUTTON_WIDTH	200
 #define CHAR_BUTTON_HEIGHT	520
 
+//town menu and button stuff
+#define TOWN_BUTTON_WIDTH	100
+#define TOWN_BUTTON_HEIGHT	50
+
 //quest stuff
 #define QUEST_Y				280
 #define QUEST_ONE_X			200
@@ -70,13 +74,15 @@ enum ScreenState
 	PICK_CHAR2,
 	PICK_CHAR3,
 	NEW_GAME,
-	TRAVEL,
 	ROOM_MAIN,
 	ROOM_MAP,
 	DUNGEON,
 	TOWN_QUEST_BOARD,
 	TOWN_SHOP,
-	TOWN_CHAR_UP
+	TOWN_CHAR_UP,
+	TOWN_PARTY_UP,
+	TOWN_BUTTON_LEFT,
+	TOWN_BUTTON_RIGHT
 };
 enum RoomSize
 {

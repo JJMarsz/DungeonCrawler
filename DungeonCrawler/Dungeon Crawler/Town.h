@@ -10,5 +10,7 @@ public:
 	~Town();
 };
 
+
+void initTown();
 #endif
 

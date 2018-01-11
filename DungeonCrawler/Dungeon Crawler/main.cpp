@@ -69,12 +69,23 @@ int main(int argc, char* args[])
 						for (i = 0; i < 3; ++i) {
 							questButtons[i].handleEvent(&e, i);
 						}
+						townButtons[0].handleEvent(&e, i);
+						townButtons[1].handleEvent(&e, i);
 						break;
 					case TOWN_CHAR_UP:
 
+						townButtons[0].handleEvent(&e, i);
+						townButtons[1].handleEvent(&e, i);
+						break;
+					case TOWN_PARTY_UP:
+
+						townButtons[0].handleEvent(&e, i);
+						townButtons[1].handleEvent(&e, i);
 						break;
 					case TOWN_SHOP:
 
+						townButtons[0].handleEvent(&e, i);
+						townButtons[1].handleEvent(&e, i);
 						break;
 					case ROOM_MAIN:
 						for (int i = 0; i < TOTAL_BUTTONS; ++i)
@@ -113,15 +124,26 @@ int main(int argc, char* args[])
 					break;
 				case TOWN_QUEST_BOARD:
 					drawQuestBoard();
+					drawTownMenu();
+					state = TOWN_QUEST_BOARD;
 					break;
 				case TOWN_CHAR_UP:
+					drawCharUp();
+					drawTownMenu();
+					state = TOWN_CHAR_UP;
 
 					break;
 				case TOWN_SHOP:
+					drawShop();
+					drawTownMenu();
+					state = TOWN_SHOP;
 
 					break;
-				case TRAVEL:
-					//drawTravel();
+				case TOWN_PARTY_UP:
+					drawPartyUp();
+					drawTownMenu();
+					state = TOWN_PARTY_UP;
+
 					break;
 				case DUNGEON:
 					drawDungeon();

@@ -53,6 +53,8 @@ extern LTexture buttonSpriteSheetTexture;
 extern LTexture mainMenu;
 extern LTexture tileSST;
 extern LTexture charSST;
+extern LTexture townmenu;
+extern LTexture townButtonSST;
 extern LTexture questboard;
 extern LTexture questSST;
 
@@ -61,6 +63,7 @@ extern std::vector<SDL_Rect> buttonSpriteClips;
 extern std::vector<SDL_Rect> tileSpriteClips;
 extern std::vector<SDL_Rect> charClips;
 extern std::vector<SDL_Rect> questPageClips;
+extern std::vector<SDL_Rect> townButtonClips;
 
 extern std::vector<LTexture*> texts;
 

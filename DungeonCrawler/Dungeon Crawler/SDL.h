@@ -43,6 +43,18 @@ void drawCharScreen();
 //draw quests and quest board
 void drawQuestBoard();
 
+//draws shop
+void drawShop();
+
+//draws character upgrade/training place
+void drawCharUp();
+
+//draw party upgrade
+void drawPartyUp();
+
+//draws the bottom menu for town activities
+void drawTownMenu();
+
 //The window renderer
 extern SDL_Renderer* gRenderer;
 //Globally used font

@@ -6,6 +6,7 @@ std::vector<LButton> Buttons;
 std::vector<LButton> menuButtons;
 std::vector<LButton> charButtons;
 std::vector<LButton> questButtons;
+std::vector<LButton> townButtons;
 
 /* Button class defenitions */
 LButton::LButton()
@@ -86,6 +87,16 @@ void LButton::render() {
 		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite + 4]);
 	else if (state == TOWN_QUEST_BOARD)
 		questSST.render(mPosition.x, mPosition.y, &questPageClips[mCurrentSprite]);
+	else if (state == TOWN_SHOP)
+		;
+	else if (state == TOWN_CHAR_UP)
+		;
+	else if (state == TOWN_PARTY_UP)
+		;
+	else if (state == TOWN_BUTTON_LEFT)
+		townButtonSST.render(mPosition.x, mPosition.y, &townButtonClips[mCurrentSprite]);
+	else if (state == TOWN_BUTTON_RIGHT)
+		townButtonSST.render(mPosition.x, mPosition.y, &townButtonClips[mCurrentSprite+4]);
 	else
 		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite + 8]);
 
@@ -151,14 +162,26 @@ void char3Clicked(int index) {
 /* Town transition functions */
 void gotoQuest(int index) {
 	state = TOWN_QUEST_BOARD;
+	townButtons[0].setHandler(gotoShop);
+	townButtons[1].setHandler(gotoCharUp);
 }
 
 void gotoCharUp(int index) {
 	state = TOWN_CHAR_UP;
+	townButtons[0].setHandler(gotoQuest);
+	townButtons[1].setHandler(gotoPartyUp);
+}
+
+void gotoPartyUp(int index) {
+	state = TOWN_PARTY_UP;
+	townButtons[0].setHandler(gotoCharUp);
+	townButtons[1].setHandler(gotoShop);
 }
 
 void gotoShop(int index) {
 	state = TOWN_SHOP;
+	townButtons[0].setHandler(gotoPartyUp);
+	townButtons[1].setHandler(gotoQuest);
 }
 
 /* Used primarily for testing */

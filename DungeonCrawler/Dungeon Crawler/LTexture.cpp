@@ -6,6 +6,8 @@ LTexture mainMenu;
 LTexture spriteSheetTexture;
 LTexture tileSST;
 LTexture charSST;
+LTexture townmenu;
+LTexture townButtonSST;
 LTexture questboard;
 LTexture questSST;
 
@@ -13,6 +15,7 @@ std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> buttonSpriteClips;
 std::vector<SDL_Rect> tileSpriteClips;
 std::vector<SDL_Rect> charClips;
+std::vector<SDL_Rect> townButtonClips;
 std::vector<SDL_Rect> questPageClips;
 std::vector<LTexture*> texts;
 
