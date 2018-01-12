@@ -7,6 +7,7 @@ std::vector<LButton> Buttons;
 std::vector<LButton> menuButtons;
 std::vector<LButton> charButtons;
 std::vector<LButton> questButtons;
+std::vector<LButton> acceptrejectButtons;
 std::vector<LButton> townButtons;
 
 /* Button class defenitions */
@@ -82,24 +83,44 @@ void LButton::setSprite(LButtonSprite newsprite) {
 
 void LButton::render() {
 	//Show current button sprite
-	if (state == ROOM_MAIN)
+	switch (state) {
+	case ROOM_MAIN:
 		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite]);
-	else if (state == MAIN_MENU)
+		break;
+	case MAIN_MENU:
 		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite + 4]);
-	else if (state == TOWN_QUEST_BOARD)
+		break;
+	case SELECTED_QUEST_ACCEPT:
+		acceptrejectSST.render(mPosition.x, mPosition.y, &acceptrejectClips[mCurrentSprite]);
+		break;
+	case SELECTED_QUEST_REJECT:
+		acceptrejectSST.render(mPosition.x, mPosition.y, &acceptrejectClips[mCurrentSprite+4]);
+		break;
+	case SELECTED_QUEST:
+	case TOWN_QUEST_BOARD:
 		questSST.render(mPosition.x, mPosition.y, &questPageClips[mCurrentSprite]);
-	else if (state == TOWN_SHOP)
-		;
-	else if (state == TOWN_CHAR_UP)
-		;
-	else if (state == TOWN_PARTY_UP)
-		;
-	else if (state == TOWN_BUTTON_LEFT)
+		break;
+	case TOWN_CHAR_UP:
+
+		break;
+	case TOWN_PARTY_UP:
+
+		break;
+	case TOWN_SHOP:
+
+		break;
+	case TOWN_BUTTON_LEFT:
 		townButtonSST.render(mPosition.x, mPosition.y, &townButtonClips[mCurrentSprite]);
-	else if (state == TOWN_BUTTON_RIGHT)
-		townButtonSST.render(mPosition.x, mPosition.y, &townButtonClips[mCurrentSprite+4]);
-	else
+		break;
+	case TOWN_BUTTON_RIGHT:
+		townButtonSST.render(mPosition.x, mPosition.y, &townButtonClips[mCurrentSprite + 4]);
+		break;
+	case PICK_CHAR1:
+	case PICK_CHAR2:
+	case PICK_CHAR3:
 		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite + 8]);
+		break;
+	};
 
 }
 
@@ -156,6 +177,12 @@ void char2Clicked(int index) {
 
 void char3Clicked(int index) {
 	chars.pickChar(chars.getIndex(displayList[index].getName()));
+	chars.unshowChar();
+	for (int i = 0; i < chars.size(); i++) {
+		if (!chars.isAvailable(i)) {
+			gParty.addChar(i);
+		}
+	}
 	//initTown();
 	state = TOWN_QUEST_BOARD;
 }
@@ -193,6 +220,17 @@ void gotoShop(int index) {
 	rightText.loadFromRenderedText("Quests", textColor, 200);
 }
 
+void questInfo(int index) {
+	state = SELECTED_QUEST;
+}
+
+void questAccept(int index) {
+	state = DUNGEON;
+}
+
+void questReject(int index) {
+	state = TOWN_QUEST_BOARD;
+}
 /* Used primarily for testing */
 void emptyHandler(int index) {
 	return;

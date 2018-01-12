@@ -331,7 +331,7 @@ int Dungeon::getHeight() { return height; }
 /* Tile class defenitions */
 //Tile defines each individual (x,y) location in the map
 //contains info for whatever the tile represents
-Tile::Tile(Encounter type_) {
+Tile::Tile(EncounterType type_) {
 	type = type_;
 	prev = NULL;
 	x = -1;
@@ -352,8 +352,8 @@ int Tile::getX() { return x; }
 int Tile::getY() { return y; }
 void Tile::setPos(int x_, int y_) {x = x_;y = y_;}
 
-Encounter Tile::getType() {return type;}
-void Tile::setType(Encounter type_) { type = type_; }
+EncounterType Tile::getType() {return type;}
+void Tile::setType(EncounterType type_) { type = type_; }
 
 void Tile::operator=(const Tile& t) {
 	type = t.type;

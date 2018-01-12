@@ -127,6 +127,7 @@
     <ClCompile Include="LTexture.cpp" />
     <ClCompile Include="party.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Quest.cpp" />
     <ClCompile Include="SDL.cpp" />
     <ClCompile Include="Town.cpp" />
   </ItemGroup>
@@ -136,6 +137,7 @@
     <ClInclude Include="lib.h" />
     <ClInclude Include="LTexture.h" />
     <ClInclude Include="party.h" />
+    <ClInclude Include="Quest.h" />
     <ClInclude Include="SDL.h" />
     <ClInclude Include="Town.h" />
   </ItemGroup>

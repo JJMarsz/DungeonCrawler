@@ -62,6 +62,9 @@ void char2Clicked(int index);
 void char3Clicked(int index);
 
 void gotoQuest(int index);
+void questInfo(int index);
+void questAccept(int index);
+void questReject(int index);
 void gotoCharUp(int index);
 void gotoPartyUp(int index);
 void gotoShop(int index);
@@ -73,5 +76,6 @@ extern std::vector<LButton> menuButtons;
 extern std::vector<LButton> charButtons;
 extern std::vector<LButton> questButtons;
 extern std::vector<LButton> townButtons;
+extern std::vector<LButton> acceptrejectButtons;
 
 #endif

@@ -4,7 +4,7 @@
 #include "lib.h"
 #include "LButton.h"
 
-enum Encounter {
+enum EncounterType {
 	NONE,
 	PATH,
 	ITEM,
@@ -29,18 +29,18 @@ enum Direction {
 
 class Tile {
 public:
-	Tile(Encounter type_);
+	Tile(EncounterType type_);
 	Tile();
 	void operator=(const Tile& t);
 	void setPrev(Tile* prev_);
 	Tile* getPrev();
-	Encounter getType();
-	void setType(Encounter type_);
+	EncounterType getType();
+	void setType(EncounterType type_);
 	int getX();
 	int getY();
 	void setPos(int x_, int y_);
 private:
-	Encounter type;
+	EncounterType type;
 	Tile* prev;
 	int x, y;
 	//moblist

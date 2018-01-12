@@ -72,12 +72,14 @@ private:
 class Party {
 public:
 	Party();
-	bool addChar(Character newChar);
+	bool addChar(int index);
 	bool remChar(std::string name);
 	bool moveParty(int x, int y);
+	int getCompleted();
 
 private:
 	int numChar;
+	int completed;
 	std::vector<Character> charList;
 	int party_x, party_y;
 };
@@ -95,6 +97,8 @@ public:
 	void getChars();
 	int getIndex(std::string);
 	void loadSprites();
+	int size();
+	Character getChar(int index);
 private:
 	std::vector<Character> charList;
 	std::vector<bool> picked;

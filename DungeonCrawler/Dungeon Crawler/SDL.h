@@ -43,6 +43,9 @@ void drawCharScreen();
 //draw quests and quest board
 void drawQuestBoard();
 
+//draws quest info
+void drawQuestInfo();
+
 //draws shop
 void drawShop();
 

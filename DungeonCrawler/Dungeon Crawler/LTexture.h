@@ -20,6 +20,12 @@ public:
 	//Creates image from font string
 	bool loadFromRenderedText(std::string textureText, SDL_Color textColor_, int w);
 
+	//Set blending
+	void setBlendMode(SDL_BlendMode blending);
+
+	//Set alpha modulation
+	void setAlpha(Uint8 alpha);
+
 	//Deallocates texture
 	void free();
 
@@ -57,6 +63,8 @@ extern LTexture townmenu;
 extern LTexture townButtonSST;
 extern LTexture questboard;
 extern LTexture questSST;
+extern LTexture questinfo;
+extern LTexture acceptrejectSST;
 extern LTexture shop;
 extern LTexture training;
 extern LTexture upgrades;
@@ -66,6 +74,7 @@ extern std::vector<SDL_Rect> buttonSpriteClips;
 extern std::vector<SDL_Rect> tileSpriteClips;
 extern std::vector<SDL_Rect> charClips;
 extern std::vector<SDL_Rect> questPageClips;
+extern std::vector<SDL_Rect> acceptrejectClips;
 extern std::vector<SDL_Rect> townButtonClips;
 
 extern std::vector<LTexture*> texts;

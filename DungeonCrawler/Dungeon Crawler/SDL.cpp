@@ -1,4 +1,5 @@
 #include "SDL.h"
+#include "Quest.h"
 
 SDL_Renderer* gRenderer = NULL;
 TTF_Font *gFont = NULL;
@@ -81,6 +82,9 @@ bool init()
 	townButtonClips.resize(8);
 	questButtons.resize(3);
 	questPageClips.resize(4);
+	current_quests.resize(3);
+	acceptrejectClips.resize(8);
+	acceptrejectButtons.resize(2);
 	int i;
 	for (i = 0; i<TOTAL_BUTTONS; i++)
 		Buttons[i].setConstraints(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -91,6 +95,8 @@ bool init()
 		questButtons[i].setConstraints(QUEST_PAGE_WIDTH, QUEST_PAGE_HEIGHT);
 	for (i = 0; i < 2; i++)
 		townButtons[i].setConstraints(TOWN_BUTTON_WIDTH, TOWN_BUTTON_HEIGHT);
+	for (i = 0; i < 2; i++)
+		acceptrejectButtons[i].setConstraints(70, 30);
 	
 	//8,6 small
 	//16,12 med
@@ -289,6 +295,31 @@ bool loadMedia()
 		}
 
 	}
+	if (!acceptrejectSST.loadFromFile("acceptreject.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
+			acceptrejectClips[i].x = 0;
+			acceptrejectClips[i].y = i * 30;
+			acceptrejectClips[i].w = 70;
+			acceptrejectClips[i].h = 30;
+		}
+		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
+			acceptrejectClips[i+4].x = 70;
+			acceptrejectClips[i+4].y = i * 30;
+			acceptrejectClips[i+4].w = 70;
+			acceptrejectClips[i+4].h = 30;
+		}
+		acceptrejectButtons[0].setPosition(275, 377);
+		acceptrejectButtons[1].setPosition(455, 377);
+	}
+	if (!questinfo.loadFromFile("questinfo.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	loadQuests();
 	if (!shop.loadFromFile("shop.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
@@ -327,6 +358,8 @@ void close() {
 	townButtonSST.free();
 	questboard.free();
 	questSST.free();
+	questinfo.free();
+	acceptrejectSST.free();
 	upgrades.free();
 	shop.free();
 	training.free();
@@ -506,15 +539,16 @@ void drawDungeon() {/**/
 	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_SetRenderDrawColor(gRenderer, 0xA0, 0xA0, 0xA0, 0xFF);
 	SDL_RenderFillRect(gRenderer, &barRect);
+	int start_x = (SCREEN_WIDTH - current_dungeon.getWidth()*50) / 2;
 	for (int x = 0; x < current_dungeon.getWidth(); x++) {
 		for (int y = 0; y < current_dungeon.getHeight(); y++) {
 			if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == PATH) {
-				tileSST.render(x * 50, y * 50, &tileSpriteClips[1]);
+				tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[1]);
 			}
 			else if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == DEADEND)
-				tileSST.render(x * 50, y * 50, &tileSpriteClips[2]);
+				tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[2]);
 			else
-				tileSST.render(x * 50, y * 50, &tileSpriteClips[0]);
+				tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[0]);
 
 		}
 	}
@@ -615,4 +649,14 @@ void drawTownMenu() {
 
 
 	//render character icons for selected characters
+}
+
+void drawQuestInfo() {
+	
+
+	questinfo.render(262, 150, NULL);
+	state = SELECTED_QUEST_ACCEPT;
+	acceptrejectButtons[0].render();
+	state = SELECTED_QUEST_REJECT;
+	acceptrejectButtons[1].render();
 }

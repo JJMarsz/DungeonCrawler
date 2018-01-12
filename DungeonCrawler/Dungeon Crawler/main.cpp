@@ -42,6 +42,7 @@ int main(int argc, char* args[])
 					{
 						quit = true;
 					}
+					//cicking state machine
 					switch (state) {
 					case MAIN_MENU:
 						//Handle button events
@@ -69,23 +70,27 @@ int main(int argc, char* args[])
 						for (i = 0; i < 3; ++i) {
 							questButtons[i].handleEvent(&e, i);
 						}
-						townButtons[0].handleEvent(&e, i);
-						townButtons[1].handleEvent(&e, i);
+						townButtons[0].handleEvent(&e, 0);
+						townButtons[1].handleEvent(&e, 1);
+						break;
+					case SELECTED_QUEST:
+						acceptrejectButtons[0].handleEvent(&e, 0);
+						acceptrejectButtons[1].handleEvent(&e, 1);
 						break;
 					case TOWN_CHAR_UP:
 
-						townButtons[0].handleEvent(&e, i);
-						townButtons[1].handleEvent(&e, i);
+						townButtons[0].handleEvent(&e, 0);
+						townButtons[1].handleEvent(&e, 1);
 						break;
 					case TOWN_PARTY_UP:
 
-						townButtons[0].handleEvent(&e, i);
-						townButtons[1].handleEvent(&e, i);
+						townButtons[0].handleEvent(&e, 0);
+						townButtons[1].handleEvent(&e, 1);
 						break;
 					case TOWN_SHOP:
 
-						townButtons[0].handleEvent(&e, i);
-						townButtons[1].handleEvent(&e, i);
+						townButtons[0].handleEvent(&e, 0);
+						townButtons[1].handleEvent(&e, 1);
 						break;
 					case ROOM_MAIN:
 						for (int i = 0; i < TOTAL_BUTTONS; ++i)
@@ -96,8 +101,6 @@ int main(int argc, char* args[])
 					default:
 						break;
 					}
-
-
 				}
 
 				//Clear screen
@@ -106,6 +109,7 @@ int main(int argc, char* args[])
 
 				//Poll keyboard state
 				const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
+				//drawing state machine
 				switch (state) {
 				case MAIN_MENU:
 					drawMainMenu();
@@ -126,6 +130,13 @@ int main(int argc, char* args[])
 					drawQuestBoard();
 					drawTownMenu();
 					state = TOWN_QUEST_BOARD;
+					break;
+				case SELECTED_QUEST:
+					drawQuestBoard();
+					drawTownMenu();
+					state = SELECTED_QUEST;
+					drawQuestInfo();
+					state = SELECTED_QUEST;
 					break;
 				case TOWN_CHAR_UP:
 					drawCharUp();

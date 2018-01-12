@@ -10,6 +10,8 @@ LTexture townmenu;
 LTexture townButtonSST;
 LTexture questboard;
 LTexture questSST;
+LTexture acceptrejectSST;
+LTexture questinfo;
 LTexture leftText;
 LTexture rightText;
 LTexture shop;
@@ -22,6 +24,7 @@ std::vector<SDL_Rect> tileSpriteClips;
 std::vector<SDL_Rect> charClips;
 std::vector<SDL_Rect> townButtonClips;
 std::vector<SDL_Rect> questPageClips;
+std::vector<SDL_Rect> acceptrejectClips;
 std::vector<LTexture*> texts;
 
 /* Texture class defenitions */
@@ -112,6 +115,14 @@ bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 
 	//Return success
 	return mTexture != NULL;
+}
+
+void LTexture::setBlendMode(SDL_BlendMode blending) {
+
+}
+
+void LTexture::setAlpha(Uint8 alpha) {
+
 }
 
 void LTexture::free()

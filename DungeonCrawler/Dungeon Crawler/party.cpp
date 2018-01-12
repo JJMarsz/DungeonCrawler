@@ -8,6 +8,7 @@ CharList chars;
 
 std::vector<Character> displayList;
 
+/* Char clas definitions */
 Character::Character(std::string name_, int str_, int dex_, int con_, int intel_, 
 						      int wis_, int cha_, int mov_, int health_, int AC_) {
 	name = name_;
@@ -54,6 +55,7 @@ void Character::render(int x, int y) {
 
 }
 
+/* Party calss definitions */
 Party::Party() {
 	numChar = 0;
 	party_x = -1;
@@ -61,9 +63,11 @@ Party::Party() {
 	charList.resize(0);
 }
 
-bool Party::addChar(Character newChar) {
+int Party::getCompleted() { return completed; }
+
+bool Party::addChar(int index) {
 	if (numChar < 3)
-		charList.push_back(newChar);
+		charList.push_back(chars.getChar(index));
 	else
 		return false;
 	numChar++;
@@ -90,6 +94,7 @@ bool Party::moveParty(int x, int y) {
 }
 
 
+/* Charlist class definiitons */
 CharList::CharList() {
 	//quell compiler bitching
 }
@@ -107,7 +112,7 @@ CharList::CharList(int magic) {
 		0,	//int
 		1,	//wis
 		0,	//cha
-		30,	//movement
+		6,	//movement
 		20,	//Health
 		15	//AC
 		},
@@ -118,7 +123,7 @@ CharList::CharList(int magic) {
 		-1,	//int
 		0,	//wis
 		-1,	//cha
-		30,	//movement
+		6,	//movement
 		25,	//Health
 		14	//AC
 	},
@@ -129,7 +134,7 @@ CharList::CharList(int magic) {
 		1,	//int
 		3,	//wis
 		0,	//cha
-		30,	//movement
+		6,	//movement
 		18,	//Health
 		16	//AC
 	},
@@ -140,7 +145,7 @@ CharList::CharList(int magic) {
 		2,	//int
 		2,	//wis
 		1,	//cha
-		30,	//movement
+		6,	//movement
 		13,	//Health
 		14	//AC
 	},
@@ -151,7 +156,7 @@ CharList::CharList(int magic) {
 		1,	//int
 		3,	//wis
 		0,	//cha
-		35,	//movement
+		7,	//movement
 		18,	//Health
 		14	//AC
 	}
@@ -245,6 +250,10 @@ void CharList::unshowChar() {
 }
 /* Unpick a character */
 void CharList::unpickChar(int index) { picked[index] = false; }
+
+Character CharList::getChar(int index) { return charList[index]; }
+
+int CharList::size() { return charList.size(); }
 
 void CharList::getChars() {
 	//pick 3 characters

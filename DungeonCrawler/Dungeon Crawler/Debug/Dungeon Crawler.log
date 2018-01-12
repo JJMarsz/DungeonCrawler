@@ -1,14 +1,2 @@
-﻿  SDL.cpp
-c:\users\jj\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(311): warning C4018: '<': signed/unsigned mismatch
-c:\users\jj\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(525): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jj\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(605): warning C4101: 'i': unreferenced local variable
-  LTexture.cpp
-  Generating Code...
-  Compiling...
-  party.cpp
-  main.cpp
-  dungeon.cpp
-c:\users\jj\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(59): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  LButton.cpp
-  Generating Code...
+﻿  Quest.cpp
   Dungeon Crawler.vcxproj -> C:\Users\JJ\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe
