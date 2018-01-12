@@ -10,6 +10,11 @@ LTexture townmenu;
 LTexture townButtonSST;
 LTexture questboard;
 LTexture questSST;
+LTexture leftText;
+LTexture rightText;
+LTexture shop;
+LTexture training;
+LTexture upgrades;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> buttonSpriteClips;
@@ -75,12 +80,13 @@ bool LTexture::loadFromFile(std::string path)
 	return mTexture != NULL;
 }
 
-bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor) {
+bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor_, int w) {
 	//Get rid of preexisting texture
 	free();
-
+	if (w <= 0)
+		w = 200;
 	//Render text surface
-	SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(gFont, textureText.c_str(), textColor, 180);
+	SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(gFont, textureText.c_str(), textColor_, w);
 	if (textSurface == NULL)
 	{
 		printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());

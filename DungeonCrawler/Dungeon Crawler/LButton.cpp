@@ -1,6 +1,7 @@
 #include "LButton.h"
 #include "party.h"
 
+SDL_Color textColor = { 255, 255, 255 };
 
 std::vector<LButton> Buttons;
 std::vector<LButton> menuButtons;
@@ -164,24 +165,32 @@ void gotoQuest(int index) {
 	state = TOWN_QUEST_BOARD;
 	townButtons[0].setHandler(gotoShop);
 	townButtons[1].setHandler(gotoCharUp);
+	leftText.loadFromRenderedText("Shop", textColor, 200);
+	rightText.loadFromRenderedText("Training", textColor, 200);
 }
 
 void gotoCharUp(int index) {
 	state = TOWN_CHAR_UP;
 	townButtons[0].setHandler(gotoQuest);
 	townButtons[1].setHandler(gotoPartyUp);
+	leftText.loadFromRenderedText("Quests", textColor, 200);
+	rightText.loadFromRenderedText("Upgrades", textColor, 200);
 }
 
 void gotoPartyUp(int index) {
 	state = TOWN_PARTY_UP;
 	townButtons[0].setHandler(gotoCharUp);
 	townButtons[1].setHandler(gotoShop);
+	leftText.loadFromRenderedText("Training", textColor, 200);
+	rightText.loadFromRenderedText("Shop", textColor, 200);
 }
 
 void gotoShop(int index) {
 	state = TOWN_SHOP;
 	townButtons[0].setHandler(gotoPartyUp);
 	townButtons[1].setHandler(gotoQuest);
+	leftText.loadFromRenderedText("Upgrades", textColor, 200);
+	rightText.loadFromRenderedText("Quests", textColor, 200);
 }
 
 /* Used primarily for testing */

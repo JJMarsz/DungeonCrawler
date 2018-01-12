@@ -112,6 +112,7 @@ bool loadMedia()
 	//Loading success flag
 	bool success = true;
 
+	SDL_Color textColor = { 255, 255, 255 };
 	//Open the font
 	gFont = TTF_OpenFont("PT_sans.ttf", TEXT_SIZE);
 	if (gFont == NULL) {
@@ -119,7 +120,12 @@ bool loadMedia()
 		success = false;
 	}
 	else {
-
+		if (!leftText.loadFromRenderedText("Shop", textColor, 200)) {
+			//failure
+		}
+		if (!rightText.loadFromRenderedText("Training", textColor, 200)) {
+			//failure
+		}
 	}
 
 	//Load spritesheet texture
@@ -283,6 +289,18 @@ bool loadMedia()
 		}
 
 	}
+	if (!shop.loadFromFile("shop.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	if (!training.loadFromFile("training.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	if (!upgrades.loadFromFile("upgrades.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
 	return success;
 }
 
@@ -296,6 +314,8 @@ void close() {
 	//Free global font
 	TTF_CloseFont(gFont);
 	gFont = NULL;
+	leftText.free();
+	rightText.free();
 
 	//Free Textures
 	spriteSheetTexture.free();
@@ -307,6 +327,9 @@ void close() {
 	townButtonSST.free();
 	questboard.free();
 	questSST.free();
+	upgrades.free();
+	shop.free();
+	training.free();
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
@@ -350,7 +373,7 @@ SDL_Texture* loadTexture(std::string path)
 int loadText(int w, std::string text) {
 	SDL_Color textColor = { 255, 255, 255 };
 	LTexture* newText = new LTexture;
-	if (!newText->loadFromRenderedText(text, textColor)) {
+	if (!newText->loadFromRenderedText(text, textColor, w)) {
 		//failure
 	}
 	else {
@@ -534,15 +557,48 @@ void drawQuestBoard() {
 }
 
 void drawShop() {
+	SDL_Rect topViewport;
+	topViewport.x = 0;
+	topViewport.y = 0;
+	topViewport.w = SCREEN_WIDTH;
+	topViewport.h = SCREEN_HEIGHT;
+	SDL_RenderSetViewport(gRenderer, &topViewport);
+	//make it gray
+	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	SDL_SetRenderDrawColor(gRenderer, 0xA0, 0xA0, 0xA0, 0xFF);
+	SDL_RenderFillRect(gRenderer, &barRect);
 
+	shop.render(0, 0, NULL);
 }
 
 void drawCharUp() {
+	SDL_Rect topViewport;
+	topViewport.x = 0;
+	topViewport.y = 0;
+	topViewport.w = SCREEN_WIDTH;
+	topViewport.h = SCREEN_HEIGHT;
+	SDL_RenderSetViewport(gRenderer, &topViewport);
+	//make it gray
+	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	SDL_SetRenderDrawColor(gRenderer, 0xA0, 0xA0, 0xA0, 0xFF);
+	SDL_RenderFillRect(gRenderer, &barRect);
 
+	training.render(0, 0, NULL);
 }
 
 void drawPartyUp() {
+	SDL_Rect topViewport;
+	topViewport.x = 0;
+	topViewport.y = 0;
+	topViewport.w = SCREEN_WIDTH;
+	topViewport.h = SCREEN_HEIGHT;
+	SDL_RenderSetViewport(gRenderer, &topViewport);
+	//make it gray
+	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+	SDL_SetRenderDrawColor(gRenderer, 0xA0, 0xA0, 0xA0, 0xFF);
+	SDL_RenderFillRect(gRenderer, &barRect);
 
+	upgrades.render(0, 0, NULL);
 }
 
 void drawTownMenu() {
@@ -552,6 +608,8 @@ void drawTownMenu() {
 	townButtons[0].render();
 	state = TOWN_BUTTON_RIGHT;
 	townButtons[1].render();
+	leftText.render(LEFT_X, LEFTRIGHT_Y);
+	rightText.render(RIGHT_X, LEFTRIGHT_Y);
 	//render text gold amount, xp amount, and completed dungeons
 
 

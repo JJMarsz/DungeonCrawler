@@ -18,7 +18,7 @@ public:
 	bool loadFromFile(std::string path);
 
 	//Creates image from font string
-	bool loadFromRenderedText(std::string textureText, SDL_Color textColor);
+	bool loadFromRenderedText(std::string textureText, SDL_Color textColor_, int w);
 
 	//Deallocates texture
 	void free();
@@ -57,6 +57,9 @@ extern LTexture townmenu;
 extern LTexture townButtonSST;
 extern LTexture questboard;
 extern LTexture questSST;
+extern LTexture shop;
+extern LTexture training;
+extern LTexture upgrades;
 
 extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> buttonSpriteClips;
@@ -67,5 +70,7 @@ extern std::vector<SDL_Rect> townButtonClips;
 
 extern std::vector<LTexture*> texts;
 
+extern LTexture leftText;
+extern LTexture rightText;
 #endif
 

@@ -35,6 +35,9 @@
 //town menu and button stuff
 #define TOWN_BUTTON_WIDTH	100
 #define TOWN_BUTTON_HEIGHT	50
+#define LEFT_X				45
+#define LEFTRIGHT_Y			SCREEN_HEIGHT - 45
+#define RIGHT_X				SCREEN_WIDTH - TOWN_BUTTON_WIDTH - 10
 
 //quest stuff
 #define QUEST_Y				280
