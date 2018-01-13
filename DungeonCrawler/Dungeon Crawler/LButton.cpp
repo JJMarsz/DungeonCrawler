@@ -179,7 +179,7 @@ void char3Clicked(int index) {
 	chars.pickChar(chars.getIndex(displayList[index].getName()));
 	chars.unshowChar();
 	for (int i = 0; i < chars.size(); i++) {
-		if (!chars.isAvailable(i)) {
+		if (chars.isAvailable(i)) {
 			gParty.addChar(i);
 		}
 	}
@@ -225,6 +225,9 @@ void questInfo(int index) {
 }
 
 void questAccept(int index) {
+	//should generate based off of what quest
+	current_dungeon = Dungeon(EASY);
+	gParty.moveParty(current_dungeon.getStartX(), current_dungeon.getStartY());
 	state = DUNGEON;
 }
 

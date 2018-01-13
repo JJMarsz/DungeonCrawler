@@ -106,8 +106,6 @@ bool init()
 	room_map[MED] = (16 << 16) + 12;
 	room_map[SMALL] = (8 << 16) + 6;
 	state = MAIN_MENU;
-
-	current_dungeon = Dungeon(HARD);
 	chars = CharList(MAGIC_NUM);
 	return success;
 }
@@ -689,6 +687,7 @@ void drawDungeon() {/**/
 			tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
 		}
 	}
+	tileSST.render(gParty.getX() * 50 + start_x, gParty.getY() * 50, &tileSpriteClips[PARTY]);
 }
 
 void drawCharScreen() {

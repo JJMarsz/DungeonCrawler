@@ -70,6 +70,8 @@ public:
 	int getHeight();
 	bool isStart(int x, int y);
 	bool isEnd(int x, int y);
+	int getStartX();
+	int getStartY();
 
 private:
 	//use RMO to access

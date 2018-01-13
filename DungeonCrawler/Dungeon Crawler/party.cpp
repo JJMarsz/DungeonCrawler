@@ -64,6 +64,8 @@ Party::Party() {
 }
 
 int Party::getCompleted() { return completed; }
+int Party::getX() { return party_x; }
+int Party::getY() { return party_y; }
 
 bool Party::addChar(int index) {
 	if (numChar < 3)
@@ -86,13 +88,29 @@ bool Party::remChar(std::string nameKill) {
 	return false;
 }
 
-
 bool Party::moveParty(int x, int y) {
 	party_x = x;
 	party_y = y;
 	return true;
 }
 
+/* Check all directions for adjacency and if tile is a valid type */
+bool Party::isAdj(int x, int y) {
+	if (x < 0 || y < 0 || x >= current_dungeon.getWidth() || y >= current_dungeon.getHeight())
+		return false;
+	int RMO = x + y * current_dungeon.getWidth();
+	if (current_dungeon.getTile(RMO).getType() == NONE)
+		return false;
+	if (party_x + 1 + current_dungeon.getWidth()*party_y == RMO)
+		return true;
+	if (party_x - 1 + current_dungeon.getWidth()*party_y == RMO)
+		return true;
+	if (party_x + current_dungeon.getWidth()*(party_y + 1) == RMO)
+		return true;
+	if (party_x + current_dungeon.getWidth()*(party_y - 1) == RMO)
+		return true;
+	return false;
+}
 
 /* Charlist class definiitons */
 CharList::CharList() {

@@ -11,7 +11,10 @@ bool hover;
 
 int main(int argc, char* args[])
 {
-	int i, x, y, start_x;
+	int i, x=0, y=0, start_x=0;
+	int prev_x = -1, prev_y = -1;
+	bool MouseDown = false;
+	bool MouseUp = false;
 	//Start up SDL and create window
 	if (!init())
 	{
@@ -39,9 +42,18 @@ int main(int argc, char* args[])
 				while (SDL_PollEvent(&e) != 0)
 				{
 					//User requests quit
-					if (e.type == SDL_QUIT)
-					{
+					switch (e.type) {
+					case SDL_QUIT:
 						quit = true;
+						break;
+					case SDL_MOUSEBUTTONDOWN:
+						MouseDown = true;
+						break;
+					case SDL_MOUSEBUTTONUP:
+						MouseUp = true;
+						break;
+					default:
+						break;
 					}
 					//cicking state machine
 					switch (state) {
@@ -53,7 +65,7 @@ int main(int argc, char* args[])
 						}
 						break;
 					case PICK_CHAR1:
-						for (i = 0; i < 3; ++i){
+						for (i = 0; i < 3; ++i) {
 							charButtons[i].handleEvent(&e, i);
 						}
 						break;
@@ -96,14 +108,24 @@ int main(int argc, char* args[])
 					case DUNGEON:
 						start_x = (SCREEN_WIDTH - current_dungeon.getWidth() * 50) / 2;
 						SDL_GetMouseState(&x, &y);
+						hover = false;
+						//within bounds
 						if (start_x + current_dungeon.getWidth() * 50 > x && start_x < x && 0 < y && current_dungeon.getHeight() * 50 > y) {
-							x -= 100;
-							x = x / 50;
 							y = y / 50;
-							hover = true;
+							y = y * 50;
+							if (x % 50 < 25)
+								x -= (start_x % 50);
+							x = x / 50;
+							x = x * 50;
+							if (gParty.isAdj(x/50 - (start_x/50), y/50))
+								hover = true;
+							if (prev_x != x || prev_y != y) {
+								MouseDown = false;
+								MouseUp = false;
+							}
+							prev_x = x;
+							prev_y = y;
 						}
-						else
-							hover = false;
 						break;
 					case ROOM_MAIN:
 						for (int i = 0; i < TOTAL_BUTTONS; ++i)
@@ -171,8 +193,19 @@ int main(int argc, char* args[])
 					break;
 				case DUNGEON:
 					drawDungeon();
-					if(hover)
-						tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[HOVER]);
+					if (hover) {
+						if (MouseDown && MouseUp) {
+							gParty.moveParty(x / 50 - (start_x / 50), y / 50);
+							/* prevent double clicking */
+							MouseDown = false;
+							MouseUp = false;
+							/* remove hover after clicking */
+							hover = false;
+							break;
+
+						}
+						tileSST.render(x + (start_x % 50), y, &tileSpriteClips[HOVER]);
+					}
 					break;
 				case ROOM_MAIN:
 					//Draw menu bar

@@ -76,6 +76,9 @@ public:
 	bool remChar(std::string name);
 	bool moveParty(int x, int y);
 	int getCompleted();
+	int getX();
+	int getY();
+	bool isAdj(int x, int y);
 
 private:
 	int numChar;
