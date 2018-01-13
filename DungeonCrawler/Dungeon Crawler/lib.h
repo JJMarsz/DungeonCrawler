@@ -47,6 +47,89 @@
 #define QUEST_PAGE_WIDTH	80
 #define QUEST_PAGE_HEIGHT	115
 
+/* TILE CONSTANTS */
+enum {
+	LEFT_,
+	DOWN_,
+	RIGHT_,
+	UP_,
+	DOWN_LEFT,
+	LEFT_UP,
+	UP_RIGHT,
+	RIGHT_DOWN,
+	HORIZ,
+	VERT,
+	DOWN_LEFT_UP,
+	LEFT_UP_RIGHT,
+	UP_RIGHT_DOWN,
+	RIGHT_DOWN_LEFT,
+	HOVER,
+	DEAD_,
+	EMPTY_,
+	PARTY
+};
+//Dead ends
+#define	TILE_LEFT_X				0
+#define	TILE_LEFT_Y				0
+
+#define	TILE_DOWN_X				50
+#define	TILE_DOWN_Y				0
+
+#define	TILE_RIGHT_X			100
+#define	TILE_RIGHT_Y			0
+
+#define	TILE_UP_X				150
+#define	TILE_UP_Y				0
+
+//Corners
+#define	TILE_DOWN_LEFT_X		0
+#define	TILE_DOWN_LEFT_Y		50
+
+#define	TILE_LEFT_UP_X			50
+#define	TILE_LEFT_UP_Y			50
+
+#define	TILE_UP_RIGHT_X			100
+#define	TILE_UP_RIGHT_Y			50
+
+#define	TILE_RIGHT_DOWN_X		150
+#define	TILE_RIGHT_DOWN_Y		50
+
+//Hallways
+#define	TILE_HORIZ_X			0
+#define	TILE_HORIZ_Y			100
+
+#define	TILE_VERT_X				50
+#define	TILE_VERT_Y				100
+
+//3 way junctions
+#define	TILE_DOWN_LEFT_UP_X		0
+#define	TILE_DOWN_LEFT_UP_Y		150
+
+#define	TILE_LEFT_UP_RIGHT_X	50
+#define	TILE_LEFT_UP_RIGHT_Y	150
+
+#define	TILE_UP_RIGHT_DOWN_X	100
+#define	TILE_UP_RIGHT_DOWN_Y	150
+
+#define	TILE_RIGHT_DOWN_LEFT_X	150
+#define	TILE_RIGHT_DOWN_LEFT_Y	150
+
+//special tiles
+#define TILE_HOVER_X			150
+#define TILE_HOVER_Y			100
+
+#define TILE_DEAD_X				100
+#define TILE_DEAD_Y				100
+
+#define TILE_EMPTY_X			200
+#define TILE_EMPTY_Y			0
+
+#define TILE_PARTY_X			200
+#define TILE_PARTY_Y			50
+
+#define TILE_WIDTH				50
+#define TILE_HEIGHT				50
+
 const int BUTTON_Y = SCREEN_HEIGHT - BUTTON_HEIGHT - 5;
 const int BUTTON_ONE_X = SCREEN_WIDTH - BUTTON_WIDTH - 18;
 const int BUTTON_TWO_X = SCREEN_WIDTH - 2 * BUTTON_WIDTH - 22;

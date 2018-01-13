@@ -68,6 +68,8 @@ public:
 	Tile getTile(int RMO_index);
 	int getWidth();
 	int getHeight();
+	bool isStart(int x, int y);
+	bool isEnd(int x, int y);
 
 private:
 	//use RMO to access

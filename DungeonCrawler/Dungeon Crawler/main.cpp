@@ -7,10 +7,11 @@
 #include "SDL.h"
 #include "dungeon.h"
 
+bool hover;
 
 int main(int argc, char* args[])
 {
-	int i;
+	int i, x, y, start_x;
 	//Start up SDL and create window
 	if (!init())
 	{
@@ -92,6 +93,18 @@ int main(int argc, char* args[])
 						townButtons[0].handleEvent(&e, 0);
 						townButtons[1].handleEvent(&e, 1);
 						break;
+					case DUNGEON:
+						start_x = (SCREEN_WIDTH - current_dungeon.getWidth() * 50) / 2;
+						SDL_GetMouseState(&x, &y);
+						if (start_x + current_dungeon.getWidth() * 50 > x && start_x < x && 0 < y && current_dungeon.getHeight() * 50 > y) {
+							x -= 100;
+							x = x / 50;
+							y = y / 50;
+							hover = true;
+						}
+						else
+							hover = false;
+						break;
 					case ROOM_MAIN:
 						for (int i = 0; i < TOTAL_BUTTONS; ++i)
 						{
@@ -158,6 +171,8 @@ int main(int argc, char* args[])
 					break;
 				case DUNGEON:
 					drawDungeon();
+					if(hover)
+						tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[HOVER]);
 					break;
 				case ROOM_MAIN:
 					//Draw menu bar

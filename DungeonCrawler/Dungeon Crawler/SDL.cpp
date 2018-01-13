@@ -69,7 +69,7 @@ bool init()
 	//set up relevant data structures
 	spriteClips.resize(6);
 	buttonSpriteClips.resize(12);
-	tileSpriteClips.resize(3);
+	tileSpriteClips.resize(18);
 	texts.reserve(50);
 	charClips.resize(NUM_CHAR);
 	Buttons.resize(12);
@@ -216,25 +216,102 @@ bool loadMedia()
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
-	if (!tileSST.loadFromFile("dungeontiles.png")) {
+	if (!tileSST.loadFromFile("tiles.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
 	else {
-		tileSpriteClips[0].x = 0;
-		tileSpriteClips[0].y = 0;
-		tileSpriteClips[0].w = 50;
-		tileSpriteClips[0].h = 50;
+		//way too many tiles
+		tileSpriteClips[LEFT_].x = TILE_LEFT_X;
+		tileSpriteClips[LEFT_].y = TILE_LEFT_Y;
+		tileSpriteClips[LEFT_].w = TILE_WIDTH;
+		tileSpriteClips[LEFT_].h = TILE_HEIGHT;
 
-		tileSpriteClips[1].x = 0;
-		tileSpriteClips[1].y = 50;
-		tileSpriteClips[1].w = 50;
-		tileSpriteClips[1].h = 50;
+		tileSpriteClips[DOWN_].x = TILE_DOWN_X;
+		tileSpriteClips[DOWN_].y = TILE_DOWN_Y;
+		tileSpriteClips[DOWN_].w = TILE_WIDTH;
+		tileSpriteClips[DOWN_].h = TILE_HEIGHT;
 
-		tileSpriteClips[2].x = 0;
-		tileSpriteClips[2].y = 100;
-		tileSpriteClips[2].w = 50;
-		tileSpriteClips[2].h = 50;
+		tileSpriteClips[RIGHT_].x = TILE_RIGHT_X;
+		tileSpriteClips[RIGHT_].y = TILE_RIGHT_Y;
+		tileSpriteClips[RIGHT_].w = TILE_WIDTH;
+		tileSpriteClips[RIGHT_].h = TILE_HEIGHT;
+
+		tileSpriteClips[UP_].x = TILE_UP_X;
+		tileSpriteClips[UP_].y = TILE_UP_Y;
+		tileSpriteClips[UP_].w = TILE_WIDTH;
+		tileSpriteClips[UP_].h = TILE_HEIGHT;
+
+		tileSpriteClips[DOWN_LEFT].x = TILE_DOWN_LEFT_X;
+		tileSpriteClips[DOWN_LEFT].y = TILE_DOWN_LEFT_Y;
+		tileSpriteClips[DOWN_LEFT].w = TILE_WIDTH;
+		tileSpriteClips[DOWN_LEFT].h = TILE_HEIGHT;
+
+		tileSpriteClips[LEFT_UP].x = TILE_LEFT_UP_X;
+		tileSpriteClips[LEFT_UP].y = TILE_LEFT_UP_Y;
+		tileSpriteClips[LEFT_UP].w = TILE_WIDTH;
+		tileSpriteClips[LEFT_UP].h = TILE_HEIGHT;
+
+		tileSpriteClips[UP_RIGHT].x = TILE_UP_RIGHT_X;
+		tileSpriteClips[UP_RIGHT].y = TILE_UP_RIGHT_Y;
+		tileSpriteClips[UP_RIGHT].w = TILE_WIDTH;
+		tileSpriteClips[UP_RIGHT].h = TILE_HEIGHT;
+
+		tileSpriteClips[RIGHT_DOWN].x = TILE_RIGHT_DOWN_X;
+		tileSpriteClips[RIGHT_DOWN].y = TILE_RIGHT_DOWN_Y;
+		tileSpriteClips[RIGHT_DOWN].w = TILE_WIDTH;
+		tileSpriteClips[RIGHT_DOWN].h = TILE_HEIGHT;
+
+		tileSpriteClips[HORIZ].x = TILE_HORIZ_X;
+		tileSpriteClips[HORIZ].y = TILE_HORIZ_Y;
+		tileSpriteClips[HORIZ].w = TILE_WIDTH;
+		tileSpriteClips[HORIZ].h = TILE_HEIGHT;
+
+		tileSpriteClips[VERT].x = TILE_VERT_X;
+		tileSpriteClips[VERT].y = TILE_VERT_Y;
+		tileSpriteClips[VERT].w = TILE_WIDTH;
+		tileSpriteClips[VERT].h = TILE_HEIGHT;
+
+		tileSpriteClips[DOWN_LEFT_UP].x = TILE_DOWN_LEFT_UP_X;
+		tileSpriteClips[DOWN_LEFT_UP].y = TILE_DOWN_LEFT_UP_Y;
+		tileSpriteClips[DOWN_LEFT_UP].w = TILE_WIDTH;
+		tileSpriteClips[DOWN_LEFT_UP].h = TILE_HEIGHT;
+
+		tileSpriteClips[LEFT_UP_RIGHT].x = TILE_LEFT_UP_RIGHT_X;
+		tileSpriteClips[LEFT_UP_RIGHT].y = TILE_LEFT_UP_RIGHT_Y;
+		tileSpriteClips[LEFT_UP_RIGHT].w = TILE_WIDTH;
+		tileSpriteClips[LEFT_UP_RIGHT].h = TILE_HEIGHT;
+
+		tileSpriteClips[UP_RIGHT_DOWN].x = TILE_UP_RIGHT_DOWN_X;
+		tileSpriteClips[UP_RIGHT_DOWN].y = TILE_UP_RIGHT_DOWN_Y;
+		tileSpriteClips[UP_RIGHT_DOWN].w = TILE_WIDTH;
+		tileSpriteClips[UP_RIGHT_DOWN].h = TILE_HEIGHT;
+
+		tileSpriteClips[RIGHT_DOWN_LEFT].x = TILE_RIGHT_DOWN_LEFT_X;
+		tileSpriteClips[RIGHT_DOWN_LEFT].y = TILE_RIGHT_DOWN_LEFT_Y;
+		tileSpriteClips[RIGHT_DOWN_LEFT].w = TILE_WIDTH;
+		tileSpriteClips[RIGHT_DOWN_LEFT].h = TILE_HEIGHT;
+
+		tileSpriteClips[HOVER].x = TILE_HOVER_X;
+		tileSpriteClips[HOVER].y = TILE_HOVER_Y;
+		tileSpriteClips[HOVER].w = TILE_WIDTH;
+		tileSpriteClips[HOVER].h = TILE_HEIGHT;
+
+		tileSpriteClips[DEAD_].x = TILE_DEAD_X;
+		tileSpriteClips[DEAD_].y = TILE_DEAD_Y;
+		tileSpriteClips[DEAD_].w = TILE_WIDTH;
+		tileSpriteClips[DEAD_].h = TILE_HEIGHT;
+
+		tileSpriteClips[EMPTY_].x = TILE_EMPTY_X;
+		tileSpriteClips[EMPTY_].y = TILE_EMPTY_Y;
+		tileSpriteClips[EMPTY_].w = TILE_WIDTH;
+		tileSpriteClips[EMPTY_].h = TILE_HEIGHT;
+
+		tileSpriteClips[PARTY].x = TILE_PARTY_X;
+		tileSpriteClips[PARTY].y = TILE_PARTY_Y;
+		tileSpriteClips[PARTY].w = TILE_WIDTH;
+		tileSpriteClips[PARTY].h = TILE_HEIGHT;
+
 	}
 	if (!charSST.loadFromFile("charicons.png")) {
 		printf("Failed to load texture image!\n");
@@ -528,6 +605,72 @@ void drawMainMenu() {
 	menuButtons[0].render();
 }
 
+int getTileIndex(int x, int y) {
+	if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth())).getType() == NONE)
+		return EMPTY_;
+	//bitwise storage of adjacency
+	//	R	D	L	U
+	//
+	int adj = 0;
+	if (current_dungeon.isStart(x, y))
+		adj += 4;
+	if (current_dungeon.isEnd(x, y))
+		adj += 1;
+	//check adjacent
+	//check up
+	if (y > 0) {
+		if (current_dungeon.getTile(x + (y-1) * (current_dungeon.getWidth())).getType() != NONE)
+			adj += 1;
+	}
+	//check left
+	if (x > 0) {
+		if (current_dungeon.getTile(x - 1 + (y) * (current_dungeon.getWidth())).getType() != NONE)
+			adj += 2;
+	}
+	//check down
+	if (y < current_dungeon.getHeight()-1) {
+		if (current_dungeon.getTile(x + (y + 1) * (current_dungeon.getWidth())).getType() != NONE)
+			adj += 4;
+	}
+	//check right
+	if (x < current_dungeon.getWidth() - 1) {
+		if (current_dungeon.getTile(x + 1 + (y) * (current_dungeon.getWidth())).getType() != NONE)
+			adj += 8;
+	}
+	switch (adj) {
+	case 1:
+		return UP_;
+	case 2:
+		return LEFT_;
+	case 3:
+		return LEFT_UP;
+	case 4:
+		return DOWN_;
+	case 5:
+		return VERT;
+	case 6:
+		return DOWN_LEFT;
+	case 7:
+		return DOWN_LEFT_UP;
+	case 8:
+		return RIGHT_;
+	case 9:
+		return UP_RIGHT;
+	case 10:
+		return HORIZ;
+	case 11:
+		return LEFT_UP_RIGHT;
+	case 12:
+		return RIGHT_DOWN;
+	case 13:
+		return UP_RIGHT_DOWN;
+	case 14:
+		return RIGHT_DOWN_LEFT;
+	default:
+		return EMPTY_;
+	}
+}
+
 void drawDungeon() {/**/
 	SDL_Rect topViewport;
 	topViewport.x = 0;
@@ -542,14 +685,8 @@ void drawDungeon() {/**/
 	int start_x = (SCREEN_WIDTH - current_dungeon.getWidth()*50) / 2;
 	for (int x = 0; x < current_dungeon.getWidth(); x++) {
 		for (int y = 0; y < current_dungeon.getHeight(); y++) {
-			if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == PATH) {
-				tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[1]);
-			}
-			else if (current_dungeon.getTile(x + y * (current_dungeon.getWidth())).getType() == DEADEND)
-				tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[2]);
-			else
-				tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[0]);
-
+			int index = getTileIndex(x, y);
+			tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
 		}
 	}
 }

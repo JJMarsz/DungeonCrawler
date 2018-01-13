@@ -325,7 +325,8 @@ Tile Dungeon::getTile(int RMO_index) {
 
 int Dungeon::getWidth() { return width; }
 int Dungeon::getHeight() { return height; }
-
+bool Dungeon::isStart(int x, int y) { return ((x == start_x && y == start_y) ? true : false); }
+bool Dungeon::isEnd(int x, int y) { return ((x == end_x && y == end_y) ? true : false); }
 
 
 /* Tile class defenitions */
