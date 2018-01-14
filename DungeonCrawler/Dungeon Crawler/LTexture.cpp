@@ -17,6 +17,16 @@ LTexture rightText;
 LTexture shop;
 LTexture training;
 LTexture upgrades;
+LTexture goldmenu;
+LTexture completed;
+LTexture questTitle;
+LTexture questInfoText;
+LTexture questGold;
+LTexture questXP;
+LTexture questDiff;
+LTexture xp0, xp1, xp2;
+LTexture acceptText;
+LTexture rejectText;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> buttonSpriteClips;

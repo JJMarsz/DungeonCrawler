@@ -1,7 +1,10 @@
 #include "LButton.h"
 #include "party.h"
+#include "Quest.h"
 
 SDL_Color textColor = { 255, 255, 255 };
+
+int quest_index = 0;
 
 std::vector<LButton> Buttons;
 std::vector<LButton> menuButtons;
@@ -84,6 +87,9 @@ void LButton::setSprite(LButtonSprite newsprite) {
 void LButton::render() {
 	//Show current button sprite
 	switch (state) {
+	case REWARD:
+		acceptrejectSST.render(mPosition.x, mPosition.y, &acceptrejectClips[mCurrentSprite+8]);
+		break;
 	case ROOM_MAIN:
 		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite]);
 		break;
@@ -183,6 +189,11 @@ void char3Clicked(int index) {
 			gParty.addChar(i);
 		}
 	}
+	goldmenu.loadFromRenderedText("0", textColor, 200);
+	xp0.loadFromRenderedText("0", textColor, 200);
+	xp1.loadFromRenderedText("0", textColor, 200);
+	xp2.loadFromRenderedText("0", textColor, 200);
+	completed.loadFromRenderedText("0", textColor, 200);
 	//initTown();
 	state = TOWN_QUEST_BOARD;
 }
@@ -222,17 +233,41 @@ void gotoShop(int index) {
 
 void questInfo(int index) {
 	state = SELECTED_QUEST;
+	quest_index = index;
+	questTitle.loadFromRenderedText(current_quests[index].getTitle(), textColor, 200);
+	questInfoText.loadFromRenderedText(current_quests[index].getInfo(), textColor, 200);
+	questGold.loadFromRenderedText("Gold: " + std::to_string(current_quests[index].getGold()), textColor, 200);
+	questXP.loadFromRenderedText("XP: " + std::to_string(current_quests[index].getXP()), textColor, 200);
+	questDiff.loadFromRenderedText("Difficulty: " + diffToString(current_quests[index].getDiff()), textColor, 200);
 }
 
 void questAccept(int index) {
 	//should generate based off of what quest
-	current_dungeon = Dungeon(EASY);
+	current_dungeon = Dungeon(current_quests[quest_index].getDiff());
 	gParty.moveParty(current_dungeon.getStartX(), current_dungeon.getStartY());
 	state = DUNGEON;
 }
 
 void questReject(int index) {
 	state = TOWN_QUEST_BOARD;
+}
+
+void returnToTown(int index) {
+	state = TOWN_QUEST_BOARD;
+	//inc completed dungeons
+	gParty.incCompleted();
+	gParty.addGold(current_quests[quest_index].getGold());
+	gParty.addXP(current_quests[quest_index].getXP());
+	//check if game is done
+
+	//create a new quest if neccesary
+	//setup all relevant things
+	completed.loadFromRenderedText(std::to_string(gParty.getCompleted()), textColor, 200);
+	goldmenu.loadFromRenderedText(std::to_string(gParty.getGold()), textColor, 200);
+	xp0.loadFromRenderedText(std::to_string(gParty.getXP(0)), textColor, 200);
+	xp1.loadFromRenderedText(std::to_string(gParty.getXP(1)), textColor, 200);
+	xp2.loadFromRenderedText(std::to_string(gParty.getXP(2)), textColor, 200);
+
 }
 /* Used primarily for testing */
 void emptyHandler(int index) {

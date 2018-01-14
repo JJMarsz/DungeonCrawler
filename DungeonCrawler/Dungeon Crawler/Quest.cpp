@@ -6,6 +6,11 @@ Quest::Quest(){
 
 }
 
+int Quest::getGold() { return gold_reward; }
+int Quest::getXP() { return xp_reward; }
+std::string Quest::getTitle() { return name; }
+std::string Quest::getInfo() { return info; }
+Difficulty Quest::getDiff() { return diff; }
 
 Quest::Quest(std::string name_, std::string info_, int gold, int xp, Difficulty diff_) {
 	name = name_;

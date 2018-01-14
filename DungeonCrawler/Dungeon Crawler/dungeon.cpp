@@ -364,3 +364,18 @@ void Tile::operator=(const Tile& t) {
 	x = t.x;
 	y = t.y;
 }
+
+
+/* misc functions */
+std::string diffToString(Difficulty diff) {
+	switch (diff) {
+	case EASY:
+		return "Easy";
+	case MEDIUM:
+		return "Medium";
+	case HARD:
+		return "Hard";
+	default:
+		return "WUTT";
+	}
+}

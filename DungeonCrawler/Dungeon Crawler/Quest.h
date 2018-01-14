@@ -46,6 +46,11 @@ class Quest{
 public:
 	Quest();
 	Quest(std::string name_, std::string info_, int gold, int xp, Difficulty diff_);
+	int getGold();
+	int getXP();
+	std::string getTitle();
+	std::string getInfo();
+	Difficulty getDiff();
 private:
 	std::vector<Encounter> normal_enemy;
 	std::vector<Encounter> special;
@@ -59,6 +64,13 @@ private:
 /* generates quests and fills quest array */
 void loadQuests();
 
+class QuestList {
+public:
+	//QuestList();
+private:
+	int completed;
+
+};
 extern std::vector<Quest> current_quests;
 
 #endif

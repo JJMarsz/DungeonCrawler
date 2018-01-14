@@ -71,7 +71,7 @@ bool init()
 	buttonSpriteClips.resize(12);
 	tileSpriteClips.resize(18);
 	texts.reserve(50);
-	charClips.resize(NUM_CHAR);
+	charClips.resize(NUM_CHAR*3);
 	Buttons.resize(12);
 	charButtons.resize(3);
 	menuButtons.resize(1);
@@ -83,8 +83,8 @@ bool init()
 	questButtons.resize(3);
 	questPageClips.resize(4);
 	current_quests.resize(3);
-	acceptrejectClips.resize(8);
-	acceptrejectButtons.resize(2);
+	acceptrejectClips.resize(12);
+	acceptrejectButtons.resize(3);
 	int i;
 	for (i = 0; i<TOTAL_BUTTONS; i++)
 		Buttons[i].setConstraints(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -95,8 +95,9 @@ bool init()
 		questButtons[i].setConstraints(QUEST_PAGE_WIDTH, QUEST_PAGE_HEIGHT);
 	for (i = 0; i < 2; i++)
 		townButtons[i].setConstraints(TOWN_BUTTON_WIDTH, TOWN_BUTTON_HEIGHT);
-	for (i = 0; i < 2; i++)
+	for (i = 0; i < 3; i++)
 		acceptrejectButtons[i].setConstraints(70, 30);
+	acceptrejectButtons[2].setHandler(returnToTown);
 	
 	//8,6 small
 	//16,12 med
@@ -106,7 +107,7 @@ bool init()
 	room_map[MED] = (16 << 16) + 12;
 	room_map[SMALL] = (8 << 16) + 6;
 	state = MAIN_MENU;
-	chars = CharList(MAGIC_NUM);
+	chars = CharList();
 	return success;
 }
 
@@ -124,12 +125,11 @@ bool loadMedia()
 		success = false;
 	}
 	else {
-		if (!leftText.loadFromRenderedText("Shop", textColor, 200)) {
-			//failure
-		}
-		if (!rightText.loadFromRenderedText("Training", textColor, 200)) {
-			//failure
-		}
+		leftText.loadFromRenderedText("Shop", textColor, 200);
+		rightText.loadFromRenderedText("Training", textColor, 200);
+		acceptText.loadFromRenderedText("Accept", textColor, 200);
+		rejectText.loadFromRenderedText("Reject", textColor, 200);
+
 	}
 
 	//Load spritesheet texture
@@ -317,14 +317,22 @@ bool loadMedia()
 	}
 	else {
 		for (i = 0; i < NUM_CHAR; i++) {
+			/* big 200x200 */
 			charClips[i].x = i*200;
 			charClips[i].y = 0;
 			charClips[i].w = 200;
 			charClips[i].h = 200;
+			/* small 50x50 */
+			charClips[i + NUM_CHAR].x = i * 200;
+			charClips[i + NUM_CHAR].y = 200;
+			charClips[i + NUM_CHAR].w = 50;
+			charClips[i + NUM_CHAR].h = 50;
+			/* small 25x25 */
+			charClips[i + 2*NUM_CHAR].x = i * 200 + 50;
+			charClips[i + 2*NUM_CHAR].y = 200;
+			charClips[i + 2*NUM_CHAR].w = 25;
+			charClips[i + 2*NUM_CHAR].h = 25;
 		}
-		questButtons[0].setPosition(QUEST_ONE_X, QUEST_Y);
-		questButtons[1].setPosition(QUEST_TWO_X, QUEST_Y);
-		questButtons[2].setPosition(QUEST_THREE_X, QUEST_Y);
 	}
 	chars.loadSprites(); 
 	if (!townmenu.loadFromFile("townmenu.png")) {
@@ -368,6 +376,9 @@ bool loadMedia()
 			questPageClips[i].w = QUEST_PAGE_WIDTH;
 			questPageClips[i].h = QUEST_PAGE_HEIGHT;
 		}
+		questButtons[0].setPosition(QUEST_ONE_X, QUEST_Y);
+		questButtons[1].setPosition(QUEST_TWO_X, QUEST_Y);
+		questButtons[2].setPosition(QUEST_THREE_X, QUEST_Y);
 
 	}
 	if (!acceptrejectSST.loadFromFile("acceptreject.png")) {
@@ -387,8 +398,15 @@ bool loadMedia()
 			acceptrejectClips[i+4].w = 70;
 			acceptrejectClips[i+4].h = 30;
 		}
+		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
+			acceptrejectClips[i + 8].x = 140;
+			acceptrejectClips[i + 8].y = i * 30;
+			acceptrejectClips[i + 8].w = 70;
+			acceptrejectClips[i + 8].h = 30;
+		}
 		acceptrejectButtons[0].setPosition(275, 377);
 		acceptrejectButtons[1].setPosition(455, 377);
+		acceptrejectButtons[2].setPosition(365, 377);
 	}
 	if (!questinfo.loadFromFile("questinfo.png")) {
 		printf("Failed to load texture image!\n");
@@ -422,6 +440,18 @@ void close() {
 	gFont = NULL;
 	leftText.free();
 	rightText.free();
+	goldmenu.free();
+	xp0.free();
+	xp1.free();
+	xp2.free();
+	completed.free();
+	questTitle.free();
+	questInfoText.free();
+	questGold.free();
+	questXP.free();
+	questDiff.free();
+	acceptText.free();
+	rejectText.free();
 
 	//Free Textures
 	spriteSheetTexture.free();
@@ -781,10 +811,17 @@ void drawTownMenu() {
 	leftText.render(LEFT_X, LEFTRIGHT_Y);
 	rightText.render(RIGHT_X, LEFTRIGHT_Y);
 	//render text gold amount, xp amount, and completed dungeons
-
-
+	goldmenu.render(542, SCREEN_HEIGHT - 44);
+	xp2.render(464, SCREEN_HEIGHT - 44);
+	xp1.render(378, SCREEN_HEIGHT - 44);
+	xp0.render(292, SCREEN_HEIGHT - 44);
+	completed.render(210, SCREEN_HEIGHT - 44);
 
 	//render character icons for selected characters
+	charSST.render(246, SCREEN_HEIGHT - 47, &gParty.getChar(0).getIcon25());
+	charSST.render(332, SCREEN_HEIGHT - 47, &gParty.getChar(1).getIcon25());
+	charSST.render(418, SCREEN_HEIGHT - 47, &gParty.getChar(2).getIcon25());
+
 }
 
 void drawQuestInfo() {
@@ -795,4 +832,11 @@ void drawQuestInfo() {
 	acceptrejectButtons[0].render();
 	state = SELECTED_QUEST_REJECT;
 	acceptrejectButtons[1].render();
+	questTitle.render(280, 164);
+	questDiff.render(280, 200);
+	questGold.render(280, 230);
+	questXP.render(280, 260);
+	questInfoText.render(280, 290);
+	acceptText.render(286, 381);
+	rejectText.render(466, 381);
 }

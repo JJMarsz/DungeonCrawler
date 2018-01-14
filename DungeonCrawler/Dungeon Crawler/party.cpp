@@ -21,6 +21,7 @@ Character::Character(std::string name_, int str_, int dex_, int con_, int intel_
 	move = mov_;
 	health = health_;
 	AC = AC_;
+	xp = 0;
 }
 
 Character::Character(){}
@@ -28,9 +29,14 @@ Character::Character(){}
 void Character::setInfo(std::string info_) { info = info_; }
 std::string Character::getInfo() { return info; }
 
-SDL_Rect Character::getClip() { return sprite; }
-void Character::setClip(SDL_Rect sprite_) { sprite = sprite_; }
+SDL_Rect Character::getBigClip() { return sprite; }
+void Character::setBigClip(SDL_Rect sprite_) { sprite = sprite_; }
+SDL_Rect Character::getIcon25() { return icon_25; }
+void Character::setIcon25(SDL_Rect sprite_) { icon_25 = sprite_; }
+SDL_Rect Character::getIcon50() { return icon_50; }
+void Character::setIcon50(SDL_Rect sprite_) { icon_50 = sprite_; }
 
+int Character::getXP() { return xp; }
 int Character::getStr() { return str; }
 int Character::getDex() { return dex; }
 int Character::getCon() { return con; }
@@ -55,18 +61,24 @@ void Character::render(int x, int y) {
 
 }
 
+void Character::addXP(int xp_) { xp += xp_; }
 /* Party calss definitions */
 Party::Party() {
 	numChar = 0;
 	party_x = -1;
 	party_y = -1;
 	charList.resize(0);
+	gold = 0;
 }
 
 int Party::getCompleted() { return completed; }
 int Party::getX() { return party_x; }
 int Party::getY() { return party_y; }
+Character Party::getChar(int index) { return charList[index]; }
+int Party::getGold() { return gold; }
+int Party::getXP(int index) { return charList[index].getXP(); }
 
+void Party::incCompleted() { completed++; }
 bool Party::addChar(int index) {
 	if (numChar < 3)
 		charList.push_back(chars.getChar(index));
@@ -112,11 +124,22 @@ bool Party::isAdj(int x, int y) {
 	return false;
 }
 
+/* post dungeon update functions */
+void Party::addGold(int gold_) { gold += gold_; }
+bool Party::subGold(int gold_){ 
+	if (gold_ > gold)
+		return false;
+	gold -= gold_;
+	return true;
+}
+void Party::addXP(int xp_) {
+	for (int i = 0; i < MAX_CHAR; i++) {
+		charList[i].addXP(xp_);
+	}
+}
+
 /* Charlist class definiitons */
 CharList::CharList() {
-	//quell compiler bitching
-}
-CharList::CharList(int magic) {
 	//Figther		0
 	//Barb			1
 	//Paladin		2
@@ -188,7 +211,9 @@ void CharList::loadSprites() {
 	//Figther
 	picked[0] = false;
 	showed[0] = false;
-	charList[0].setClip(charClips[0]);
+	charList[0].setBigClip(charClips[0]);
+	charList[0].setIcon50(charClips[NUM_CHAR]);
+	charList[0].setIcon25(charClips[NUM_CHAR*2]);
 	charList[0].setInfo(
 		"Temp text for now, Figther."
 	);
@@ -196,7 +221,9 @@ void CharList::loadSprites() {
 	//Barb
 	picked[1] = false;
 	showed[1] = false;
-	charList[1].setClip(charClips[1]);
+	charList[1].setBigClip(charClips[1]);
+	charList[1].setIcon50(charClips[1 + NUM_CHAR]);
+	charList[1].setIcon25(charClips[1 + NUM_CHAR * 2]);
 	charList[1].setInfo(
 		"Temp text for now, Barbarian."
 	);
@@ -204,7 +231,9 @@ void CharList::loadSprites() {
 	//Paladin
 	picked[2] = false;
 	showed[2] = false;
-	charList[2].setClip(charClips[2]);
+	charList[2].setBigClip(charClips[2]);
+	charList[2].setIcon50(charClips[2 + NUM_CHAR]);
+	charList[2].setIcon25(charClips[2 + NUM_CHAR * 2]);
 	charList[2].setInfo(
 		"Temp text for now, Paladin."
 	);
@@ -212,7 +241,9 @@ void CharList::loadSprites() {
 	//Rogue
 	picked[3] = false;
 	showed[3] = false;
-	charList[3].setClip(charClips[3]);
+	charList[3].setBigClip(charClips[3]);
+	charList[3].setIcon50(charClips[3 + NUM_CHAR]);
+	charList[3].setIcon25(charClips[3 + NUM_CHAR * 2]);
 	charList[3].setInfo(
 		"Temp text for now, Rogue."
 	);
@@ -220,7 +251,9 @@ void CharList::loadSprites() {
 	//Ranger
 	picked[4] = false;
 	showed[4] = false;
-	charList[4].setClip(charClips[4]);
+	charList[4].setBigClip(charClips[4]);
+	charList[4].setIcon50(charClips[4 + NUM_CHAR]);
+	charList[4].setIcon25(charClips[4 + NUM_CHAR * 2]);
 	charList[4].setInfo(
 		"Temp text for now, Ranger."
 	);

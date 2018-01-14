@@ -27,12 +27,16 @@ public:
 	
 	);
 	std::string getName();
-
+	int getXP();
 	std::string getInfo();
 	void setInfo(std::string info_);
 
-	SDL_Rect getClip();
-	void setClip(SDL_Rect sprite_);
+	SDL_Rect getBigClip();
+	void setBigClip(SDL_Rect sprite_);
+	SDL_Rect getIcon25();
+	void setIcon25(SDL_Rect sprite_);
+	SDL_Rect getIcon50();
+	void setIcon50(SDL_Rect sprite_);
 
 	int getStr();
 	int getDex();
@@ -46,6 +50,7 @@ public:
 	int getTextIndex();
 	void setTextIndex(int index);
 	void render(int x, int y);
+	void addXP(int xp_);
 	//Hit(int atk_roll, int dmg_roll);
 	//Attack()
 
@@ -62,9 +67,11 @@ private:
 	int move;
 	int health;
 	int AC;
-	//somehow maintain lvlups
-	//items and whatnot
+	int xp;
 	SDL_Rect sprite;
+	SDL_Rect icon_50;
+	SDL_Rect icon_25;
+
 	std::string info; 
 	int textIndex;
 };
@@ -78,11 +85,21 @@ public:
 	int getCompleted();
 	int getX();
 	int getY();
+	Character getChar(int index);
 	bool isAdj(int x, int y);
+	void incCompleted();
+	int getGold();
+	void addGold(int gold_);
+	bool subGold(int gold_);
+	int getXP(int index);
+	void addXP(int xp_);
+	bool subXP(int xp_);
+
 
 private:
 	int numChar;
 	int completed;
+	int gold;
 	std::vector<Character> charList;
 	int party_x, party_y;
 };
@@ -91,7 +108,6 @@ private:
 class CharList {
 public:
 	CharList();
-	CharList(int magic);
 	bool isAvailable(int index);
 	void pickChar(int index);
 	Character showChar(int index);

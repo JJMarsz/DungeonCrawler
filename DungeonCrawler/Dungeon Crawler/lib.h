@@ -46,6 +46,7 @@
 #define QUEST_THREE_X		520
 #define QUEST_PAGE_WIDTH	80
 #define QUEST_PAGE_HEIGHT	115
+#define QUEST_MAX			3
 
 /* TILE CONSTANTS */
 enum {
@@ -66,7 +67,7 @@ enum {
 	HOVER,
 	DEAD_,
 	EMPTY_,
-	PARTY
+	PARTY,
 };
 //Dead ends
 #define	TILE_LEFT_X				0
@@ -171,7 +172,8 @@ enum ScreenState
 	TOWN_CHAR_UP,
 	TOWN_PARTY_UP,
 	TOWN_BUTTON_LEFT,
-	TOWN_BUTTON_RIGHT
+	TOWN_BUTTON_RIGHT,
+	REWARD
 };
 enum RoomSize
 {

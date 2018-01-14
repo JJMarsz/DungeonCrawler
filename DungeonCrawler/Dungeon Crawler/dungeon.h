@@ -84,5 +84,7 @@ private:
 	int path_length;
 };
 
+std::string diffToString(Difficulty diff);
+
 extern Dungeon current_dungeon;
 #endif

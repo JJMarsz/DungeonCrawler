@@ -127,6 +127,9 @@ int main(int argc, char* args[])
 							prev_y = y;
 						}
 						break;
+					case REWARD:
+						acceptrejectButtons[2].handleEvent(&e, 2);
+						break;
 					case ROOM_MAIN:
 						for (int i = 0; i < TOTAL_BUTTONS; ++i)
 						{
@@ -169,7 +172,6 @@ int main(int argc, char* args[])
 				case SELECTED_QUEST:
 					drawQuestBoard();
 					drawTownMenu();
-					state = SELECTED_QUEST;
 					drawQuestInfo();
 					state = SELECTED_QUEST;
 					break;
@@ -192,6 +194,8 @@ int main(int argc, char* args[])
 
 					break;
 				case DUNGEON:
+					if (current_dungeon.isEnd(gParty.getX(), gParty.getY()))
+						state = REWARD;
 					drawDungeon();
 					if (hover) {
 						if (MouseDown && MouseUp) {
@@ -202,10 +206,14 @@ int main(int argc, char* args[])
 							/* remove hover after clicking */
 							hover = false;
 							break;
-
 						}
 						tileSST.render(x + (start_x % 50), y, &tileSpriteClips[HOVER]);
 					}
+					break;
+				case REWARD:
+					drawDungeon();
+					questinfo.render(262, 150, NULL);
+					acceptrejectButtons[2].render();
 					break;
 				case ROOM_MAIN:
 					//Draw menu bar

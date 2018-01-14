@@ -55,6 +55,8 @@ private:
 
 };
 
+extern int quest_index;
+
 void menuClicked(int index);
 
 void char1Clicked(int index);
@@ -68,6 +70,7 @@ void questReject(int index);
 void gotoCharUp(int index);
 void gotoPartyUp(int index);
 void gotoShop(int index);
+void returnToTown(int index);
 
 void emptyHandler(int index);
 

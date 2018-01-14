@@ -79,7 +79,18 @@ extern std::vector<SDL_Rect> townButtonClips;
 
 extern std::vector<LTexture*> texts;
 
+/* Texts */
 extern LTexture leftText;
 extern LTexture rightText;
+extern LTexture goldmenu;
+extern LTexture xp0, xp1, xp2;
+extern LTexture completed;
+extern LTexture questTitle;
+extern LTexture questInfoText;
+extern LTexture questGold;
+extern LTexture questXP;
+extern LTexture questDiff;
+extern LTexture acceptText;
+extern LTexture rejectText;
 #endif
 
