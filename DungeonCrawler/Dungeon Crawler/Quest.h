@@ -62,16 +62,34 @@ private:
 };
 
 /* generates quests and fills quest array */
-void loadQuests();
+void initQuests();
 
 class QuestList {
 public:
-	//QuestList();
+	struct QuestDesc {
+		Quest q;
+		bool show;
+		bool complete;
+	};
+	QuestList();
+	bool isAvailable(int index);
+	Quest showQuest(int index);
+	void completeQuest(std::string name);
+	void unShowQuest();
+	void getQuests();
+	void getEasyQuest();
+	void getMedQuest();
+	void getHardQuest();
+
 private:
-	int completed;
+	std::vector<QuestDesc> list;
+	int easyQuestIndex;
+	int medQuestIndex;
+	int hardQuestIndex;
 
 };
 extern std::vector<Quest> current_quests;
+extern QuestList quests;
 
 #endif
 

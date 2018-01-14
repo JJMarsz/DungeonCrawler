@@ -82,7 +82,6 @@ bool init()
 	townButtonClips.resize(8);
 	questButtons.resize(3);
 	questPageClips.resize(4);
-	current_quests.resize(3);
 	acceptrejectClips.resize(12);
 	acceptrejectButtons.resize(3);
 	int i;
@@ -412,7 +411,8 @@ bool loadMedia()
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
-	loadQuests();
+	initQuests();
+	quests.getQuests();
 	if (!shop.loadFromFile("shop.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
@@ -834,9 +834,9 @@ void drawQuestInfo() {
 	acceptrejectButtons[1].render();
 	questTitle.render(280, 164);
 	questDiff.render(280, 200);
-	questGold.render(280, 230);
-	questXP.render(280, 260);
-	questInfoText.render(280, 290);
+	questGold.render(280, 220);
+	questXP.render(280, 240);
+	questInfoText.render(280, 260);
 	acceptText.render(286, 381);
 	rejectText.render(466, 381);
 }

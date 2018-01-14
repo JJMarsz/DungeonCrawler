@@ -46,29 +46,11 @@
 #define QUEST_THREE_X		520
 #define QUEST_PAGE_WIDTH	80
 #define QUEST_PAGE_HEIGHT	115
-#define QUEST_MAX			3
+#define MAX_QUESTS			3
+#define NUM_QUEST			10
+#define END_GAME			5
 
-/* TILE CONSTANTS */
-enum {
-	LEFT_,
-	DOWN_,
-	RIGHT_,
-	UP_,
-	DOWN_LEFT,
-	LEFT_UP,
-	UP_RIGHT,
-	RIGHT_DOWN,
-	HORIZ,
-	VERT,
-	DOWN_LEFT_UP,
-	LEFT_UP_RIGHT,
-	UP_RIGHT_DOWN,
-	RIGHT_DOWN_LEFT,
-	HOVER,
-	DEAD_,
-	EMPTY_,
-	PARTY,
-};
+
 //Dead ends
 #define	TILE_LEFT_X				0
 #define	TILE_LEFT_Y				0
@@ -173,7 +155,8 @@ enum ScreenState
 	TOWN_PARTY_UP,
 	TOWN_BUTTON_LEFT,
 	TOWN_BUTTON_RIGHT,
-	REWARD
+	REWARD,
+	END
 };
 enum RoomSize
 {
@@ -182,4 +165,25 @@ enum RoomSize
 	LARGE
 };
 
+/* TILE CONSTANTS */
+enum {
+	LEFT_,
+	DOWN_,
+	RIGHT_,
+	UP_,
+	DOWN_LEFT,
+	LEFT_UP,
+	UP_RIGHT,
+	RIGHT_DOWN,
+	HORIZ,
+	VERT,
+	DOWN_LEFT_UP,
+	LEFT_UP_RIGHT,
+	UP_RIGHT_DOWN,
+	RIGHT_DOWN_LEFT,
+	HOVER,
+	DEAD_,
+	EMPTY_,
+	PARTY,
+};
 #endif

@@ -234,8 +234,8 @@ void gotoShop(int index) {
 void questInfo(int index) {
 	state = SELECTED_QUEST;
 	quest_index = index;
-	questTitle.loadFromRenderedText(current_quests[index].getTitle(), textColor, 200);
-	questInfoText.loadFromRenderedText(current_quests[index].getInfo(), textColor, 200);
+	questTitle.loadFromRenderedText(current_quests[index].getTitle(), textColor, 250);
+	questInfoText.loadFromRenderedText(current_quests[index].getInfo(), textColor, 250);
 	questGold.loadFromRenderedText("Gold: " + std::to_string(current_quests[index].getGold()), textColor, 200);
 	questXP.loadFromRenderedText("XP: " + std::to_string(current_quests[index].getXP()), textColor, 200);
 	questDiff.loadFromRenderedText("Difficulty: " + diffToString(current_quests[index].getDiff()), textColor, 200);
@@ -245,6 +245,7 @@ void questAccept(int index) {
 	//should generate based off of what quest
 	current_dungeon = Dungeon(current_quests[quest_index].getDiff());
 	gParty.moveParty(current_dungeon.getStartX(), current_dungeon.getStartY());
+	quests.unShowQuest();
 	state = DUNGEON;
 }
 
@@ -259,7 +260,11 @@ void returnToTown(int index) {
 	gParty.addGold(current_quests[quest_index].getGold());
 	gParty.addXP(current_quests[quest_index].getXP());
 	//check if game is done
-
+	if (gParty.getCompleted() >= END_GAME) {
+		state = END;
+	}
+	quests.completeQuest(current_quests[quest_index].getTitle());
+	quests.getQuests();
 	//create a new quest if neccesary
 	//setup all relevant things
 	completed.loadFromRenderedText(std::to_string(gParty.getCompleted()), textColor, 200);
