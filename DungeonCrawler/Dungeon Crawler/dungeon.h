@@ -33,6 +33,12 @@ enum Direction {
 	DOWN
 };
 
+enum Area {
+	BOSS_,
+	START_,
+	NONE_
+};
+
 class Tile {
 public:
 	Tile(EncounterType type_);
@@ -45,10 +51,13 @@ public:
 	int getX();
 	int getY();
 	void setPos(int x_, int y_);
+	void setArea(Area a);
+	Area getArea();
 private:
 	EncounterType type;
 	Tile* prev;
 	int x, y;
+	Area area;
 	//moblist
 };
 
@@ -59,7 +68,7 @@ public:
 	void addelements(int num);
 	int find(int elem);
 	bool setunion(int a, int b);
-	//int size(elem);
+	int getSize(int i);
 
 private:
 	std::vector<int> set;
@@ -70,7 +79,6 @@ public:
 	Dungeon();
 	Dungeon(Difficulty type);
 	void setTile(int RMO_index, Tile newTile);
-	bool canTravel(int x, int y, Direction dir);
 	Tile getTile(int RMO_index);
 	int getWidth();
 	int getHeight();
@@ -78,15 +86,24 @@ public:
 	bool isEnd(int x, int y);
 	int getStartX();
 	int getStartY();
-	bool pathAdjacent(int x, int y);
-	void initProspect();
-	void setUnionNone(int x, int y);
 
 private:
+
+	bool pathAdjacent(int x, int y);
+	bool canGen(int x, int y);
+	void deadendProspectGenerate();
+	void setUnionNone(int x, int y);
+	void initArea();
+	bool inBossArea(int x, int y);
+	bool canTravel(int x, int y, Direction dir);
+	void clearBarriers();
+	void updateBarriers();
+
 	//use RMO to access
 	//x + width*y
 	std::vector<Tile> dungMap;
 	DisjointSets mapSet;
+	std::unordered_map<int, bool> bossArea;
 	int width, height;
 	int start_x, start_y;
 	int end_x, end_y;

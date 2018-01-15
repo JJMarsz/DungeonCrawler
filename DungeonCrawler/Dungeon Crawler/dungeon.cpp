@@ -19,7 +19,6 @@ int DisjointSets::find(int elem) {
 	}
 }
 
-
 bool DisjointSets::setunion(int a, int b) {
 	int parentA, parentB;
 	if (set[a] < 0)
@@ -50,6 +49,10 @@ DisjointSets::DisjointSets() {
 
 void DisjointSets::flush() {
 	set.resize(0);
+}
+
+int DisjointSets::getSize(int i) {
+	return -set[find(i)];
 }
 /* Dungeon class defenitions */
 //creates a basic dungeon, once made, apply dungeon quest modifiers to it
@@ -154,10 +157,9 @@ Dungeon::Dungeon(Difficulty type) {
 		if (path_length > 2*height && path_length < 3*height)
 			break;
 	}
-	Tile* trav = dungMap[end_x + end_y * width].getPrev()->getPrev();
 	//generate dead ends
 	//mark barrier tiles
-	initProspect();
+	deadendProspectGenerate();
 	/*int path_count = 0;
 	while (dead_count > 0 && trav != NULL) {
 		newTile.setType(DEADEND);
@@ -264,23 +266,230 @@ Dungeon::Dungeon(Difficulty type) {
 	}*/
 }
 
-void Dungeon::initProspect() {
+void Dungeon::deadendProspectGenerate() {
 	int i, j;
-	for (i = 0; i < width; i++) {
-		for (j = 0; j < height; j++) {
-			if (pathAdjacent(i, j) && dungMap[i + j*width].getType() == NONE)
-				dungMap[i + j * width] = BARRIER;
-		}
-	}
+	//init the boss area
+	initArea();
+	//create barriers
+	updateBarriers();
 	
 	for (i = 0; i < width; i++) {
-		for (j = 0; j < height; j++) {
+		for (j = 1; j < height-1; j++) {
 			if (dungMap[i + j * width].getType() == NONE) {
 				//setunion all adjacent tiles, except barriers
 				setUnionNone(i, j);
 			}
 		}
 	}
+	std::vector<int> possible;
+	int highest = 0;
+	int curr = 0;
+	for (i = 0; i < width; i++) {
+		for (j = 0; j < height; j++) {
+			//searh for highest prospect
+			curr = 0;
+			if (dungMap[i + j * width].getType() == BARRIER) {
+				//check adjacent tiles for highest prospect
+				if (j > 0) {
+					if (dungMap[i + (j - 1)*width].getType() == NONE) {
+						if (curr < mapSet.getSize(i + (j - 1)*width)) {
+							curr = mapSet.getSize(i + (j - 1)*width);
+						}
+					}
+				}
+				if (i > 0) {
+					if (dungMap[i - 1 + (j)*width].getType() == NONE) {
+						if (curr < mapSet.getSize(i - 1 + (j)*width)) {
+							curr = mapSet.getSize(i - 1 + (j)*width);
+						}
+					}
+
+				}
+				if (j < height - 1) {
+					if (dungMap[i + (j + 1)*width].getType() == NONE) {
+						if (curr < mapSet.getSize(i + (j+1)*width)) {
+							curr = mapSet.getSize(i + (j+1)*width);
+						}
+					}
+
+				}
+				if (i < width - 1) {
+					if (dungMap[i + 1 + (j)*width].getType() == NONE) {
+						if (curr < mapSet.getSize(i + 1 + (j)*width)) {
+							curr = mapSet.getSize(i + 1 + (j)*width);
+						}
+					}
+
+				}
+			}
+			if (curr == highest) {
+				//push to tile vector
+				possible.push_back(i + j * width);
+			}
+			else if (curr > highest) {
+				//flush vector and start a new one
+				highest = curr;
+				possible = std::vector<int>(0);
+				possible.push_back(i + j * width);
+			}
+		}
+	}
+
+	//at this point we have a vector of RMO indeces to barrier tiles with the highest prospect
+	srand(time(NULL));
+	int selected = possible[rand() % possible.size()];
+	dungMap[selected].setType(DEADEND);
+	//now generate the path for this deadend
+	int d_count = 2;//limits the downs to only 2 which prevents obviously bad paths
+
+
+
+
+
+
+
+	/*
+	prev_x = trav->getX();
+	prev_y = trav->getY();
+	int path_limit = height;
+	int d_count = 2;
+	while (1) {
+		while (1) {
+			dir = (Direction)(rand() % 4);
+			timeout++;
+			if (dir == DOWN && d_count < 1)
+				continue;
+			if (y == 1 && dir == UP)
+				continue;
+			if (canTravel(x, y, dir))
+				break;
+			if (timeout > 300)
+				break;
+		}
+		if (timeout > 300) {
+			timeout = 0;
+			break;
+		}
+		//by this point, a valid direction is selected
+
+		if (canTravel(x, y, dir)) {
+			path_limit--;
+			prev_x = x;
+			prev_y = y;
+			switch (dir) {
+			case UP:
+				y--;
+				break;
+			case LEFT:
+				x--;
+				break;
+			case DOWN:
+				y++;
+				d_count--;
+				break;
+			case RIGHT:
+				x++;
+				break;
+			default:
+				while (1);
+			}
+			mapSet.setunion(prev_y*width + prev_x, y*width + x);
+			newTile.setPrev(&dungMap[prev_y*width + prev_x]);
+			newTile.setPos(x, y);
+			setTile(y*width + x, newTile);
+		}
+		if (path_limit < 1)
+			break;
+	}*/
+}
+
+void Dungeon::clearBarriers() {
+	int i, j;
+	for (i = 0; i < width; i++) {
+		for (j = 1; j < height - 1; j++) {
+			if (dungMap[i + j * width].getType() == BARRIER)
+				dungMap[i + j * width].setType(NONE);
+		}
+	}
+}
+
+void Dungeon::updateBarriers() {
+	int i, j;
+	for (i = 0; i < width; i++) {
+		for (j = 1; j < height - 1; j++) {
+			if (canGen(i, j) && dungMap[i + j * width].getType() == NONE && !inBossArea(i, j))
+				dungMap[i + j * width].setType(BARRIER);
+		}
+	}
+}
+
+void Dungeon::initArea() {
+	//the boss area is the last 3 tiles and adjacent areas, store all tiles to vec to be compared later
+
+	//create boss area
+	int x = end_x;
+	int y = end_y;
+	int temp_x;
+	for (int i = 0; i < 3; i++) {
+		//add all adjacent tiles
+		if (y > 0) {
+			if (getTile(x + (y - 1)*width).getType() == BARRIER || getTile(x + (y - 1)*width).getType() == NONE)
+				dungMap[x + (y - 1)*width].setArea(BOSS_);
+		}
+		if (x > 0) {
+			if (getTile(x - 1 + (y)*width).getType() == BARRIER || getTile(x - 1 + (y)*width).getType() == NONE)
+				dungMap[x - 1 + (y)*width].setArea(BOSS_);
+		}
+		if (y < getHeight() - 1) {
+			if (getTile(x + (y + 1)*width).getType() == BARRIER || getTile(x + (y + 1)*width).getType() == NONE)
+				dungMap[x + (y + 1)*width].setArea(BOSS_);
+		}
+		if (x < getWidth() - 1) {
+			if (getTile(x + 1 + (y)*width).getType() == BARRIER || getTile(x + 1 + (y)*width).getType() == NONE)
+				dungMap[x + 1 + (y)*width].setArea(BOSS_);
+		}
+		temp_x = x;
+		x = dungMap[temp_x + y * width].getPrev()->getX();
+		y = dungMap[temp_x + y * width].getPrev()->getY();
+	}
+
+
+}
+
+bool Dungeon::inBossArea(int x, int y) {
+	if (dungMap[x + y * width].getArea() == BOSS_ || dungMap[x + y * width].getArea() == START_)
+		return true;
+	return false;
+}
+
+bool Dungeon::canGen(int x, int y) {
+	bool path = false;
+	if (y > 0) {
+		if (dungMap[x + (y - 1)*width].getType() == PATH || dungMap[x + (y - 1)*width].getType() == DEADEND)
+			path = true;
+	}
+	if (x > 0) {
+		if (dungMap[x - 1 + (y)*width].getType() == PATH || dungMap[x - 1 + (y)*width].getType() == DEADEND) {
+			if (path == true)
+				return false;
+			path = true;
+		}
+	}
+	if (y < height - 1) {
+		if (dungMap[x + (y + 1)*width].getType() == PATH || dungMap[x + (y + 1)*width].getType() == DEADEND) {
+			if (path == true)
+				return false;
+			path = true;
+		}
+	}
+	if (x < width - 1) {
+		if (dungMap[x + 1 + (y)*width].getType() == PATH || dungMap[x + 1 + (y)*width].getType() == DEADEND) {
+			if (path == true)
+				return false;
+			path = true;
+		}
+	}
+	return path;
 }
 
 bool Dungeon::pathAdjacent(int x, int y) {
@@ -290,16 +499,19 @@ bool Dungeon::pathAdjacent(int x, int y) {
 			path = true;
 	}
 	if (x > 0) {
-		if (dungMap[x - 1 + (y)*width].getType() == PATH || dungMap[x - 1 + (y)*width].getType() == DEADEND)
+		if (dungMap[x - 1 + (y)*width].getType() == PATH || dungMap[x - 1 + (y)*width].getType() == DEADEND) {
 			path = true;
+		}
 	}
 	if (y < height - 1) {
-		if (dungMap[x + (y + 1)*width].getType() == PATH || dungMap[x + (y + 1)*width].getType() == DEADEND)
+		if (dungMap[x + (y + 1)*width].getType() == PATH || dungMap[x + (y + 1)*width].getType() == DEADEND) {
 			path = true;
+		}
 	}
 	if (x < width - 1) {
-		if (dungMap[x + 1 + (y)*width].getType() == PATH || dungMap[x + 1 + (y)*width].getType() == DEADEND)
+		if (dungMap[x + 1 + (y)*width].getType() == PATH || dungMap[x + 1 + (y)*width].getType() == DEADEND) {
 			path = true;
+		}
 	}
 	return path;
 }
@@ -307,20 +519,20 @@ bool Dungeon::pathAdjacent(int x, int y) {
 void Dungeon::setUnionNone(int x, int y) {
 	//union everythign adjacent as long as its NONE
 	int curr = x + (y)*width;
-	if (y > 0) {
-		if (getTile(x + (y - 1)*width).getType() != BARRIER && mapSet.find(curr) != mapSet.find(curr - width))
+	if (y > 1) {
+		if (getTile(x + (y - 1)*width).getType() == NONE && !pathAdjacent(x, y-1) && mapSet.find(curr) != mapSet.find(curr - width))
 			mapSet.setunion(curr, curr - width);
 	}
 	if (x > 0) {
-		if (getTile(x - 1 + (y)*width).getType() != BARRIER && mapSet.find(curr) != mapSet.find(curr - 1))
+		if (getTile(x - 1 + (y)*width).getType() == NONE && !pathAdjacent(x - 1, y) && mapSet.find(curr) != mapSet.find(curr - 1))
 			mapSet.setunion(curr, curr - 1);
 	}
-	if (y < getHeight() - 1) {
-		if (getTile(x + (y + 1)*width).getType() != BARRIER && mapSet.find(curr) != mapSet.find(curr + width))
+	if (y < getHeight() - 2) {
+		if (getTile(x + (y + 1)*width).getType() == NONE && !pathAdjacent(x, y + 1) && mapSet.find(curr) != mapSet.find(curr + width))
 			mapSet.setunion(curr, curr + width);
 	}
 	if (x < getWidth() - 1) {
-		if (getTile(x + 1 + (y)*width).getType() != BARRIER && mapSet.find(curr) != mapSet.find(curr + 1))
+		if (getTile(x + 1 + (y)*width).getType() == NONE && !pathAdjacent(x + 1, y) && mapSet.find(curr) != mapSet.find(curr + 1))
 			mapSet.setunion(curr, curr + 1);
 	}
 }
@@ -428,6 +640,8 @@ void Tile::operator=(const Tile& t) {
 	y = t.y;
 }
 
+void Tile::setArea(Area a) { area = a; }
+Area Tile::getArea() { return area; }
 
 /* misc functions */
 std::string diffToString(Difficulty diff) {
