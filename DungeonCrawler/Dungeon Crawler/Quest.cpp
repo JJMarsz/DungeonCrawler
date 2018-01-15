@@ -129,6 +129,15 @@ QuestList::QuestList() {
 	};
 	list[hardQuestIndex].complete = false;
 	list[hardQuestIndex].show = false;
+	list[hardQuestIndex+1].q =
+	{ "The Beholder Xanathar",
+		"The sacred town sword was stolen by Xanathar! Reclaim our sword for a worthwhile compensation!",
+		600,
+		3,
+		HARD
+	};
+	list[hardQuestIndex+1].complete = false;
+	list[hardQuestIndex+1].show = false;
 }
 
 bool QuestList::isAvailable(int index) {

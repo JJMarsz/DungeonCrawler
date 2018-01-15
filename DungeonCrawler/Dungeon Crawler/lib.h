@@ -47,7 +47,7 @@
 #define QUEST_PAGE_WIDTH	80
 #define QUEST_PAGE_HEIGHT	115
 #define MAX_QUESTS			3
-#define NUM_QUEST			10
+#define NUM_QUEST			11
 #define END_GAME			5
 
 
@@ -109,6 +109,17 @@
 
 #define TILE_PARTY_X			200
 #define TILE_PARTY_Y			50
+
+#define TILE_BARRIER_X			200
+#define TILE_BARRIER_Y			100
+
+//these are debug colorings
+#define TILE_AREA_X				200
+#define	TILE_AREA1_Y			150	
+#define	TILE_AREA2_Y			200	
+#define	TILE_AREA3_Y			250	
+#define	TILE_AREA4_Y			300	
+#define	TILE_AREA5_Y			350	
 
 #define TILE_WIDTH				50
 #define TILE_HEIGHT				50
@@ -185,5 +196,6 @@ enum {
 	DEAD_,
 	EMPTY_,
 	PARTY,
+	BAR
 };
 #endif

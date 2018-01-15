@@ -11,7 +11,13 @@ enum EncounterType {
 	INFO,
 	BOSS,
 	MOBS,
-	DEADEND
+	DEADEND,
+	BARRIER,
+	AREA1,
+	AREA2,
+	AREA3,
+	AREA4,
+	AREA5
 };
 
 enum Difficulty {
@@ -72,6 +78,9 @@ public:
 	bool isEnd(int x, int y);
 	int getStartX();
 	int getStartY();
+	bool pathAdjacent(int x, int y);
+	void initProspect();
+	void setUnionNone(int x, int y);
 
 private:
 	//use RMO to access

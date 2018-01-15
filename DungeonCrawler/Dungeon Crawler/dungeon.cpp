@@ -19,6 +19,7 @@ int DisjointSets::find(int elem) {
 	}
 }
 
+
 bool DisjointSets::setunion(int a, int b) {
 	int parentA, parentB;
 	if (set[a] < 0)
@@ -153,10 +154,11 @@ Dungeon::Dungeon(Difficulty type) {
 		if (path_length > 2*height && path_length < 3*height)
 			break;
 	}
-	Tile* trav = dungMap[end_x + end_y * width].getPrev();
+	Tile* trav = dungMap[end_x + end_y * width].getPrev()->getPrev();
 	//generate dead ends
-	
-	int path_count = 0;
+	//mark barrier tiles
+	initProspect();
+	/*int path_count = 0;
 	while (dead_count > 0 && trav != NULL) {
 		newTile.setType(DEADEND);
 		if (rand() % 100 + 1 < (dead_count) * 20 + path_count * 5) {
@@ -202,7 +204,7 @@ Dungeon::Dungeon(Difficulty type) {
 				//generate the deadend path
 				prev_x = trav->getX();
 				prev_y = trav->getY();
-				int path_limit = height / 2;
+				int path_limit = height;
 				int d_count = 2;
 				while (1) {
 					while (1) {
@@ -253,12 +255,73 @@ Dungeon::Dungeon(Difficulty type) {
 						break;
 				}
 			}
-			trav = trav->getPrev();
 			timeout++;
 			if (timeout > 300)
 				break;
 		}
+		trav = trav->getPrev();
 		path_count++;
+	}*/
+}
+
+void Dungeon::initProspect() {
+	int i, j;
+	for (i = 0; i < width; i++) {
+		for (j = 0; j < height; j++) {
+			if (pathAdjacent(i, j) && dungMap[i + j*width].getType() == NONE)
+				dungMap[i + j * width] = BARRIER;
+		}
+	}
+	
+	for (i = 0; i < width; i++) {
+		for (j = 0; j < height; j++) {
+			if (dungMap[i + j * width].getType() == NONE) {
+				//setunion all adjacent tiles, except barriers
+				setUnionNone(i, j);
+			}
+		}
+	}
+}
+
+bool Dungeon::pathAdjacent(int x, int y) {
+	bool path = false;
+	if (y > 0) {
+		if (dungMap[x + (y - 1)*width].getType() == PATH || dungMap[x + (y - 1)*width].getType() == DEADEND)
+			path = true;
+	}
+	if (x > 0) {
+		if (dungMap[x - 1 + (y)*width].getType() == PATH || dungMap[x - 1 + (y)*width].getType() == DEADEND)
+			path = true;
+	}
+	if (y < height - 1) {
+		if (dungMap[x + (y + 1)*width].getType() == PATH || dungMap[x + (y + 1)*width].getType() == DEADEND)
+			path = true;
+	}
+	if (x < width - 1) {
+		if (dungMap[x + 1 + (y)*width].getType() == PATH || dungMap[x + 1 + (y)*width].getType() == DEADEND)
+			path = true;
+	}
+	return path;
+}
+
+void Dungeon::setUnionNone(int x, int y) {
+	//union everythign adjacent as long as its NONE
+	int curr = x + (y)*width;
+	if (y > 0) {
+		if (getTile(x + (y - 1)*width).getType() != BARRIER && mapSet.find(curr) != mapSet.find(curr - width))
+			mapSet.setunion(curr, curr - width);
+	}
+	if (x > 0) {
+		if (getTile(x - 1 + (y)*width).getType() != BARRIER && mapSet.find(curr) != mapSet.find(curr - 1))
+			mapSet.setunion(curr, curr - 1);
+	}
+	if (y < getHeight() - 1) {
+		if (getTile(x + (y + 1)*width).getType() != BARRIER && mapSet.find(curr) != mapSet.find(curr + width))
+			mapSet.setunion(curr, curr + width);
+	}
+	if (x < getWidth() - 1) {
+		if (getTile(x + 1 + (y)*width).getType() != BARRIER && mapSet.find(curr) != mapSet.find(curr + 1))
+			mapSet.setunion(curr, curr + 1);
 	}
 }
 

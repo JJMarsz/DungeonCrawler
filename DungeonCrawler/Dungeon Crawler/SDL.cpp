@@ -69,7 +69,7 @@ bool init()
 	//set up relevant data structures
 	spriteClips.resize(6);
 	buttonSpriteClips.resize(12);
-	tileSpriteClips.resize(18);
+	tileSpriteClips.resize(24);
 	texts.reserve(50);
 	charClips.resize(NUM_CHAR*3);
 	Buttons.resize(12);
@@ -308,6 +308,11 @@ bool loadMedia()
 		tileSpriteClips[PARTY].y = TILE_PARTY_Y;
 		tileSpriteClips[PARTY].w = TILE_WIDTH;
 		tileSpriteClips[PARTY].h = TILE_HEIGHT;
+
+		tileSpriteClips[BAR].x = TILE_BARRIER_X;
+		tileSpriteClips[BAR].y = TILE_BARRIER_Y;
+		tileSpriteClips[BAR].w = TILE_WIDTH;
+		tileSpriteClips[BAR].h = TILE_HEIGHT;
 
 	}
 	if (!charSST.loadFromFile("charicons.png")) {
@@ -636,6 +641,10 @@ void drawMainMenu() {
 int getTileIndex(int x, int y) {
 	if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth())).getType() == NONE)
 		return EMPTY_;
+	if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth())).getType() == DEADEND)
+		return DEAD_;
+	if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth())).getType() == BARRIER)
+		return BAR;
 	//bitwise storage of adjacency
 	//	R	D	L	U
 	//
@@ -647,22 +656,26 @@ int getTileIndex(int x, int y) {
 	//check adjacent
 	//check up
 	if (y > 0) {
-		if (current_dungeon.getTile(x + (y-1) * (current_dungeon.getWidth())).getType() != NONE)
+		if (current_dungeon.getTile(x + (y-1) * (current_dungeon.getWidth())).getType() != NONE
+			&& current_dungeon.getTile(x + (y - 1) * (current_dungeon.getWidth())).getType() != BARRIER)
 			adj += 1;
 	}
 	//check left
 	if (x > 0) {
-		if (current_dungeon.getTile(x - 1 + (y) * (current_dungeon.getWidth())).getType() != NONE)
+		if (current_dungeon.getTile(x - 1 + (y) * (current_dungeon.getWidth())).getType() != NONE
+			&& current_dungeon.getTile(x - 1 + (y) * (current_dungeon.getWidth())).getType() != BARRIER)
 			adj += 2;
 	}
 	//check down
 	if (y < current_dungeon.getHeight()-1) {
-		if (current_dungeon.getTile(x + (y + 1) * (current_dungeon.getWidth())).getType() != NONE)
+		if (current_dungeon.getTile(x + (y + 1) * (current_dungeon.getWidth())).getType() != NONE
+			&& current_dungeon.getTile(x + (y + 1) * (current_dungeon.getWidth())).getType() != BARRIER)
 			adj += 4;
 	}
 	//check right
 	if (x < current_dungeon.getWidth() - 1) {
-		if (current_dungeon.getTile(x + 1 + (y) * (current_dungeon.getWidth())).getType() != NONE)
+		if (current_dungeon.getTile(x + 1 + (y) * (current_dungeon.getWidth())).getType() != NONE
+			&& current_dungeon.getTile(x + 1 + (y) * (current_dungeon.getWidth())).getType() != BARRIER)
 			adj += 8;
 	}
 	switch (adj) {

@@ -113,6 +113,8 @@ bool Party::isAdj(int x, int y) {
 	int RMO = x + y * current_dungeon.getWidth();
 	if (current_dungeon.getTile(RMO).getType() == NONE)
 		return false;
+	if (current_dungeon.getTile(RMO).getType() == BARRIER)
+		return false;
 	if (party_x + 1 + current_dungeon.getWidth()*party_y == RMO)
 		return true;
 	if (party_x - 1 + current_dungeon.getWidth()*party_y == RMO)
