@@ -339,20 +339,22 @@ void Dungeon::deadendProspectGenerate() {
 	srand(time(NULL));
 	int selected = possible[rand() % possible.size()];
 	dungMap[selected].setType(DEADEND);
+	clearBarriers();
 	//now generate the path for this deadend
 	int d_count = 2;//limits the downs to only 2 which prevents obviously bad paths
 
 
+	Tile* trav = &dungMap[selected];
+	int prev_y, prev_x, y, x, timeout=0;
+	Direction dir;
+	Tile newTile(DEADEND);
 
-
-
-
-
-	/*
 	prev_x = trav->getX();
 	prev_y = trav->getY();
+	x = trav->getX();
+	y = trav->getY();
+	mapSet.setunion(selected, start_x + start_y*width);
 	int path_limit = height;
-	int d_count = 2;
 	while (1) {
 		while (1) {
 			dir = (Direction)(rand() % 4);
@@ -363,36 +365,49 @@ void Dungeon::deadendProspectGenerate() {
 				continue;
 			if (canTravel(x, y, dir))
 				break;
-			if (timeout > 300)
+			if (timeout > 1000)
 				break;
 		}
-		if (timeout > 300) {
+		if (timeout > 1000) {
 			timeout = 0;
 			break;
 		}
 		//by this point, a valid direction is selected
 
 		if (canTravel(x, y, dir)) {
-			path_limit--;
 			prev_x = x;
 			prev_y = y;
 			switch (dir) {
 			case UP:
-				y--;
-				break;
+				if (canGen(x, y - 1)) {
+					y--;
+					break;
+				}
+				continue;
 			case LEFT:
-				x--;
-				break;
+				if (canGen(x - 1, y)) {
+					x--;
+					break;
+				}
+				continue;
 			case DOWN:
-				y++;
-				d_count--;
-				break;
+				if (canGen(x, y + 1)) {
+					y++;
+					d_count--;
+					break;
+				}
+				continue;
 			case RIGHT:
-				x++;
-				break;
+				if (canGen(x + 1, y)) {
+					x++;
+					break;
+				}
+				continue;
 			default:
 				while (1);
 			}
+			path_limit--;
+			timeout = 0;
 			mapSet.setunion(prev_y*width + prev_x, y*width + x);
 			newTile.setPrev(&dungMap[prev_y*width + prev_x]);
 			newTile.setPos(x, y);
@@ -400,7 +415,8 @@ void Dungeon::deadendProspectGenerate() {
 		}
 		if (path_limit < 1)
 			break;
-	}*/
+	}
+	updateBarriers();
 }
 
 void Dungeon::clearBarriers() {
@@ -621,6 +637,7 @@ Tile::Tile() {
 	prev = NULL;
 	x = -1;
 	y = -1;
+	area = NONE_;
 }
 
 Tile* Tile::getPrev() { return prev; }

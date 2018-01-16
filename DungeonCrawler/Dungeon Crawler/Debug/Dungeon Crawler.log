@@ -1,12 +1,4 @@
 ﻿  dungeon.cpp
 c:\users\jj\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(63): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
 c:\users\jj\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(339): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  party.cpp
-  main.cpp
-  SDL.cpp
-  Quest.cpp
-  LTexture.cpp
-  LButton.cpp
   Dungeon Crawler.vcxproj -> C:\Users\JJ\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe
