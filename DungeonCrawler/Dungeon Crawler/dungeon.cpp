@@ -267,156 +267,182 @@ Dungeon::Dungeon(Difficulty type) {
 }
 
 void Dungeon::deadendProspectGenerate() {
+	//initializations
 	int i, j;
 	//init the boss area
 	initArea();
 	//create barriers
 	updateBarriers();
 	
-	for (i = 0; i < width; i++) {
-		for (j = 1; j < height-1; j++) {
-			if (dungMap[i + j * width].getType() == NONE) {
-				//setunion all adjacent tiles, except barriers
-				setUnionNone(i, j);
-			}
-		}
-	}
-	std::vector<int> possible;
-	int highest = 0;
-	int curr = 0;
-	for (i = 0; i < width; i++) {
-		for (j = 0; j < height; j++) {
-			//searh for highest prospect
-			curr = 0;
-			if (dungMap[i + j * width].getType() == BARRIER) {
-				//check adjacent tiles for highest prospect
-				if (j > 0) {
-					if (dungMap[i + (j - 1)*width].getType() == NONE) {
-						if (curr < mapSet.getSize(i + (j - 1)*width)) {
-							curr = mapSet.getSize(i + (j - 1)*width);
-						}
-					}
-				}
-				if (i > 0) {
-					if (dungMap[i - 1 + (j)*width].getType() == NONE) {
-						if (curr < mapSet.getSize(i - 1 + (j)*width)) {
-							curr = mapSet.getSize(i - 1 + (j)*width);
-						}
-					}
-
-				}
-				if (j < height - 1) {
-					if (dungMap[i + (j + 1)*width].getType() == NONE) {
-						if (curr < mapSet.getSize(i + (j+1)*width)) {
-							curr = mapSet.getSize(i + (j+1)*width);
-						}
-					}
-
-				}
-				if (i < width - 1) {
-					if (dungMap[i + 1 + (j)*width].getType() == NONE) {
-						if (curr < mapSet.getSize(i + 1 + (j)*width)) {
-							curr = mapSet.getSize(i + 1 + (j)*width);
-						}
-					}
-
-				}
-			}
-			if (curr == highest) {
-				//push to tile vector
-				possible.push_back(i + j * width);
-			}
-			else if (curr > highest) {
-				//flush vector and start a new one
-				highest = curr;
-				possible = std::vector<int>(0);
-				possible.push_back(i + j * width);
-			}
-		}
-	}
-
-	//at this point we have a vector of RMO indeces to barrier tiles with the highest prospect
-	srand(time(NULL));
-	int selected = possible[rand() % possible.size()];
-	dungMap[selected].setType(DEADEND);
-	clearBarriers();
-	//now generate the path for this deadend
-	int d_count = 2;//limits the downs to only 2 which prevents obviously bad paths
-
-
-	Tile* trav = &dungMap[selected];
-	int prev_y, prev_x, y, x, timeout=0;
-	Direction dir;
-	Tile newTile(DEADEND);
-
-	prev_x = trav->getX();
-	prev_y = trav->getY();
-	x = trav->getX();
-	y = trav->getY();
-	mapSet.setunion(selected, start_x + start_y*width);
-	int path_limit = height;
 	while (1) {
-		while (1) {
-			dir = (Direction)(rand() % 4);
-			timeout++;
-			if (dir == DOWN && d_count < 1)
-				continue;
-			if (y == 1 && dir == UP)
-				continue;
-			if (canTravel(x, y, dir))
-				break;
-			if (timeout > 1000)
-				break;
-		}
-		if (timeout > 1000) {
-			timeout = 0;
-			break;
-		}
-		//by this point, a valid direction is selected
-
-		if (canTravel(x, y, dir)) {
-			prev_x = x;
-			prev_y = y;
-			switch (dir) {
-			case UP:
-				if (canGen(x, y - 1)) {
-					y--;
-					break;
+		for (i = 0; i < width; i++) {
+			for (j = 1; j < height - 1; j++) {
+				if (dungMap[i + j * width].getType() == NONE) {
+					//setunion all adjacent tiles, except barriers
+					setUnionNone(i, j);
 				}
-				continue;
-			case LEFT:
-				if (canGen(x - 1, y)) {
-					x--;
-					break;
-				}
-				continue;
-			case DOWN:
-				if (canGen(x, y + 1)) {
-					y++;
-					d_count--;
-					break;
-				}
-				continue;
-			case RIGHT:
-				if (canGen(x + 1, y)) {
-					x++;
-					break;
-				}
-				continue;
-			default:
-				while (1);
 			}
-			path_limit--;
-			timeout = 0;
-			mapSet.setunion(prev_y*width + prev_x, y*width + x);
-			newTile.setPrev(&dungMap[prev_y*width + prev_x]);
-			newTile.setPos(x, y);
-			setTile(y*width + x, newTile);
 		}
-		if (path_limit < 1)
+		std::vector<int> possible;
+		int highest = 0;
+		int curr = 0;
+		for (i = 0; i < width; i++) {
+			for (j = 0; j < height; j++) {
+				//searh for highest prospect
+				curr = 0;
+				if (dungMap[i + j * width].getType() == BARRIER) {
+					//check adjacent tiles for highest prospect
+					if (j > 0) {
+						if (dungMap[i + (j - 1)*width].getType() == NONE) {
+							if (curr < mapSet.getSize(i + (j - 1)*width)) {
+								curr = mapSet.getSize(i + (j - 1)*width);
+							}
+						}
+					}
+					if (i > 0) {
+						if (dungMap[i - 1 + (j)*width].getType() == NONE) {
+							if (curr < mapSet.getSize(i - 1 + (j)*width)) {
+								curr = mapSet.getSize(i - 1 + (j)*width);
+							}
+						}
+
+					}
+					if (j < height - 1) {
+						if (dungMap[i + (j + 1)*width].getType() == NONE) {
+							if (curr < mapSet.getSize(i + (j + 1)*width)) {
+								curr = mapSet.getSize(i + (j + 1)*width);
+							}
+						}
+
+					}
+					if (i < width - 1) {
+						if (dungMap[i + 1 + (j)*width].getType() == NONE) {
+							if (curr < mapSet.getSize(i + 1 + (j)*width)) {
+								curr = mapSet.getSize(i + 1 + (j)*width);
+							}
+						}
+
+					}
+				}
+				if (curr == highest) {
+					//push to tile vector
+					if(!deadendAdjacent(i, j))
+						possible.push_back(i + j * width);
+				}
+				else if (curr > highest) {
+					//flush vector and start a new one
+					if(!deadendAdjacent(i, j)) {
+						highest = curr;
+						possible = std::vector<int>(0);
+						possible.push_back(i + j * width);
+					}
+				}
+			}
+		}
+		if (highest < height)
 			break;
+		//at this point we have a vector of RMO indeces to barrier tiles with the highest prospect
+		srand(time(NULL));
+		int selected = possible[rand() % possible.size()];
+		dungMap[selected].setType(DEADEND);
+		//now generate the path for this deadend
+		int d_count = 2;//limits the downs to only 2 which prevents obviously bad paths
+
+
+		Tile* trav = &dungMap[selected];
+		int prev_y, prev_x, y, x, timeout = 0;
+		Direction dir;
+		Tile newTile(DEADEND);
+
+		prev_x = trav->getX();
+		prev_y = trav->getY();
+		x = trav->getX();
+		y = trav->getY();
+		//set all barrier tiles back to NONE
+		clearBarriers();
+		//grab a fresh disjoint set and only union paths and detours
+		reSet();
+		int path_limit = (height / 3) + rand() % 3;
+		srand(time(NULL));
+		while (1) {
+			while (1) {
+				dir = (Direction)(rand() % 4);
+				timeout++;
+				if (dir == DOWN && d_count < 1)
+					continue;
+				if (y == 1 && dir == UP)
+					continue;
+				if (canTravel(x, y, dir))
+					break;
+				if (timeout > 1000)
+					break;
+			}
+			if (timeout > 1000) {
+				timeout = 0;
+				break;
+			}
+			//by this point, a valid direction is selected
+
+			if (canTravel(x, y, dir)) {
+				prev_x = x;
+				prev_y = y;
+				switch (dir) {
+				case UP:
+					if (canGen(x, y - 1)) {
+						y--;
+						break;
+					}
+					continue;
+				case LEFT:
+					if (canGen(x - 1, y)) {
+						x--;
+						break;
+					}
+					continue;
+				case DOWN:
+					if (canGen(x, y + 1)) {
+						y++;
+						d_count--;
+						break;
+					}
+					continue;
+				case RIGHT:
+					if (canGen(x + 1, y)) {
+						x++;
+						break;
+					}
+					continue;
+				default:
+					while (1);
+				}
+				path_limit--;
+				timeout = 0;
+				mapSet.setunion(prev_y*width + prev_x, y*width + x);
+				newTile.setPrev(&dungMap[prev_y*width + prev_x]);
+				newTile.setPos(x, y);
+				setTile(y*width + x, newTile);
+			}
+			if (path_limit < 1)
+				break;
+		}
+		updateBarriers();
 	}
+	clearBarriers();
 	updateBarriers();
+}
+
+void Dungeon::reSet() {
+	//new set
+	mapSet = DisjointSets();
+	mapSet.addelements(width*height);
+	//union all non NONE tiles
+	int i, j;
+	for (i = 0; i < width; i++) {
+		for (j = 1; j < height - 1; j++) {
+			if (dungMap[i + j * width].getType() != NONE)
+				mapSet.setunion(start_x + start_y * width, i + j * width);
+		}
+	}
 }
 
 void Dungeon::clearBarriers() {
@@ -526,6 +552,30 @@ bool Dungeon::pathAdjacent(int x, int y) {
 	}
 	if (x < width - 1) {
 		if (dungMap[x + 1 + (y)*width].getType() == PATH || dungMap[x + 1 + (y)*width].getType() == DEADEND) {
+			path = true;
+		}
+	}
+	return path;
+}
+
+bool Dungeon::deadendAdjacent(int x, int y) {
+	bool path = false;
+	if (y > 0) {
+		if (dungMap[x + (y - 1)*width].getType() == DEADEND)
+			path = true;
+	}
+	if (x > 0) {
+		if (dungMap[x - 1 + (y)*width].getType() == DEADEND) {
+			path = true;
+		}
+	}
+	if (y < height - 1) {
+		if (dungMap[x + (y + 1)*width].getType() == DEADEND) {
+			path = true;
+		}
+	}
+	if (x < width - 1) {
+		if (dungMap[x + 1 + (y)*width].getType() == DEADEND) {
 			path = true;
 		}
 	}

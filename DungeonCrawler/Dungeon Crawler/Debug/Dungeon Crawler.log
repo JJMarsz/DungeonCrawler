@@ -1,4 +1,5 @@
 ﻿  dungeon.cpp
-c:\users\jj\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(63): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jj\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(339): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Dungeon Crawler.vcxproj -> C:\Users\JJ\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(63): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(345): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(366): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Dungeon Crawler.vcxproj -> C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe

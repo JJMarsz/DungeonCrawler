@@ -90,6 +90,7 @@ public:
 private:
 
 	bool pathAdjacent(int x, int y);
+	bool deadendAdjacent(int x, int y);
 	bool canGen(int x, int y);
 	void deadendProspectGenerate();
 	void setUnionNone(int x, int y);
@@ -98,6 +99,7 @@ private:
 	bool canTravel(int x, int y, Direction dir);
 	void clearBarriers();
 	void updateBarriers();
+	void reSet();
 
 	//use RMO to access
 	//x + width*y
