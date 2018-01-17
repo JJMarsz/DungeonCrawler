@@ -97,6 +97,11 @@
 #define	TILE_RIGHT_DOWN_LEFT_X	150
 #define	TILE_RIGHT_DOWN_LEFT_Y	150
 
+//the rare but real, 4 way crossroads
+
+#define TILE_FOUR_WAY_X			50
+#define TILE_FOUR_WAY_Y			250
+
 //special tiles
 #define TILE_HOVER_X			150
 #define TILE_HOVER_Y			100
@@ -204,6 +209,7 @@ enum {
 	LEFT_UP_RIGHT,
 	UP_RIGHT_DOWN,
 	RIGHT_DOWN_LEFT,
+	FOUR_WAY,
 	HOVER,
 	DEAD_,
 	EMPTY_,

@@ -69,8 +69,8 @@ bool init()
 	//set up relevant data structures
 	spriteClips.resize(6);
 	buttonSpriteClips.resize(12);
-	tileSpriteClips.resize(28);
-	texts.reserve(50);
+	tileSpriteClips.resize(29);
+	texts.reserve(20);
 	charClips.resize(NUM_CHAR*3);
 	Buttons.resize(12);
 	charButtons.resize(3);
@@ -288,6 +288,11 @@ bool loadMedia()
 		tileSpriteClips[RIGHT_DOWN_LEFT].y = TILE_RIGHT_DOWN_LEFT_Y;
 		tileSpriteClips[RIGHT_DOWN_LEFT].w = TILE_WIDTH;
 		tileSpriteClips[RIGHT_DOWN_LEFT].h = TILE_HEIGHT;
+
+		tileSpriteClips[FOUR_WAY].x = TILE_FOUR_WAY_X;
+		tileSpriteClips[FOUR_WAY].y = TILE_FOUR_WAY_Y;
+		tileSpriteClips[FOUR_WAY].w = TILE_WIDTH;
+		tileSpriteClips[FOUR_WAY].h = TILE_HEIGHT;
 
 		tileSpriteClips[HOVER].x = TILE_HOVER_X;
 		tileSpriteClips[HOVER].y = TILE_HOVER_Y;
@@ -727,6 +732,8 @@ int getTileIndex(int x, int y) {
 		return UP_RIGHT_DOWN;
 	case 14:
 		return RIGHT_DOWN_LEFT;
+	case 15:
+		return FOUR_WAY;
 	default:
 		return EMPTY_;
 	}
@@ -734,16 +741,20 @@ int getTileIndex(int x, int y) {
 int encounterExists(int x, int y) {
 	if (gParty.getX() == x && gParty.getY() == y)
 		return -1;
-	if (current_dungeon.getTile(x + y * current_dungeon.getWidth()).getType() == BOSS) {
+	switch (current_dungeon.getTile(x + y * current_dungeon.getWidth()).getType()) {
+	case BOSS:
 		return BOSSS;
-	}
-	if (current_dungeon.getTile(x + y * current_dungeon.getWidth()).getType() == MOB) {
+	case MOB:
 		return MOBS;
-	}
-	else
+	case LOOT:
+		return LOOTS;
+	case INFO:
+		return INFOS;
+	default:
 		return -1;
+	}
 }
-void drawDungeon() {/**/
+void drawDungeon() {
 	SDL_Rect topViewport;
 	topViewport.x = 0;
 	topViewport.y = 0;
@@ -765,6 +776,7 @@ void drawDungeon() {/**/
 				tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
 		}
 	}
+	//draw any special tiles
 	tileSST.render(gParty.getX() * 50 + start_x, gParty.getY() * 50, &tileSpriteClips[PARTY]);
 }
 

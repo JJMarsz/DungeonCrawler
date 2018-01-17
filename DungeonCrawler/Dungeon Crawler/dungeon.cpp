@@ -167,22 +167,23 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	//main path length is between 2*height and 3*height
 	//mob encounters for main path
 	//dead ends are completely random
-	int mob_enc;
+	int enc, total_enc;
+	int i, j;
 	switch (diff) {
 	case EASY:
-		mob_enc = 2 + rand() % 2;
+		total_enc = 2 + rand() % 2;
 		break;
 	case MED:
-		mob_enc = 3 + rand() % 2;
+		total_enc = 3 + rand() % 2;
 		break;
 	case HARD:
-		mob_enc = 4 + rand() % 2;
+		total_enc = 4 + rand() % 2;
 		break;
 	}
+	enc = total_enc;
 	srand(time(NULL));
-	int range = (path_length-3) / mob_enc;
+	int range = path_length/enc;
 	int count = rand() % 3;
-	int i;
 	Tile* trav = &dungMap[end_x + end_y * width];
 	for (i = 0; i < count; i++) {
 		trav = trav->getPrev();
@@ -190,27 +191,65 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	//set it as boss
 	trav->setType(BOSS);
 	//do other stuff to store boss info and such
+	boss = trav;
 
-
-
-
-	count = 1234;
-	//set up mob encounters
-	while (count > 0) {
-		count = rand() % range+1;
-		for (i = 0; i < count; i++) {
-			if (trav->getPrev() == NULL) { break; }
-			trav = trav->getPrev();
-		}
-		if (trav->getPrev() == NULL) { break; }
-		trav->setType(MOB);
-		for (i = 0; i < range - count; i++) {
-			if (trav->getPrev() == NULL) { break; }
-			trav = trav->getPrev();
-		}
-		if (trav->getPrev() == NULL) { break; }
-		count--;
+	for (i = 0; i < 3-count; i++) {
+		trav = trav->getPrev();
 	}
+
+	while (range * enc >= path_length-5) {
+		range--;
+	}
+
+	//set up the ranges for population
+	std::vector<std::vector<Tile*>> range_maps;
+	range_maps.resize(enc);
+	for (i = 0; i < enc; i++) {
+		range_maps[i].resize(range);
+		for (j = 0; j < range; j++) {
+			range_maps[i][j] = trav;
+			trav = trav->getPrev();
+		}
+	}
+
+	//set up mob encounters
+	int range_num = 0;
+	while (enc > 0) {
+		count = rand() % range;
+		range_maps[range_num][count]->setType(MOB);
+		//otherstuff
+		mob.push_back(range_maps[range_num][count]);
+		enc--;
+		range_num++;
+	}
+
+	//loot encounters
+	range_num = 0;
+	enc = 1 + rand() % 2;
+	while (enc > 0) {
+		while (range_maps[range_num][count]->getType() != PATH) {
+			count = rand() % range;
+		}
+		range_maps[range_num][count]->setType(LOOT);
+		//otherstuff
+
+		enc--;
+		range_num++;
+	}
+
+	range_num = 0;
+	enc = 2 + rand() % (total_enc - 1);
+	while (enc > 0) {
+		while (range_maps[range_num][count]->getType() != PATH) {
+			count = rand() % range;
+		}
+		range_maps[range_num][count]->setType(INFO);
+		//otherstuff
+
+		enc--;
+		range_num++;
+	}
+	
 }
 
 void Dungeon::deadendProspectGenerate() {
@@ -220,7 +259,8 @@ void Dungeon::deadendProspectGenerate() {
 	initArea();
 	//create barriers
 	updateBarriers();
-	
+	deadends.reserve(6);
+
 	while (1) {
 		for (i = 0; i < width; i++) {
 			for (j = 1; j < height - 1; j++) {
@@ -311,6 +351,7 @@ void Dungeon::deadendProspectGenerate() {
 		reSet();
 		int path_limit = (height / 3) + rand() % 3;
 		srand(time(NULL));
+		int count = 0;
 		while (1) {
 			while (1) {
 				dir = (Direction)(rand() % 4);
@@ -368,15 +409,20 @@ void Dungeon::deadendProspectGenerate() {
 				newTile.setPrev(&dungMap[prev_y*width + prev_x]);
 				newTile.setPos(x, y);
 				setTile(y*width + x, newTile);
+				count++;
 			}
 			if (path_limit < 1)
 				break;
 		}
-		deadends.push_back(&dungMap[x + y*width]);
+		Deadend newdead;
+		newdead.end = &dungMap[x + y * width];
+		newdead.length = count;
+		deadends.push_back(newdead);
 		updateBarriers();
 	}
 	//after generating deadends, these are useless
 	clearBarriers();
+	deadends.shrink_to_fit();
 }
 
 void Dungeon::reSet() {
@@ -618,6 +664,10 @@ bool Dungeon::isStart(int x, int y) { return ((x == start_x && y == start_y) ? t
 bool Dungeon::isEnd(int x, int y) { return ((x == end_x && y == end_y) ? true : false); }
 int Dungeon::getStartX() { return start_x; }
 int Dungeon::getStartY() { return start_y; }
+Tile* Dungeon::getBoss() { return boss; }
+Tile* Dungeon::getLoot(int i) { return loot[i]; }
+Tile* Dungeon::getMob(int i) { return mob[i]; }
+Tile* Dungeon::getInfo(int i) { return info[i]; }
 
 
 /* Tile class defenitions */

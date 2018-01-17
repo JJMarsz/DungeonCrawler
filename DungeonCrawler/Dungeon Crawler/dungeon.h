@@ -87,6 +87,14 @@ public:
 	bool isEnd(int x, int y);
 	int getStartX();
 	int getStartY();
+	Tile* getBoss();
+	Tile* getLoot(int i);
+	Tile* getMob(int i);
+	Tile* getInfo(int i);
+	struct Deadend {
+		Tile* end;
+		int length;
+	};
 
 private:
 
@@ -107,12 +115,18 @@ private:
 	//x + width*y
 	std::vector<Tile> dungMap;
 	DisjointSets mapSet;
-	std::unordered_map<int, bool> bossArea;
 	int width, height;
 	int start_x, start_y;
 	int end_x, end_y;
 	int path_length;//main path length
-	std::vector<Tile*> deadends;
+	std::vector<Deadend> deadends;
+
+	//encounter info
+	Tile* boss;
+	std::vector<Tile*> loot;
+	std::vector<Tile*> mob;
+	std::vector<Tile*> info;
+
 
 };
 
