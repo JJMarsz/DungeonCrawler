@@ -107,11 +107,23 @@
 #define TILE_EMPTY_X			200
 #define TILE_EMPTY_Y			0
 
-#define TILE_PARTY_X			200
-#define TILE_PARTY_Y			50
-
 #define TILE_BARRIER_X			200
-#define TILE_BARRIER_Y			100
+#define TILE_BARRIER_Y			50
+
+#define TILE_PARTY_X			200
+#define TILE_PARTY_Y			100
+
+#define TILE_MOB_X				200
+#define TILE_MOB_Y				150
+
+#define TILE_INFO_X				200
+#define TILE_INFO_Y				200
+
+#define TILE_LOOT_X				150
+#define TILE_LOOT_Y				200
+
+#define TILE_BOSS_X				100
+#define TILE_BOSS_Y				200
 
 //these are debug colorings
 #define TILE_AREA_X				200
@@ -196,6 +208,11 @@ enum {
 	DEAD_,
 	EMPTY_,
 	PARTY,
-	BAR
+	BAR,
+	BOSSS,
+	MOBS,
+	LOOTS,
+	INFOS,
+
 };
 #endif

@@ -69,7 +69,7 @@ bool init()
 	//set up relevant data structures
 	spriteClips.resize(6);
 	buttonSpriteClips.resize(12);
-	tileSpriteClips.resize(24);
+	tileSpriteClips.resize(28);
 	texts.reserve(50);
 	charClips.resize(NUM_CHAR*3);
 	Buttons.resize(12);
@@ -313,6 +313,26 @@ bool loadMedia()
 		tileSpriteClips[BAR].y = TILE_BARRIER_Y;
 		tileSpriteClips[BAR].w = TILE_WIDTH;
 		tileSpriteClips[BAR].h = TILE_HEIGHT;
+
+		tileSpriteClips[BOSSS].x = TILE_BOSS_X;
+		tileSpriteClips[BOSSS].y = TILE_BOSS_Y;
+		tileSpriteClips[BOSSS].w = TILE_WIDTH;
+		tileSpriteClips[BOSSS].h = TILE_HEIGHT;
+
+		tileSpriteClips[MOBS].x = TILE_MOB_X;
+		tileSpriteClips[MOBS].y = TILE_MOB_Y;
+		tileSpriteClips[MOBS].w = TILE_WIDTH;
+		tileSpriteClips[MOBS].h = TILE_HEIGHT;
+
+		tileSpriteClips[INFOS].x = TILE_INFO_X;
+		tileSpriteClips[INFOS].y = TILE_INFO_Y;
+		tileSpriteClips[INFOS].w = TILE_WIDTH;
+		tileSpriteClips[INFOS].h = TILE_HEIGHT;
+
+		tileSpriteClips[LOOTS].x = TILE_LOOT_X;
+		tileSpriteClips[LOOTS].y = TILE_LOOT_Y;
+		tileSpriteClips[LOOTS].w = TILE_WIDTH;
+		tileSpriteClips[LOOTS].h = TILE_HEIGHT;
 
 	}
 	if (!charSST.loadFromFile("charicons.png")) {
@@ -641,10 +661,10 @@ void drawMainMenu() {
 int getTileIndex(int x, int y) {
 	if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth())).getType() == NONE)
 		return EMPTY_;
-	if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth())).getType() == DEADEND)
-		return DEAD_;
+	/*if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth())).getType() == DEADEND)
+		return DEAD_;*/
 	if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth())).getType() == BARRIER)
-		return BAR;
+		return EMPTY_;
 	//bitwise storage of adjacency
 	//	R	D	L	U
 	//
@@ -711,7 +731,18 @@ int getTileIndex(int x, int y) {
 		return EMPTY_;
 	}
 }
-
+int encounterExists(int x, int y) {
+	if (gParty.getX() == x && gParty.getY() == y)
+		return -1;
+	if (current_dungeon.getTile(x + y * current_dungeon.getWidth()).getType() == BOSS) {
+		return BOSSS;
+	}
+	if (current_dungeon.getTile(x + y * current_dungeon.getWidth()).getType() == MOB) {
+		return MOBS;
+	}
+	else
+		return -1;
+}
 void drawDungeon() {/**/
 	SDL_Rect topViewport;
 	topViewport.x = 0;
@@ -728,6 +759,10 @@ void drawDungeon() {/**/
 		for (int y = 0; y < current_dungeon.getHeight(); y++) {
 			int index = getTileIndex(x, y);
 			tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
+			//check if something is at this tile
+			index = encounterExists(x, y);
+			if (index != -1) 
+				tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
 		}
 	}
 	tileSST.render(gParty.getX() * 50 + start_x, gParty.getY() * 50, &tileSpriteClips[PARTY]);

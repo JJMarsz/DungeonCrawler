@@ -35,10 +35,16 @@ private:
 
 class Encounter {
 public:
+	//Encounter(EncounterType type_);
 	EncounterType getType();
 	void setType(EncounterType type_);
 private:
-	std::vector<Enemy> moblist;
+	/* For combat encounters */
+	//std::vector<Enemy> moblist;
+	/* for Info/Loot encounters */
+	//
+	/*  */
+
 	EncounterType type;
 };
 
@@ -56,11 +62,11 @@ private:
 	Encounter Boss;
 	/* Regular mob fight encounter */
 	std::vector<Encounter> enemyEnc;
-	/* Info on dungeon or special dungeon move */
+	/* Info/Loot on dungeon or special dungeon move */
 	std::vector<Encounter> infoEnc;
 	/* Choice on one of party members */
 	std::vector<Encounter> choiceEnc;
-	/* THings to generate in dead ends */
+	/* Things to generate in dead ends */
 	std::vector<Encounter> deadEnc;
 	std::string name;
 	std::string info;

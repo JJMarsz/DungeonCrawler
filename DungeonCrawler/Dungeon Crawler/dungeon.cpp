@@ -158,112 +158,59 @@ Dungeon::Dungeon(Difficulty type) {
 			break;
 	}
 	//generate dead ends
-	//mark barrier tiles
 	deadendProspectGenerate();
-	/*int path_count = 0;
-	while (dead_count > 0 && trav != NULL) {
-		newTile.setType(DEADEND);
-		if (rand() % 100 + 1 < (dead_count) * 20 + path_count * 5) {
-			timeout = 0;
-			//allowing a dead to be created, check which adjacent tile
-			dir = (Direction)(rand() % 4);
-			if (canTravel(trav->getX(), trav->getY(), dir) && trav->getY() > 1) {
-				timeout = 0;
-				dead_count--;
-				path_count = 0;
-				switch (dir) {
-				case UP:
-					dungMap[trav->getX() + (trav->getY() - 1)*width].setType(DEADEND);
-					dungMap[trav->getX() + (trav->getY() - 1)*width].setPrev(trav);
-					mapSet.setunion(trav->getX() + trav->getY()*width, trav->getX() + (trav->getY() - 1)*width);
-					x = trav->getX();
-					y = trav->getY() - 1;
-					break;
-				case LEFT:
-					dungMap[trav->getX() - 1 + (trav->getY())*width].setType(DEADEND);
-					dungMap[trav->getX() - 1 + (trav->getY())*width].setPrev(trav);
-					mapSet.setunion(trav->getX() + trav->getY()*width, trav->getX() - 1 + (trav->getY())*width);
-					x = trav->getX() - 1;
-					y = trav->getY();
-					break;
-				case DOWN:
-					dungMap[trav->getX() + (trav->getY() + 1)*width].setType(DEADEND);
-					dungMap[trav->getX() + (trav->getY() + 1)*width].setPrev(trav);
-					mapSet.setunion(trav->getX() + trav->getY()*width, trav->getX() + (trav->getY() + 1)*width);
-					x = trav->getX();
-					y = trav->getY() + 1;
-					break;
-				case RIGHT:
-					dungMap[trav->getX() + 1 + (trav->getY())*width].setType(DEADEND);
-					dungMap[trav->getX() + 1 + (trav->getY())*width].setPrev(trav);
-					mapSet.setunion(trav->getX() + trav->getY()*width, trav->getX() + 1 + (trav->getY())*width);
-					x = trav->getX() + 1;
-					y = trav->getY();
-					break;
-				default:
-					continue;
-				}
-				//generate the deadend path
-				prev_x = trav->getX();
-				prev_y = trav->getY();
-				int path_limit = height;
-				int d_count = 2;
-				while (1) {
-					while (1) {
-						dir = (Direction)(rand() % 4);
-						timeout++;
-						if (dir == DOWN && d_count < 1)
-							continue;
-						if (y == 1 && dir == UP)
-							continue;
-						if (canTravel(x, y, dir))
-							break;
-						if (timeout > 300)
-							break;
-					}
-					if (timeout > 300) {
-						timeout = 0;
-						break;
-					}
-					//by this point, a valid direction is selected
+	populateDungeon(type);
+	
+}
 
-					if (canTravel(x, y, dir)) {
-						path_limit--;
-						prev_x = x;
-						prev_y = y;
-						switch (dir) {
-						case UP:
-							y--;
-							break;
-						case LEFT:
-							x--;
-							break;
-						case DOWN:
-							y++;
-							d_count--;
-							break;
-						case RIGHT:
-							x++;
-							break;
-						default:
-							while (1);
-						}
-						mapSet.setunion(prev_y*width + prev_x, y*width + x);
-						newTile.setPrev(&dungMap[prev_y*width + prev_x]);
-						newTile.setPos(x, y);
-						setTile(y*width + x, newTile);
-					}
-					if (path_limit < 1)
-						break;
-				}
-			}
-			timeout++;
-			if (timeout > 300)
-				break;
-		}
+void Dungeon::populateDungeon(Difficulty diff) {
+	//main path length is between 2*height and 3*height
+	//mob encounters for main path
+	//dead ends are completely random
+	int mob_enc;
+	switch (diff) {
+	case EASY:
+		mob_enc = 2 + rand() % 2;
+		break;
+	case MED:
+		mob_enc = 3 + rand() % 2;
+		break;
+	case HARD:
+		mob_enc = 4 + rand() % 2;
+		break;
+	}
+	srand(time(NULL));
+	int range = (path_length-3) / mob_enc;
+	int count = rand() % 3;
+	int i;
+	Tile* trav = &dungMap[end_x + end_y * width];
+	for (i = 0; i < count; i++) {
 		trav = trav->getPrev();
-		path_count++;
-	}*/
+	}
+	//set it as boss
+	trav->setType(BOSS);
+	//do other stuff to store boss info and such
+
+
+
+
+	count = 1234;
+	//set up mob encounters
+	while (count > 0) {
+		count = rand() % range+1;
+		for (i = 0; i < count; i++) {
+			if (trav->getPrev() == NULL) { break; }
+			trav = trav->getPrev();
+		}
+		if (trav->getPrev() == NULL) { break; }
+		trav->setType(MOB);
+		for (i = 0; i < range - count; i++) {
+			if (trav->getPrev() == NULL) { break; }
+			trav = trav->getPrev();
+		}
+		if (trav->getPrev() == NULL) { break; }
+		count--;
+	}
 }
 
 void Dungeon::deadendProspectGenerate() {
@@ -425,10 +372,11 @@ void Dungeon::deadendProspectGenerate() {
 			if (path_limit < 1)
 				break;
 		}
+		deadends.push_back(&dungMap[x + y*width]);
 		updateBarriers();
 	}
+	//after generating deadends, these are useless
 	clearBarriers();
-	updateBarriers();
 }
 
 void Dungeon::reSet() {

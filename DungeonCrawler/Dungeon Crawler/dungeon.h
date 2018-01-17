@@ -7,10 +7,10 @@
 enum EncounterType {
 	NONE,
 	PATH,
-	ITEM,
+	LOOT,
 	INFO,
 	BOSS,
-	MOBS,
+	MOB,
 	DEADEND,
 	BARRIER,
 	AREA1,
@@ -58,7 +58,8 @@ private:
 	Tile* prev;
 	int x, y;
 	Area area;
-	//moblist
+	//use as index into an quests encounter list
+	
 };
 
 class DisjointSets {
@@ -92,6 +93,7 @@ private:
 	bool pathAdjacent(int x, int y);
 	bool deadendAdjacent(int x, int y);
 	bool canGen(int x, int y);
+	void populateDungeon(Difficulty diff);
 	void deadendProspectGenerate();
 	void setUnionNone(int x, int y);
 	void initArea();
@@ -109,7 +111,9 @@ private:
 	int width, height;
 	int start_x, start_y;
 	int end_x, end_y;
-	int path_length;
+	int path_length;//main path length
+	std::vector<Tile*> deadends;
+
 };
 
 std::string diffToString(Difficulty diff);
