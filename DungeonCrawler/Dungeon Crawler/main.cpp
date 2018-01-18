@@ -197,6 +197,7 @@ int main(int argc, char* args[])
 					if (current_dungeon.isEnd(gParty.getX(), gParty.getY()))
 						state = REWARD;
 					drawDungeon();
+					drawDungeonMenu();
 					if (hover) {
 						if (MouseDown && MouseUp) {
 							gParty.moveParty(x / 50 - (start_x / 50), y / 50);
@@ -216,6 +217,9 @@ int main(int argc, char* args[])
 					drawDungeon();
 					questinfo.render(262, 150, NULL);
 					acceptrejectButtons[2].render();
+					questTitle.render(280, 164);
+					questGold.render(280, 220);
+					questXP.render(280, 240);
 					break;
 				case ROOM_MAIN:
 					//Draw menu bar

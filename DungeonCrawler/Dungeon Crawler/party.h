@@ -46,6 +46,7 @@ public:
 	int getCha();
 	int getMove();
 	int getHP();
+	int getMaxHP();
 	int getAC();
 	int getTextIndex();
 	void setTextIndex(int index);
@@ -66,6 +67,7 @@ private:
 	int cha;
 	int move;
 	int health;
+	int max_health;
 	int AC;
 	int xp;
 	SDL_Rect sprite;

@@ -68,6 +68,8 @@ extern LTexture acceptrejectSST;
 extern LTexture shop;
 extern LTexture training;
 extern LTexture upgrades;
+extern LTexture dungeonmenu;
+extern LTexture healthboxes;
 
 extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> buttonSpriteClips;
@@ -76,6 +78,7 @@ extern std::vector<SDL_Rect> charClips;
 extern std::vector<SDL_Rect> questPageClips;
 extern std::vector<SDL_Rect> acceptrejectClips;
 extern std::vector<SDL_Rect> townButtonClips;
+extern std::vector<SDL_Rect> healthBoxClips;
 
 extern std::vector<LTexture*> texts;
 

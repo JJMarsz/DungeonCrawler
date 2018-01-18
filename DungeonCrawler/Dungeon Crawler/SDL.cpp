@@ -84,6 +84,7 @@ bool init()
 	questPageClips.resize(4);
 	acceptrejectClips.resize(12);
 	acceptrejectButtons.resize(3);
+	healthBoxClips.resize(11);
 	int i;
 	for (i = 0; i<TOTAL_BUTTONS; i++)
 		Buttons[i].setConstraints(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -460,6 +461,22 @@ bool loadMedia()
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
+	if(!dungeonmenu.loadFromFile("dungeonmenu.png")){
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	if (!healthboxes.loadFromFile("healthbox.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		for (i = 0; i < 11; i++) {
+			healthBoxClips[i].x = i*50;
+			healthBoxClips[i].y = 0;
+			healthBoxClips[i].w = 50;
+			healthBoxClips[i].h = 50;
+		}
+	}
 	return success;
 }
 
@@ -503,6 +520,9 @@ void close() {
 	upgrades.free();
 	shop.free();
 	training.free();
+	dungeonmenu.free();
+	healthboxes.free();
+
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
@@ -772,12 +792,16 @@ void drawDungeon() {
 	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_SetRenderDrawColor(gRenderer, 0xA0, 0xA0, 0xA0, 0xFF);
 	SDL_RenderFillRect(gRenderer, &barRect);
+
 	int start_x = (SCREEN_WIDTH - current_dungeon.getWidth()*50) / 2;
 	for (int x = 0; x < current_dungeon.getWidth(); x++) {
 		for (int y = 0; y < current_dungeon.getHeight(); y++) {
 			if (current_dungeon.getSightStatus(x + y * current_dungeon.getWidth())){
 				int index = getTileIndex(x, y);
-				tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
+				if(index == EMPTY_)
+					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[SEEN]);
+				else
+					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
 				//do scout check
 
 				//check if something is at this tile
@@ -791,6 +815,19 @@ void drawDungeon() {
 	}
 	//draw any special tiles
 	tileSST.render(gParty.getX() * 50 + start_x, gParty.getY() * 50, &tileSpriteClips[PARTY]);
+}
+
+void drawDungeonMenu() {
+	//dungeon menu stuff
+	int health_ratio;
+	dungeonmenu.render(0, SCREEN_HEIGHT - 70);
+	goldmenu.render(400, SCREEN_HEIGHT - 45);
+	//all char stuff
+		for (int i = 0; i < 3; i++) {
+			charSST.render(10 + i*120, SCREEN_HEIGHT - 60, &gParty.getChar(i).getIcon50());
+			health_ratio = (gParty.getChar(i).getMaxHP() - gParty.getChar(i).getHP()) / (gParty.getChar(i).getMaxHP() / 11);
+			healthboxes.render(70 + 120*i, SCREEN_HEIGHT - 60, &healthBoxClips[health_ratio]);
+		}
 }
 
 void drawCharScreen() {

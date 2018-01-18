@@ -100,7 +100,7 @@
 //the rare but real, 4 way crossroads
 
 #define TILE_FOUR_WAY_X			50
-#define TILE_FOUR_WAY_Y			250
+#define TILE_FOUR_WAY_Y			200
 
 //special tiles
 #define TILE_HOVER_X			150

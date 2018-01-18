@@ -101,6 +101,9 @@ public:
 	Tile* getInfo(int i);
 	void updateLOS();
 	bool getSightStatus(int i);
+	bool getSeen(int i);
+	bool getVisited(int i);
+	bool getScouted(int i);
 private:
 
 	bool pathAdjacent(int x, int y);

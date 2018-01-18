@@ -37,6 +37,9 @@ void drawMainMenu();
 //used to draw the dungeon
 void drawDungeon();
 
+//draws menu used in dungeon
+void drawDungeonMenu();
+
 //used to draw and pick the characters
 void drawCharScreen();
 

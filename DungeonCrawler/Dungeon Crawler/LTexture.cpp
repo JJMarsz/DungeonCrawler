@@ -27,6 +27,8 @@ LTexture questDiff;
 LTexture xp0, xp1, xp2;
 LTexture acceptText;
 LTexture rejectText;
+LTexture dungeonmenu;
+LTexture healthboxes;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> buttonSpriteClips;
@@ -35,6 +37,7 @@ std::vector<SDL_Rect> charClips;
 std::vector<SDL_Rect> townButtonClips;
 std::vector<SDL_Rect> questPageClips;
 std::vector<SDL_Rect> acceptrejectClips;
+std::vector<SDL_Rect> healthBoxClips;
 std::vector<LTexture*> texts;
 
 /* Texture class defenitions */

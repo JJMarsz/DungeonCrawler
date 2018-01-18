@@ -208,7 +208,7 @@ void Dungeon::populateDungeon(Difficulty diff) {
 		trav = trav->getPrev();
 	}
 
-	while (range * enc >= path_length-5) {
+	while (range * enc > path_length-5) {
 		range--;
 	}
 
@@ -464,7 +464,7 @@ void Dungeon::deadendProspectGenerate() {
 		}
 		Deadend newdead;
 		newdead.end = &dungMap[x + y * width];
-		newdead.length = count;
+		newdead.length = count+1;
 		deadends.push_back(newdead);
 		updateBarriers();
 	}
@@ -702,7 +702,39 @@ void Dungeon::updateLOS() {
 	switch (gParty.getLOS()) {
 	case 2:
 		//extra looking
+		if (gParty.getY() > 1 ) {
+			if(dungMap[gParty.getX() + (gParty.getY()-1)*width].getType() != NONE)
+				sight[gParty.getX() + (gParty.getY() - 2)*width].seen = true;
+		}
+		if (gParty.getX() > 1) {
+			if (dungMap[gParty.getX() - 1 + (gParty.getY())*width].getType() != NONE)
+				sight[gParty.getX() - 2 + gParty.getY()*width].seen = true;
+		}
+		if (gParty.getY() < height - 2) {
+			if (dungMap[gParty.getX() + (gParty.getY() + 1)*width].getType() != NONE)
+				sight[gParty.getX() + (gParty.getY() + 2)*width].seen = true;
+		}
+		if (gParty.getX() < width - 2) {
+			if (dungMap[gParty.getX() + 1 + (gParty.getY())*width].getType() != NONE)
+				sight[gParty.getX() + 2 + gParty.getY()*width].seen = true;
+		}
 
+		if (gParty.getY() > 0 && gParty.getX() > 0) {
+			if (dungMap[gParty.getX() + (gParty.getY() - 1)*width].getType() != NONE || dungMap[gParty.getX() - 1 + (gParty.getY())*width].getType() != NONE)
+				sight[gParty.getX() - 1 + (gParty.getY() - 1)*width].seen = true;
+		}
+		if (gParty.getX() > 0 && gParty.getY() < height - 1) {
+			if (dungMap[gParty.getX() + (gParty.getY() + 1)*width].getType() != NONE || dungMap[gParty.getX() - 1 + (gParty.getY())*width].getType() != NONE)
+				sight[gParty.getX() - 1 + (gParty.getY()+1)*width].seen = true;
+		}
+		if (gParty.getX() < width - 1 && gParty.getY() < height - 1) {
+			if (dungMap[gParty.getX() + (gParty.getY() + 1)*width].getType() != NONE || dungMap[gParty.getX() + 1 + (gParty.getY())*width].getType() != NONE)
+				sight[gParty.getX() + 1 + (gParty.getY() + 1)*width].seen = true;
+		}
+		if (gParty.getX() < width - 1 && gParty.getY() > 0) {
+			if (dungMap[gParty.getX() + (gParty.getY() - 1)*width].getType() != NONE || dungMap[gParty.getX() + 1 + (gParty.getY())*width].getType() != NONE)
+				sight[gParty.getX() + 1 + (gParty.getY()-1)*width].seen = true;
+		}
 	case 1:
 		sight[gParty.getX() + gParty.getY()*width].visited = true;
 		if (gParty.getY() > 0) {
@@ -740,6 +772,9 @@ Tile* Dungeon::getLoot(int i) { return loot[i]; }
 Tile* Dungeon::getMob(int i) { return mob[i]; }
 Tile* Dungeon::getInfo(int i) { return info[i]; }
 bool Dungeon::getSightStatus(int i) { return (sight[i].scouted || sight[i].visited || sight[i].seen); }
+bool Dungeon::getSeen(int i) { return sight[i].seen; }
+bool Dungeon::getVisited(int i) { return sight[i].visited; }
+bool Dungeon::getScouted(int i) { return sight[i].scouted; }
 
 
 /* Tile class defenitions */

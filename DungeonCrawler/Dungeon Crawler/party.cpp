@@ -20,6 +20,7 @@ Character::Character(std::string name_, int str_, int dex_, int con_, int intel_
 	cha = cha_;
 	move = mov_;
 	health = health_;
+	max_health = health_;
 	AC = AC_;
 	xp = 0;
 }
@@ -45,6 +46,7 @@ int Character::getWis() { return wis; }
 int Character::getCha() { return cha; }
 int Character::getMove() { return move; }
 int Character::getHP() { return health; }
+int Character::getMaxHP() { return max_health; }
 int Character::getAC() { return AC; }
 std::string Character::getName() { return name; }
 
