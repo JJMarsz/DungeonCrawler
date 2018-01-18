@@ -200,6 +200,8 @@ int main(int argc, char* args[])
 					if (hover) {
 						if (MouseDown && MouseUp) {
 							gParty.moveParty(x / 50 - (start_x / 50), y / 50);
+							//update line of sight
+							current_dungeon.updateLOS();
 							/* prevent double clicking */
 							MouseDown = false;
 							MouseUp = false;

@@ -62,6 +62,7 @@ Dungeon::Dungeon() {
 Dungeon::Dungeon(Difficulty type) {
 	srand(time(NULL));
 
+
 	unsigned i;
 	int x, y, prev_x, prev_y, down_count;
 	int timeout, mult;
@@ -69,6 +70,8 @@ Dungeon::Dungeon(Difficulty type) {
 	Tile newTile(PATH);
 	Direction dir;
 	int dead_count;
+
+
 	while (1) {
 		switch (type) {
 		case EASY:
@@ -160,6 +163,14 @@ Dungeon::Dungeon(Difficulty type) {
 	//generate dead ends
 	deadendProspectGenerate();
 	populateDungeon(type);
+
+	//initialize sight in dungeon
+	sight.resize(width*height);
+	for (i = 0; i < width*height; i++) {
+		sight[i].seen = false;
+		sight[i].scouted = false;
+		sight[i].visited = false;
+	}
 	
 }
 
@@ -212,6 +223,7 @@ void Dungeon::populateDungeon(Difficulty diff) {
 		}
 	}
 
+	srand(time(NULL));
 	//set up mob encounters
 	int range_num = 0;
 	while (enc > 0) {
@@ -223,6 +235,7 @@ void Dungeon::populateDungeon(Difficulty diff) {
 		range_num++;
 	}
 
+	srand(time(NULL));
 	//loot encounters
 	range_num = 0;
 	enc = 1 + rand() % 2;
@@ -237,6 +250,8 @@ void Dungeon::populateDungeon(Difficulty diff) {
 		range_num++;
 	}
 
+	//info encounters
+	srand(time(NULL));
 	range_num = 0;
 	enc = 2 + rand() % (total_enc - 1);
 	while (enc > 0) {
@@ -249,7 +264,40 @@ void Dungeon::populateDungeon(Difficulty diff) {
 		enc--;
 		range_num++;
 	}
-	
+
+	//choice encounters
+	srand(time(NULL));
+	range_num = 0;
+	enc = 2 + rand() % (total_enc - 1);
+	while (enc > 0) {
+		while (range_maps[range_num][count]->getType() != PATH) {
+			count = rand() % range;
+		}
+		range_maps[range_num][count]->setType(CHOICE);
+		//otherstuff
+
+		enc--;
+		range_num++;
+	}
+
+	//fill out deadends with encounters
+	srand(time(NULL));
+	std::vector<std::vector<Tile*>> dead_range_maps;
+	dead_range_maps.resize(deadends.size());
+	for (i = 0; i < deadends.size(); i++) {
+		dead_range_maps[i].resize(deadends[i].length);
+		trav = deadends[i].end;
+		for (j = 0; j < deadends[i].length; j++) {
+			dead_range_maps[i][j] = trav;
+			trav = trav->getPrev();
+		}
+	}
+
+	for (i = 0; i < deadends.size(); i++) {
+		count = rand() % deadends[i].length;
+
+		dead_range_maps[i][count]->setType(CHOICE);
+	}
 }
 
 void Dungeon::deadendProspectGenerate() {
@@ -649,15 +697,38 @@ bool Dungeon::canTravel(int curr_x, int curr_y, Direction dir) {
 
 }
 
+void Dungeon::updateLOS() {
+	//current tile as visited
+	switch (gParty.getLOS()) {
+	case 2:
+		//extra looking
+
+	case 1:
+		sight[gParty.getX() + gParty.getY()*width].visited = true;
+		if (gParty.getY() > 0) {
+			sight[gParty.getX() + (gParty.getY() - 1)*width].seen = true;
+		}
+		if (gParty.getX() > 0) {
+			sight[gParty.getX() - 1 + gParty.getY()*width].seen = true;
+		}
+		if (gParty.getY() < height - 1) {
+			sight[gParty.getX() + (gParty.getY() + 1)*width].seen = true;
+		}
+		if (gParty.getX() < width - 1) {
+			sight[gParty.getX() + 1 + gParty.getY()*width].seen = true;
+		}
+		break;
+	}
+	
+
+}
+
 void Dungeon::setTile(int RMO_index, Tile newTile) {
 	dungMap[RMO_index] = newTile;
 }
-
 Tile Dungeon::getTile(int RMO_index) {
 	return dungMap[RMO_index];
 }
-
-
 int Dungeon::getWidth() { return width; }
 int Dungeon::getHeight() { return height; }
 bool Dungeon::isStart(int x, int y) { return ((x == start_x && y == start_y) ? true : false); }
@@ -668,6 +739,7 @@ Tile* Dungeon::getBoss() { return boss; }
 Tile* Dungeon::getLoot(int i) { return loot[i]; }
 Tile* Dungeon::getMob(int i) { return mob[i]; }
 Tile* Dungeon::getInfo(int i) { return info[i]; }
+bool Dungeon::getSightStatus(int i) { return (sight[i].scouted || sight[i].visited || sight[i].seen); }
 
 
 /* Tile class defenitions */
@@ -678,6 +750,8 @@ Tile::Tile(EncounterType type_) {
 	prev = NULL;
 	x = -1;
 	y = -1;
+	area = NONE_;
+	index = -1;
 }
 
 Tile::Tile() {
@@ -686,6 +760,7 @@ Tile::Tile() {
 	x = -1;
 	y = -1;
 	area = NONE_;
+	index = -1;
 }
 
 Tile* Tile::getPrev() { return prev; }

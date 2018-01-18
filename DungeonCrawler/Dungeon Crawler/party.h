@@ -92,6 +92,7 @@ public:
 	void addGold(int gold_);
 	bool subGold(int gold_);
 	int getXP(int index);
+	int getLOS();
 	void addXP(int xp_);
 	bool subXP(int xp_);
 
@@ -102,6 +103,7 @@ private:
 	int gold;
 	std::vector<Character> charList;
 	int party_x, party_y;
+	int LOS;
 };
 
 /* contains available characters */

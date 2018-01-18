@@ -13,11 +13,7 @@ enum EncounterType {
 	MOB,
 	DEADEND,
 	BARRIER,
-	AREA1,
-	AREA2,
-	AREA3,
-	AREA4,
-	AREA5
+	CHOICE
 };
 
 enum Difficulty {
@@ -58,8 +54,8 @@ private:
 	Tile* prev;
 	int x, y;
 	Area area;
-	//use as index into an quests encounter list
-	
+	//use as index into a quests encounter list
+	int index;
 };
 
 class DisjointSets {
@@ -77,6 +73,18 @@ private:
 
 class Dungeon {
 public:
+	struct Deadend {
+		Tile* end;
+		int length;
+	};
+	struct Status {
+		//has the player seen the tile in LOS
+		bool seen;
+		//has the plyare gotten info on this tile
+		bool scouted;
+		//has the player been to this tile
+		bool visited;
+	};
 	Dungeon();
 	Dungeon(Difficulty type);
 	void setTile(int RMO_index, Tile newTile);
@@ -91,11 +99,8 @@ public:
 	Tile* getLoot(int i);
 	Tile* getMob(int i);
 	Tile* getInfo(int i);
-	struct Deadend {
-		Tile* end;
-		int length;
-	};
-
+	void updateLOS();
+	bool getSightStatus(int i);
 private:
 
 	bool pathAdjacent(int x, int y);
@@ -120,6 +125,7 @@ private:
 	int end_x, end_y;
 	int path_length;//main path length
 	std::vector<Deadend> deadends;
+	std::vector<Status> sight;
 
 	//encounter info
 	Tile* boss;

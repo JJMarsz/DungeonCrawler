@@ -69,7 +69,7 @@ bool init()
 	//set up relevant data structures
 	spriteClips.resize(6);
 	buttonSpriteClips.resize(12);
-	tileSpriteClips.resize(29);
+	tileSpriteClips.resize(30);
 	texts.reserve(20);
 	charClips.resize(NUM_CHAR*3);
 	Buttons.resize(12);
@@ -314,10 +314,10 @@ bool loadMedia()
 		tileSpriteClips[PARTY].w = TILE_WIDTH;
 		tileSpriteClips[PARTY].h = TILE_HEIGHT;
 
-		tileSpriteClips[BAR].x = TILE_BARRIER_X;
-		tileSpriteClips[BAR].y = TILE_BARRIER_Y;
-		tileSpriteClips[BAR].w = TILE_WIDTH;
-		tileSpriteClips[BAR].h = TILE_HEIGHT;
+		tileSpriteClips[SEEN].x = TILE_SEEN_X;
+		tileSpriteClips[SEEN].y = TILE_SEEN_Y;
+		tileSpriteClips[SEEN].w = TILE_WIDTH;
+		tileSpriteClips[SEEN].h = TILE_HEIGHT;
 
 		tileSpriteClips[BOSSS].x = TILE_BOSS_X;
 		tileSpriteClips[BOSSS].y = TILE_BOSS_Y;
@@ -338,6 +338,11 @@ bool loadMedia()
 		tileSpriteClips[LOOTS].y = TILE_LOOT_Y;
 		tileSpriteClips[LOOTS].w = TILE_WIDTH;
 		tileSpriteClips[LOOTS].h = TILE_HEIGHT;
+
+		tileSpriteClips[CHOICES].x = TILE_CHOICE_X;
+		tileSpriteClips[CHOICES].y = TILE_CHOICE_Y;
+		tileSpriteClips[CHOICES].w = TILE_WIDTH;
+		tileSpriteClips[CHOICES].h = TILE_HEIGHT;
 
 	}
 	if (!charSST.loadFromFile("charicons.png")) {
@@ -750,6 +755,8 @@ int encounterExists(int x, int y) {
 		return LOOTS;
 	case INFO:
 		return INFOS;
+	case CHOICE:
+		return CHOICES;
 	default:
 		return -1;
 	}
@@ -768,12 +775,18 @@ void drawDungeon() {
 	int start_x = (SCREEN_WIDTH - current_dungeon.getWidth()*50) / 2;
 	for (int x = 0; x < current_dungeon.getWidth(); x++) {
 		for (int y = 0; y < current_dungeon.getHeight(); y++) {
-			int index = getTileIndex(x, y);
-			tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
-			//check if something is at this tile
-			index = encounterExists(x, y);
-			if (index != -1) 
+			if (current_dungeon.getSightStatus(x + y * current_dungeon.getWidth())){
+				int index = getTileIndex(x, y);
 				tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
+				//do scout check
+
+				//check if something is at this tile
+				index = encounterExists(x, y);
+				if (index != -1)
+					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
+			}
+			else
+				tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[EMPTY_]);
 		}
 	}
 	//draw any special tiles

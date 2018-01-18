@@ -112,8 +112,8 @@
 #define TILE_EMPTY_X			200
 #define TILE_EMPTY_Y			0
 
-#define TILE_BARRIER_X			200
-#define TILE_BARRIER_Y			50
+#define TILE_SEEN_X				200
+#define TILE_SEEN_Y				50
 
 #define TILE_PARTY_X			200
 #define TILE_PARTY_Y			100
@@ -130,13 +130,9 @@
 #define TILE_BOSS_X				100
 #define TILE_BOSS_Y				200
 
-//these are debug colorings
-#define TILE_AREA_X				200
-#define	TILE_AREA1_Y			150	
-#define	TILE_AREA2_Y			200	
-#define	TILE_AREA3_Y			250	
-#define	TILE_AREA4_Y			300	
-#define	TILE_AREA5_Y			350	
+#define TILE_CHOICE_X			0
+#define TILE_CHOICE_Y			200
+
 
 #define TILE_WIDTH				50
 #define TILE_HEIGHT				50
@@ -219,6 +215,7 @@ enum {
 	MOBS,
 	LOOTS,
 	INFOS,
-
+	CHOICES,
+	SEEN
 };
 #endif

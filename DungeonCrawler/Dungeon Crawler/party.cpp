@@ -69,6 +69,7 @@ Party::Party() {
 	party_y = -1;
 	charList.resize(0);
 	gold = 0;
+	LOS = 1;
 }
 
 int Party::getCompleted() { return completed; }
@@ -77,6 +78,7 @@ int Party::getY() { return party_y; }
 Character Party::getChar(int index) { return charList[index]; }
 int Party::getGold() { return gold; }
 int Party::getXP(int index) { return charList[index].getXP(); }
+int Party::getLOS() { return LOS; }
 
 void Party::incCompleted() { completed++; }
 bool Party::addChar(int index) {

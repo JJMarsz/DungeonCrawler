@@ -246,6 +246,7 @@ void questAccept(int index) {
 	current_dungeon = Dungeon(current_quests[quest_index].getDiff());
 	gParty.moveParty(current_dungeon.getStartX(), current_dungeon.getStartY());
 	quests.unShowQuest();
+	current_dungeon.updateLOS();
 	state = DUNGEON;
 }
 
