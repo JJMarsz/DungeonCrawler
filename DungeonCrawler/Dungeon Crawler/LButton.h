@@ -57,7 +57,10 @@ private:
 
 extern int quest_index;
 
-void menuClicked(int index);
+void newGame(int index);
+void loadGame(int index);
+void tutorial(int index);
+void credits(int index);
 
 void char1Clicked(int index);
 void char2Clicked(int index);
@@ -72,6 +75,7 @@ void gotoPartyUp(int index);
 void gotoShop(int index);
 void returnToTown(int index);
 
+
 void emptyHandler(int index);
 
 extern std::vector<LButton> Buttons;
@@ -80,5 +84,6 @@ extern std::vector<LButton> charButtons;
 extern std::vector<LButton> questButtons;
 extern std::vector<LButton> townButtons;
 extern std::vector<LButton> acceptrejectButtons;
+extern std::vector<LButton> dungeonButtons;
 
 #endif

@@ -8,6 +8,7 @@
 #include "dungeon.h"
 
 bool hover;
+MOD mod_state = MOD_DOWN;
 
 int main(int argc, char* args[])
 {
@@ -34,6 +35,9 @@ int main(int argc, char* args[])
 
 			//Event handler
 			SDL_Event e;
+			
+			//Modulation components
+			int r = 1000;
 
 			//While application is running
 			while (!quit)
@@ -106,6 +110,9 @@ int main(int argc, char* args[])
 						townButtons[1].handleEvent(&e, 1);
 						break;
 					case DUNGEON:
+						dungeonButtons[0].handleEvent(&e, 0);
+						dungeonButtons[1].handleEvent(&e, 1);
+						dungeonButtons[2].handleEvent(&e, 2);
 						start_x = (SCREEN_WIDTH - current_dungeon.getWidth() * 50) / 2;
 						SDL_GetMouseState(&x, &y);
 						hover = false;
@@ -198,6 +205,16 @@ int main(int argc, char* args[])
 						state = REWARD;
 					drawDungeon();
 					drawDungeonMenu();
+					if (mod_state == MOD_UP)
+						r++;
+					else
+						r--;
+					if (r >= 1275)
+						mod_state = MOD_DOWN;
+					if (r <= 900)
+						mod_state = MOD_UP;
+					SDL_Delay(10);
+					tileSST.setColor(r/5, r/5, r/5);
 					if (hover) {
 						if (MouseDown && MouseUp) {
 							gParty.moveParty(x / 50 - (start_x / 50), y / 50);

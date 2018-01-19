@@ -20,6 +20,9 @@ public:
 	//Creates image from font string
 	bool loadFromRenderedText(std::string textureText, SDL_Color textColor_, int w);
 
+	//Set color modulation
+	void setColor(Uint8 red, Uint8 green, Uint8 blue);
+
 	//Set blending
 	void setBlendMode(SDL_BlendMode blending);
 
@@ -69,7 +72,10 @@ extern LTexture shop;
 extern LTexture training;
 extern LTexture upgrades;
 extern LTexture dungeonmenu;
-extern LTexture healthboxes;
+extern LTexture healthboxSST;
+extern LTexture dungeonButtonSST;
+extern LTexture dungText1, dungText2, dungText3;
+extern LTexture newgametext, loadgametext, tutorialtext, creditstext;
 
 extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> buttonSpriteClips;
@@ -79,6 +85,7 @@ extern std::vector<SDL_Rect> questPageClips;
 extern std::vector<SDL_Rect> acceptrejectClips;
 extern std::vector<SDL_Rect> townButtonClips;
 extern std::vector<SDL_Rect> healthBoxClips;
+extern std::vector<SDL_Rect> dungeonButtonClips;
 
 extern std::vector<LTexture*> texts;
 

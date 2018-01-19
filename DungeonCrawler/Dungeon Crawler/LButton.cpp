@@ -12,6 +12,7 @@ std::vector<LButton> charButtons;
 std::vector<LButton> questButtons;
 std::vector<LButton> acceptrejectButtons;
 std::vector<LButton> townButtons;
+std::vector<LButton> dungeonButtons;
 
 /* Button class defenitions */
 LButton::LButton()
@@ -106,6 +107,9 @@ void LButton::render() {
 	case TOWN_QUEST_BOARD:
 		questSST.render(mPosition.x, mPosition.y, &questPageClips[mCurrentSprite]);
 		break;
+	case DUNGEON:
+		dungeonButtonSST.render(mPosition.x, mPosition.y, &dungeonButtonClips[mCurrentSprite]);
+		break;
 	case TOWN_CHAR_UP:
 
 		break;
@@ -126,6 +130,7 @@ void LButton::render() {
 	case PICK_CHAR3:
 		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite + 8]);
 		break;
+
 	};
 
 }
@@ -148,7 +153,7 @@ int LButton::getHeight() {
 }
 
 //different button clicked function handlers
-void menuClicked(int index) {
+void newGame(int index) {
 	charButtons[0].setHandler(char1Clicked);
 	charButtons[1].setHandler(char1Clicked);
 	charButtons[2].setHandler(char1Clicked);
@@ -156,6 +161,18 @@ void menuClicked(int index) {
 	chars.unshowChar();
 	chars.getChars();
 	state = PICK_CHAR1;
+}
+
+void loadGame(int index) {
+	return;
+}
+
+void tutorial(int index) {
+	return;
+}
+
+void credits(int index) {
+	return;
 }
 
 /* Character selection */
@@ -243,7 +260,11 @@ void questInfo(int index) {
 
 void questAccept(int index) {
 	//should generate based off of what quest
+	SDL_Color Color = { 0, 0, 0 };
 	current_dungeon = Dungeon(current_quests[quest_index].getDiff());
+	dungText1.loadFromRenderedText("Rest", Color, 200);
+	dungText2.loadFromRenderedText("Scout", Color, 200);
+	dungText3.loadFromRenderedText("Peek", Color, 200);
 	gParty.moveParty(current_dungeon.getStartX(), current_dungeon.getStartY());
 	quests.unShowQuest();
 	current_dungeon.updateLOS();
@@ -252,6 +273,20 @@ void questAccept(int index) {
 
 void questReject(int index) {
 	state = TOWN_QUEST_BOARD;
+}
+
+void rest(int index) {
+
+}
+
+void peek(int index) {
+	//check if adjacent tile is a special tile
+
+}
+
+void scout(int index) {
+	//reveal a 2x2 or 3x3 area of the map
+
 }
 
 void returnToTown(int index) {

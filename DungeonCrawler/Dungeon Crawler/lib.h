@@ -10,7 +10,7 @@
 #include <time.h>       /* time */
 #include <sstream>
 
-#define TOTAL_MENU_BUTTONS	1
+#define TOTAL_MENU_BUTTONS	4
 
 //Screen dimension constants
 #define SCREEN_WIDTH	800
@@ -217,5 +217,10 @@ enum {
 	INFOS,
 	CHOICES,
 	SEEN
+};
+
+enum MOD{
+	MOD_UP,
+	MOD_DOWN
 };
 #endif

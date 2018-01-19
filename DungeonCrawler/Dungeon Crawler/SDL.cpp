@@ -74,8 +74,11 @@ bool init()
 	charClips.resize(NUM_CHAR*3);
 	Buttons.resize(12);
 	charButtons.resize(3);
-	menuButtons.resize(1);
-	menuButtons[0].setHandler(menuClicked);
+	menuButtons.resize(4);
+	menuButtons[0].setHandler(newGame);
+	menuButtons[1].setHandler(loadGame);
+	menuButtons[2].setHandler(tutorial);
+	menuButtons[3].setHandler(credits);
 	townButtons.resize(2);
 	townButtons[0].setHandler(gotoShop);
 	townButtons[1].setHandler(gotoCharUp);
@@ -85,10 +88,13 @@ bool init()
 	acceptrejectClips.resize(12);
 	acceptrejectButtons.resize(3);
 	healthBoxClips.resize(11);
+	dungeonButtonClips.resize(4);
+	dungeonButtons.resize(3);
 	int i;
 	for (i = 0; i<TOTAL_BUTTONS; i++)
 		Buttons[i].setConstraints(BUTTON_WIDTH, BUTTON_HEIGHT);
-	menuButtons[0].setConstraints(2*BUTTON_WIDTH, BUTTON_HEIGHT);
+	for (i = 0; i < TOTAL_MENU_BUTTONS; i++)
+		menuButtons[i].setConstraints(2*BUTTON_WIDTH, BUTTON_HEIGHT);
 	for (i = 0; i < 3; i++) 
 		charButtons[i].setConstraints(CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
 	for (i = 0; i < 3; i++)
@@ -97,6 +103,8 @@ bool init()
 		townButtons[i].setConstraints(TOWN_BUTTON_WIDTH, TOWN_BUTTON_HEIGHT);
 	for (i = 0; i < 3; i++)
 		acceptrejectButtons[i].setConstraints(70, 30);
+	for (i = 0; i < 3; i++)
+		dungeonButtons[i].setConstraints(90, 46);
 	acceptrejectButtons[2].setHandler(returnToTown);
 	
 	//8,6 small
@@ -129,11 +137,15 @@ bool loadMedia()
 		rightText.loadFromRenderedText("Training", textColor, 200);
 		acceptText.loadFromRenderedText("Accept", textColor, 200);
 		rejectText.loadFromRenderedText("Reject", textColor, 200);
+		newgametext.loadFromRenderedText("New Game", textColor, 200);
+		loadgametext.loadFromRenderedText("Load Game", textColor, 200);
+		tutorialtext.loadFromRenderedText("Tutorial", textColor, 200);
+		creditstext.loadFromRenderedText("Credits", textColor, 200);
 
 	}
 
 	//Load spritesheet texture
-	if (!spriteSheetTexture.loadFromFile("sprites.png")) {
+	if (!spriteSheetTexture.loadFromFile("textures/sprites.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
@@ -164,7 +176,7 @@ bool loadMedia()
 	}
 
 	//Load button spritesheet texture
-	if (!buttonSpriteSheetTexture.loadFromFile("button.png")) {
+	if (!buttonSpriteSheetTexture.loadFromFile("textures/button.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
@@ -205,16 +217,20 @@ bool loadMedia()
 		Buttons[10].setPosition(BUTTON_ELEVEN_X, BUTTON_Y);
 		Buttons[11].setPosition(BUTTON_TWELVE_X, BUTTON_Y);
 
-		menuButtons[0].setPosition(SCREEN_WIDTH / 2 - menuButtons[0].getWidth() / 2, SCREEN_HEIGHT / 2 + menuButtons[0].getHeight() / 2);
+		menuButtons[0].setPosition(145, 610);
+		menuButtons[1].setPosition(275, 610);
+		menuButtons[2].setPosition(405, 610);
+		menuButtons[3].setPosition(535, 610);
+
 		charButtons[0].setPosition(50, 50);
 		charButtons[1].setPosition(300, 50);
 		charButtons[2].setPosition(550, 50);
 	}
-	if (!mainMenu.loadFromFile("mainmenu.png")) {
+	if (!mainMenu.loadFromFile("textures/mainmenu.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
-	if (!tileSST.loadFromFile("tiles.png")) {
+	if (!tileSST.loadFromFile("textures/tiles.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
@@ -346,7 +362,7 @@ bool loadMedia()
 		tileSpriteClips[CHOICES].h = TILE_HEIGHT;
 
 	}
-	if (!charSST.loadFromFile("charicons.png")) {
+	if (!charSST.loadFromFile("textures/charicons.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
@@ -370,11 +386,11 @@ bool loadMedia()
 		}
 	}
 	chars.loadSprites(); 
-	if (!townmenu.loadFromFile("townmenu.png")) {
+	if (!townmenu.loadFromFile("textures/townmenu.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
-	if (!townButtonSST.loadFromFile("townbuttons.png")) {
+	if (!townButtonSST.loadFromFile("textures/townbuttons.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
@@ -396,11 +412,11 @@ bool loadMedia()
 		townButtons[0].setPosition(25, SCREEN_HEIGHT - 60);
 		townButtons[1].setPosition(SCREEN_WIDTH - 125, SCREEN_HEIGHT - 60);
 	}
-	if (!questboard.loadFromFile("questboard.png")) {
+	if (!questboard.loadFromFile("textures/questboard.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
-	if (!questSST.loadFromFile("quest.png")) {
+	if (!questSST.loadFromFile("textures/quest.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
@@ -416,7 +432,7 @@ bool loadMedia()
 		questButtons[2].setPosition(QUEST_THREE_X, QUEST_Y);
 
 	}
-	if (!acceptrejectSST.loadFromFile("acceptreject.png")) {
+	if (!acceptrejectSST.loadFromFile("textures/acceptreject.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
@@ -443,29 +459,29 @@ bool loadMedia()
 		acceptrejectButtons[1].setPosition(455, 377);
 		acceptrejectButtons[2].setPosition(365, 377);
 	}
-	if (!questinfo.loadFromFile("questinfo.png")) {
+	if (!questinfo.loadFromFile("textures/questinfo.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
 	initQuests();
 	quests.getQuests();
-	if (!shop.loadFromFile("shop.png")) {
+	if (!shop.loadFromFile("textures/shop.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
-	if (!training.loadFromFile("training.png")) {
+	if (!training.loadFromFile("textures/training.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
-	if (!upgrades.loadFromFile("upgrades.png")) {
+	if (!upgrades.loadFromFile("textures/upgrades.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
-	if(!dungeonmenu.loadFromFile("dungeonmenu.png")){
+	if(!dungeonmenu.loadFromFile("textures/dungeonmenu.png")){
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
-	if (!healthboxes.loadFromFile("healthbox.png")) {
+	if (!healthboxSST.loadFromFile("textures/healthbox.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
@@ -476,6 +492,21 @@ bool loadMedia()
 			healthBoxClips[i].w = 50;
 			healthBoxClips[i].h = 50;
 		}
+	}
+	if (!dungeonButtonSST.loadFromFile("textures/dungeonbutton.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
+			dungeonButtonClips[i].y = i * 46;
+			dungeonButtonClips[i].x = 0;
+			dungeonButtonClips[i].w = 90;
+			dungeonButtonClips[i].h = 46;
+		}
+		dungeonButtons[0].setPosition(498, SCREEN_HEIGHT - 58);
+		dungeonButtons[1].setPosition(598, SCREEN_HEIGHT - 58);
+		dungeonButtons[2].setPosition(698, SCREEN_HEIGHT - 58);
 	}
 	return success;
 }
@@ -504,6 +535,13 @@ void close() {
 	questDiff.free();
 	acceptText.free();
 	rejectText.free();
+	dungText1.free();
+	dungText2.free();
+	dungText3.free();
+	newgametext.free();
+	loadgametext.free();
+	tutorialtext.free();
+	creditstext.free();
 
 	//Free Textures
 	spriteSheetTexture.free();
@@ -521,7 +559,8 @@ void close() {
 	shop.free();
 	training.free();
 	dungeonmenu.free();
-	healthboxes.free();
+	healthboxSST.free();
+	dungeonButtonSST.free();
 
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
@@ -685,7 +724,12 @@ void drawMainMenu() {
 
 	mainMenu.render(0, 0, NULL);
 	//buttonSpriteSheetTexture.render(SCREEN_WIDTH / 2 - menuButtons[0].getWidth() / 2, SCREEN_HEIGHT / 2 + menuButtons[0].getHeight() / 2);
-	menuButtons[0].render();
+	for(int i=0;i<TOTAL_MENU_BUTTONS;i++)
+		menuButtons[i].render();
+	newgametext.render(164, 630);
+	loadgametext.render(294, 630);
+	tutorialtext.render(434, 630);
+	creditstext.render(568, 630);
 }
 
 int getTileIndex(int x, int y) {
@@ -823,11 +867,16 @@ void drawDungeonMenu() {
 	dungeonmenu.render(0, SCREEN_HEIGHT - 70);
 	goldmenu.render(400, SCREEN_HEIGHT - 45);
 	//all char stuff
-		for (int i = 0; i < 3; i++) {
-			charSST.render(10 + i*120, SCREEN_HEIGHT - 60, &gParty.getChar(i).getIcon50());
-			health_ratio = (gParty.getChar(i).getMaxHP() - gParty.getChar(i).getHP()) / (gParty.getChar(i).getMaxHP() / 11);
-			healthboxes.render(70 + 120*i, SCREEN_HEIGHT - 60, &healthBoxClips[health_ratio]);
-		}
+	for (int i = 0; i < 3; i++) {
+		charSST.render(10 + i*120, SCREEN_HEIGHT - 60, &gParty.getChar(i).getIcon50());
+		health_ratio = (gParty.getChar(i).getMaxHP() - gParty.getChar(i).getHP()) / (gParty.getChar(i).getMaxHP() / 11);
+		healthboxSST.render(70 + 120*i, SCREEN_HEIGHT - 60, &healthBoxClips[health_ratio]);
+		dungeonButtons[i].render();
+	}
+
+	dungText1.render(526, SCREEN_HEIGHT - 46);
+	dungText2.render(622, SCREEN_HEIGHT - 46);
+	dungText3.render(725, SCREEN_HEIGHT - 46);
 }
 
 void drawCharScreen() {
