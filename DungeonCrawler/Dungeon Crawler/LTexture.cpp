@@ -32,6 +32,7 @@ LTexture healthboxSST;
 LTexture dungeonButtonSST;
 LTexture dungText1, dungText2, dungText3;
 LTexture newgametext, loadgametext, tutorialtext, creditstext;
+LTexture messageBox;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> buttonSpriteClips;

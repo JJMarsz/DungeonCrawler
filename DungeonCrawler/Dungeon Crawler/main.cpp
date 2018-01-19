@@ -10,6 +10,9 @@
 bool hover;
 //Modulation components
 MOD mod_state = MOD_DOWN;
+std::string message = "";
+bool display_message;
+SDL_Color color = { 0, 0, 0 };
 
 int main(int argc, char* args[])
 {
@@ -109,29 +112,55 @@ int main(int argc, char* args[])
 						townButtons[1].handleEvent(&e, 1);
 						break;
 					case DUNGEON:
-						dungeonButtons[0].handleEvent(&e, 0);
-						dungeonButtons[1].handleEvent(&e, 1);
-						dungeonButtons[2].handleEvent(&e, 2);
-						start_x = (SCREEN_WIDTH - current_dungeon.getWidth() * 50) / 2;
-						SDL_GetMouseState(&x, &y);
-						hover = false;
-						//within bounds
-						if (start_x + current_dungeon.getWidth() * 50 > x && start_x < x && 0 < y && current_dungeon.getHeight() * 50 > y) {
-							y = y / 50;
-							y = y * 50;
-							if (x % 50 < 25)
-								x -= (start_x % 50);
-							x = x / 50;
-							x = x * 50;
-							if (gParty.isAdj(x/50 - (start_x/50), y/50))
-								hover = true;
-							if (prev_x != x || prev_y != y) {
-								MouseDown = false;
-								MouseUp = false;
+						if (msg_queue.empty()) {
+							dungeonButtons[0].handleEvent(&e, 0);
+							dungeonButtons[1].handleEvent(&e, 1);
+							dungeonButtons[2].handleEvent(&e, 2);
+							start_x = (SCREEN_WIDTH - current_dungeon.getWidth() * 50) / 2;
+							SDL_GetMouseState(&x, &y);
+							hover = false;
+							//within bounds
+							if (start_x + current_dungeon.getWidth() * 50 > x && start_x < x && 0 < y && current_dungeon.getHeight() * 50 > y) {
+								y = y / 50;
+								y = y * 50;
+								if (x % 50 < 25)
+									x -= (start_x % 50);
+								x = x / 50;
+								x = x * 50;
+								if (gParty.isAdj(x / 50 - (start_x / 50), y / 50))
+									hover = true;
+								if (prev_x != x || prev_y != y) {
+									MouseDown = false;
+									MouseUp = false;
+								}
+								prev_x = x;
+								prev_y = y;
 							}
-							prev_x = x;
-							prev_y = y;
 						}
+						else {//new message or display current one
+							//display new message or end displaying messages
+							if (MouseDown == true && MouseUp == true) {
+								msg_queue.pop();
+								if (msg_queue.empty()) {
+									display_message = false;
+									message = "";
+
+								}
+								else {
+									message = msg_queue.front();
+									messageBox.loadFromRenderedText(message, color, 200);
+								}
+							}
+							else if(message == ""){
+								//first message from message queue
+								display_message = true;
+								message = msg_queue.front();
+								messageBox.loadFromRenderedText(message, color, 200);
+							}
+
+
+						}
+						
 						break;
 					case REWARD:
 						acceptrejectButtons[2].handleEvent(&e, 2);
@@ -231,6 +260,10 @@ int main(int argc, char* args[])
 						}
 						tileSST.render(x + (start_x % 50), y, &tileSpriteClips[HOVER]);
 					}
+					if (display_message == true) {
+						messageBox.render(100, 600);
+					}
+
 					break;
 				case REWARD:
 					drawDungeon();

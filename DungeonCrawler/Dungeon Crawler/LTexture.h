@@ -76,6 +76,7 @@ extern LTexture healthboxSST;
 extern LTexture dungeonButtonSST;
 extern LTexture dungText1, dungText2, dungText3;
 extern LTexture newgametext, loadgametext, tutorialtext, creditstext;
+extern LTexture messageBox;
 
 extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> buttonSpriteClips;

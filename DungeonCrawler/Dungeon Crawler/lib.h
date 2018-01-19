@@ -9,6 +9,7 @@
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
 #include <sstream>
+#include <queue>
 
 #define TOTAL_MENU_BUTTONS	4
 

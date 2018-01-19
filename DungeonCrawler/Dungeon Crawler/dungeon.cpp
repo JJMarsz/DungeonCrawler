@@ -2,6 +2,7 @@
 #include "SDL.h"
 
 Dungeon current_dungeon;
+std::queue<std::string> msg_queue;
 
 /* Disjoint Sets class definitions */
 void DisjointSets::addelements(int num) {
@@ -767,6 +768,7 @@ void Dungeon::perceptionCheck() {
 	int y = gParty.getY();
 	//what need to be beat
 	int DC, stash;
+	std::string msg;
 	switch (dif) {
 	case EASY:
 		DC = 0;
@@ -779,92 +781,149 @@ void Dungeon::perceptionCheck() {
 		break;
 	}
 	stash = DC;
-	//nat 20 is auto success
 	if (y > 0 ) {
 		//if the tile is just a path, not an empty tile, and has never been seen before, attempt to see
-		if (dungMap[x + (y - 1)*width].getType() != PATH && dungMap[x + (y - 1)*width].getType() != NONE && !getSeen(x + (y - 1)*width)) {
+		if (dungMap[x + (y - 1)*width].getType() != PATH && dungMap[x + (y - 1)*width].getType() != NONE && !getSeen(x + (y - 1)*width) && dungMap[x + (y - 1)*width].getType() != DEADEND) {
 			switch (dungMap[x + (y - 1)*width].getType()) {
 			case MOB:
+				msg = "The party notices some enemies ";
+				DC += 12;
+				break;
 			case BOSS:
+				msg = "The party sees the boss ";
+				DC += 12;
+				break;
 			case TRAP:
+				msg = "The party notices a trap ";
 				DC += 12;
 				break;
 			case LOOT:
+				msg = "The party sees something shiny ";
+				DC += 10;
+				break;
 			case INFO:
+				msg = "The party sees some ancient text ";
+				DC += 10;
+				break;
 			case CHOICE:
+				msg = "The party sees a well ";
 				DC += 10;
 				break;
 			}
 			if (roll + highest_wis > DC) {
 				sight[x + (y - 1)*width].scouted = true;
 				//push a message into the message queue
-
+				msg_queue.push(msg + "up above.");
 			}
 		}
 	}
 	DC = stash;
 	if (gParty.getX() > 0) {
-		if (dungMap[x - 1 + (y)*width].getType() != PATH && dungMap[x - 1 + (y)*width].getType() != NONE && !getSeen(x - 1 + (y)*width)) {
+		if (dungMap[x - 1 + (y)*width].getType() != PATH && dungMap[x - 1 + (y)*width].getType() != NONE && !getSeen(x - 1 + (y)*width) && dungMap[x - 1 + (y)*width].getType() != DEADEND) {
 			switch (dungMap[x - 1 + (y)*width].getType()) {
 			case MOB:
+				msg = "The party notices some enemies ";
+				DC += 12;
+				break;
 			case BOSS:
+				msg = "The party sees the boss ";
+				DC += 12;
+				break;
 			case TRAP:
+				msg = "The party notices a trap ";
 				DC += 12;
 				break;
 			case LOOT:
+				msg = "The party sees something shiny ";
+				DC += 10;
+				break;
 			case INFO:
+				msg = "The party sees some ancient text ";
+				DC += 10;
+				break;
 			case CHOICE:
+				msg = "The party sees a well ";
 				DC += 10;
 				break;
 			}
 			if (roll + highest_wis > DC) {
 				sight[x - 1 + (y)*width].scouted = true;
 				//push a message into the message queue
+				msg_queue.push(msg + "to the left.");
 
 			}
 		}
 	}
 	DC = stash;
 	if (gParty.getY() < height - 1) {
-		if (dungMap[x + (y + 1)*width].getType() != PATH && dungMap[x + (y + 1)*width].getType() != NONE && !getSeen(x + (y + 1)*width)) {
+		if (dungMap[x + (y + 1)*width].getType() != PATH && dungMap[x + (y + 1)*width].getType() != NONE && !getSeen(x + (y + 1)*width) && dungMap[x + (y + 1)*width].getType() != DEADEND) {
 			switch (dungMap[x + (y + 1)*width].getType()) {
 			case MOB:
+				msg = "The party notices some enemies ";
+				DC += 12;
+				break;
 			case BOSS:
+				msg = "The party sees the boss ";
+				DC += 12;
+				break;
 			case TRAP:
+				msg = "The party notices a trap ";
 				DC += 12;
 				break;
 			case LOOT:
+				msg = "The party sees something shiny ";
+				DC += 10;
+				break;
 			case INFO:
+				msg = "The party sees some ancient text ";
+				DC += 10;
+				break;
 			case CHOICE:
+				msg = "The party sees a well ";
 				DC += 10;
 				break;
 			}
 			if (roll + highest_wis > DC) {
 				sight[x + (y + 1)*width].scouted = true;
 				//push a message into the message queue
+				msg_queue.push(msg + "down below.");
 
 			}
 		}
 	}
 	DC = stash;
 	if (gParty.getX() < width - 1) {
-		if (dungMap[x + 1 + (y)*width].getType() != PATH && dungMap[x + 1 + (y)*width].getType() != NONE && !getSeen(x + 1 + (y)*width)) {
+		if (dungMap[x + 1 + (y)*width].getType() != PATH && dungMap[x + 1 + (y)*width].getType() != NONE && !getSeen(x + 1 + (y)*width) && dungMap[x + 1 + (y)*width].getType() != DEADEND) {
 			switch (dungMap[x + 1 + (y)*width].getType()) {
 			case MOB:
+				msg = "The party notices some enemies ";
+				DC += 12;
+				break;
 			case BOSS:
+				msg = "The party sees the boss ";
+				DC += 12;
+				break;
 			case TRAP:
+				msg = "The party notices a trap ";
 				DC += 12;
 				break;
 			case LOOT:
+				msg = "The party sees something shiny ";
+				DC += 10;
+				break;
 			case INFO:
+				msg = "The party sees some ancient text ";
+				DC += 10;
+				break;
 			case CHOICE:
+				msg = "The party sees a well ";
 				DC += 10;
 				break;
 			}
 			if (roll + highest_wis > DC) {
 				sight[x + 1 + (y)*width].scouted = true;
 				//push a message into the message queue
-
+				msg_queue.push(msg + "to the right.");
 			}
 		}
 	}

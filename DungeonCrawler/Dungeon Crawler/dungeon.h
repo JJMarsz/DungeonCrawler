@@ -145,4 +145,6 @@ private:
 std::string diffToString(Difficulty diff);
 
 extern Dungeon current_dungeon;
+
+extern std::queue<std::string> msg_queue;
 #endif

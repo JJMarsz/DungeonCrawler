@@ -548,6 +548,7 @@ void close() {
 	loadgametext.free();
 	tutorialtext.free();
 	creditstext.free();
+	messageBox.free();
 
 	//Free Textures
 	spriteSheetTexture.free();
@@ -850,16 +851,21 @@ void drawDungeon() {
 				int index = getTileIndex(x, y);
 				if(index == EMPTY_)
 					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[SEEN]);
+				else if(!current_dungeon.getVisited(x + y * current_dungeon.getWidth())){
+					tileSST.setColor(200, 200, 200);
+					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
+					tileSST.setColor(255, 255, 255);
+
+				}
 				else
 					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
 				//do scout check
 
 				//check if something is at this tile
 				index = encounterExists(x, y);
-				if (index != -1 && current_dungeon.getScouted(x + y*current_dungeon.getWidth()) && !current_dungeon.getVisited(x + y * current_dungeon.getWidth()))
+				if (index != -1 && current_dungeon.getScouted(x + y * current_dungeon.getWidth()) && !current_dungeon.getVisited(x + y * current_dungeon.getWidth())) {
 					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
-				else if(current_dungeon.getVisited(x + y * current_dungeon.getWidth()))
-					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[VISITED]);
+				}
 			}
 			else {
 				tileSST.setColor(r / 5, r / 5, r / 5);
