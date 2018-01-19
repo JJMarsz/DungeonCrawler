@@ -7,6 +7,7 @@ SDL_Window* gWindow = NULL;
 
 std::unordered_map<RoomSize, int> room_map;
 ScreenState state;
+int r = 1000;
 
 /* SDL functions */
 bool init()
@@ -69,7 +70,7 @@ bool init()
 	//set up relevant data structures
 	spriteClips.resize(6);
 	buttonSpriteClips.resize(12);
-	tileSpriteClips.resize(30);
+	tileSpriteClips.resize(31);
 	texts.reserve(20);
 	charClips.resize(NUM_CHAR*3);
 	Buttons.resize(12);
@@ -360,6 +361,11 @@ bool loadMedia()
 		tileSpriteClips[CHOICES].y = TILE_CHOICE_Y;
 		tileSpriteClips[CHOICES].w = TILE_WIDTH;
 		tileSpriteClips[CHOICES].h = TILE_HEIGHT;
+
+		tileSpriteClips[VISITED].x = TILE_VISITED_X;
+		tileSpriteClips[VISITED].y = TILE_VISITED_Y;
+		tileSpriteClips[VISITED].w = TILE_WIDTH;
+		tileSpriteClips[VISITED].h = TILE_HEIGHT;
 
 	}
 	if (!charSST.loadFromFile("textures/charicons.png")) {
@@ -850,11 +856,16 @@ void drawDungeon() {
 
 				//check if something is at this tile
 				index = encounterExists(x, y);
-				if (index != -1)
+				if (index != -1 && current_dungeon.getScouted(x + y*current_dungeon.getWidth()) && !current_dungeon.getVisited(x + y * current_dungeon.getWidth()))
 					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
+				else if(current_dungeon.getVisited(x + y * current_dungeon.getWidth()))
+					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[VISITED]);
 			}
-			else
+			else {
+				tileSST.setColor(r / 5, r / 5, r / 5);
 				tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[EMPTY_]);
+				tileSST.setColor(255,255, 255);
+			}
 		}
 	}
 	//draw any special tiles

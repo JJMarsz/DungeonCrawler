@@ -13,7 +13,8 @@ enum EncounterType {
 	MOB,
 	DEADEND,
 	BARRIER,
-	CHOICE
+	CHOICE,
+	TRAP
 };
 
 enum Difficulty {
@@ -100,6 +101,7 @@ public:
 	Tile* getMob(int i);
 	Tile* getInfo(int i);
 	void updateLOS();
+	void perceptionCheck();
 	bool getSightStatus(int i);
 	bool getSeen(int i);
 	bool getVisited(int i);
@@ -121,6 +123,7 @@ private:
 
 	//use RMO to access
 	//x + width*y
+	Difficulty dif;
 	std::vector<Tile> dungMap;
 	DisjointSets mapSet;
 	int width, height;

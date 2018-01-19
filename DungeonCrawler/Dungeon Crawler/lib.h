@@ -133,6 +133,9 @@
 #define TILE_CHOICE_X			0
 #define TILE_CHOICE_Y			200
 
+#define TILE_VISITED_X			0
+#define TILE_VISITED_Y			250
+
 
 #define TILE_WIDTH				50
 #define TILE_HEIGHT				50
@@ -216,7 +219,8 @@ enum {
 	LOOTS,
 	INFOS,
 	CHOICES,
-	SEEN
+	SEEN,
+	VISITED
 };
 
 enum MOD{

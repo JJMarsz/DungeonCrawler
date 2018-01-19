@@ -8,6 +8,7 @@
 #include "dungeon.h"
 
 bool hover;
+//Modulation components
 MOD mod_state = MOD_DOWN;
 
 int main(int argc, char* args[])
@@ -36,8 +37,6 @@ int main(int argc, char* args[])
 			//Event handler
 			SDL_Event e;
 			
-			//Modulation components
-			int r = 1000;
 
 			//While application is running
 			while (!quit)
@@ -214,10 +213,13 @@ int main(int argc, char* args[])
 					if (r <= 900)
 						mod_state = MOD_UP;
 					SDL_Delay(10);
-					tileSST.setColor(r/5, r/5, r/5);
 					if (hover) {
 						if (MouseDown && MouseUp) {
 							gParty.moveParty(x / 50 - (start_x / 50), y / 50);
+							//check to see if party sees something new in area
+							//done before LOS is updated to prevent player abuse by constantly rerolling
+							//once a tile has been spotted, it gets 1 roll to see what it is, no more
+							current_dungeon.perceptionCheck();
 							//update line of sight
 							current_dungeon.updateLOS();
 							/* prevent double clicking */
@@ -232,6 +234,7 @@ int main(int argc, char* args[])
 					break;
 				case REWARD:
 					drawDungeon();
+					drawDungeonMenu();
 					questinfo.render(262, 150, NULL);
 					acceptrejectButtons[2].render();
 					questTitle.render(280, 164);

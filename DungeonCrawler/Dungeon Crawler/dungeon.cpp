@@ -70,7 +70,7 @@ Dungeon::Dungeon(Difficulty type) {
 	Tile newTile(PATH);
 	Direction dir;
 	int dead_count;
-
+	dif = type;
 
 	while (1) {
 		switch (type) {
@@ -753,6 +753,121 @@ void Dungeon::updateLOS() {
 	}
 	
 
+}
+
+void Dungeon::perceptionCheck() {
+	int highest_wis = (gParty.getChar(0).getWis() < gParty.getChar(1).getWis()) ? gParty.getChar(1).getWis() : gParty.getChar(0).getWis();
+	highest_wis = (highest_wis < gParty.getChar(2).getWis()) ? gParty.getChar(2).getWis() : highest_wis;
+	srand(time(NULL));
+	int roll = rand() % 20 + 1;
+	//automatic fail
+	if (roll == 1)
+		return;
+	int x = gParty.getX();
+	int y = gParty.getY();
+	//what need to be beat
+	int DC, stash;
+	switch (dif) {
+	case EASY:
+		DC = 0;
+		break;
+	case MED:
+		DC = 1;
+		break;
+	case HARD:
+		DC = 3;
+		break;
+	}
+	stash = DC;
+	//nat 20 is auto success
+	if (y > 0 ) {
+		//if the tile is just a path, not an empty tile, and has never been seen before, attempt to see
+		if (dungMap[x + (y - 1)*width].getType() != PATH && dungMap[x + (y - 1)*width].getType() != NONE && !getSeen(x + (y - 1)*width)) {
+			switch (dungMap[x + (y - 1)*width].getType()) {
+			case MOB:
+			case BOSS:
+			case TRAP:
+				DC += 12;
+				break;
+			case LOOT:
+			case INFO:
+			case CHOICE:
+				DC += 10;
+				break;
+			}
+			if (roll + highest_wis > DC) {
+				sight[x + (y - 1)*width].scouted = true;
+				//push a message into the message queue
+
+			}
+		}
+	}
+	DC = stash;
+	if (gParty.getX() > 0) {
+		if (dungMap[x - 1 + (y)*width].getType() != PATH && dungMap[x - 1 + (y)*width].getType() != NONE && !getSeen(x - 1 + (y)*width)) {
+			switch (dungMap[x - 1 + (y)*width].getType()) {
+			case MOB:
+			case BOSS:
+			case TRAP:
+				DC += 12;
+				break;
+			case LOOT:
+			case INFO:
+			case CHOICE:
+				DC += 10;
+				break;
+			}
+			if (roll + highest_wis > DC) {
+				sight[x - 1 + (y)*width].scouted = true;
+				//push a message into the message queue
+
+			}
+		}
+	}
+	DC = stash;
+	if (gParty.getY() < height - 1) {
+		if (dungMap[x + (y + 1)*width].getType() != PATH && dungMap[x + (y + 1)*width].getType() != NONE && !getSeen(x + (y + 1)*width)) {
+			switch (dungMap[x + (y + 1)*width].getType()) {
+			case MOB:
+			case BOSS:
+			case TRAP:
+				DC += 12;
+				break;
+			case LOOT:
+			case INFO:
+			case CHOICE:
+				DC += 10;
+				break;
+			}
+			if (roll + highest_wis > DC) {
+				sight[x + (y + 1)*width].scouted = true;
+				//push a message into the message queue
+
+			}
+		}
+	}
+	DC = stash;
+	if (gParty.getX() < width - 1) {
+		if (dungMap[x + 1 + (y)*width].getType() != PATH && dungMap[x + 1 + (y)*width].getType() != NONE && !getSeen(x + 1 + (y)*width)) {
+			switch (dungMap[x + 1 + (y)*width].getType()) {
+			case MOB:
+			case BOSS:
+			case TRAP:
+				DC += 12;
+				break;
+			case LOOT:
+			case INFO:
+			case CHOICE:
+				DC += 10;
+				break;
+			}
+			if (roll + highest_wis > DC) {
+				sight[x + 1 + (y)*width].scouted = true;
+				//push a message into the message queue
+
+			}
+		}
+	}
 }
 
 void Dungeon::setTile(int RMO_index, Tile newTile) {
