@@ -25,6 +25,7 @@
 #define MAGIC_NUM		123456789
 
 #define TEXT_SIZE		15
+#define MSG_TEXT_SIZE	18
 
 //button constants
 #define BUTTON_WIDTH	60

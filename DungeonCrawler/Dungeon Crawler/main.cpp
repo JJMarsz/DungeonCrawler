@@ -12,7 +12,7 @@ bool hover;
 MOD mod_state = MOD_DOWN;
 std::string message = "";
 bool display_message;
-SDL_Color color = { 0, 0, 0 };
+SDL_Color color = { 255, 255, 255 };
 
 int main(int argc, char* args[])
 {
@@ -20,6 +20,7 @@ int main(int argc, char* args[])
 	int prev_x = -1, prev_y = -1;
 	bool MouseDown = false;
 	bool MouseUp = false;
+	int w;
 	//Start up SDL and create window
 	if (!init())
 	{
@@ -148,14 +149,14 @@ int main(int argc, char* args[])
 								}
 								else {
 									message = msg_queue.front();
-									messageBox.loadFromRenderedText(message, color, 200);
+									messageBox.loadFromRenderedText(message, color, 800);
 								}
 							}
 							else if(message == ""){
 								//first message from message queue
 								display_message = true;
 								message = msg_queue.front();
-								messageBox.loadFromRenderedText(message, color, 200);
+								messageBox.loadFromRenderedText(message, color, 800);
 							}
 
 
@@ -261,7 +262,7 @@ int main(int argc, char* args[])
 						tileSST.render(x + (start_x % 50), y, &tileSpriteClips[HOVER]);
 					}
 					if (display_message == true) {
-						messageBox.render(100, 600);
+						messageBox.render((SCREEN_WIDTH - messageBox.getWidth())/2, 614);
 					}
 
 					break;

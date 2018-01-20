@@ -107,7 +107,16 @@ bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 	if (w <= 0)
 		w = 200;
 	//Render text surface
-	SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(gFont, textureText.c_str(), textColor_, w);
+	SDL_Surface* textSurface;
+	switch (state) {
+	case DUNGEON:
+		textSurface = TTF_RenderText_Blended_Wrapped(msg_font, textureText.c_str(), textColor_, w);
+		break;
+	default:
+		textSurface = TTF_RenderText_Blended_Wrapped(gFont, textureText.c_str(), textColor_, w);
+		break;
+	}
+	
 	if (textSurface == NULL)
 	{
 		printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());

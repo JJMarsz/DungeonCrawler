@@ -65,6 +65,7 @@ void drawTownMenu();
 extern SDL_Renderer* gRenderer;
 //Globally used font
 extern TTF_Font *gFont;
+extern TTF_Font* msg_font;
 //The window we'll be rendering to
 extern SDL_Window* gWindow;
 extern std::unordered_map<RoomSize, int> room_map;

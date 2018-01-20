@@ -76,23 +76,23 @@ Dungeon::Dungeon(Difficulty type) {
 	while (1) {
 		switch (type) {
 		case EASY:
-			//8x8 to 9x9
-			width = 8 + rand() % 2;
-			height = 8 + rand() % 2;
+			//9x9 to 10x10
+			width = 9 + rand() % 2;
+			height = 9 + rand() % 2;
 			dead_count = 2;
 			mult = 10;
 			break;
 		case MEDIUM:
-			//10x10 to 11x11
-			width = 10 + rand() % 2;
+			//11x10 to 12x11
+			width = 11 + rand() % 2;
 			height = 10 + rand() % 2;
 			dead_count = 3;
 			mult = 5;
 			break;
 		case HARD:
-			//12x12 to 13x13
-			width = 12 + rand() % 2;
-			height = 12 + rand() % 2;
+			//13x11 to 14x12
+			width = 13 + rand() % 2;
+			height = 11 + rand() % 2;
 			dead_count = 4;
 			mult = 2;
 			break;
@@ -158,7 +158,7 @@ Dungeon::Dungeon(Difficulty type) {
 		end_x = x;
 		end_y = y;
 		//require a longish path
-		if (path_length > 2*height && path_length < 3*height)
+		if (path_length > 2*width && path_length < 3*width)
 			break;
 	}
 	//generate dead ends

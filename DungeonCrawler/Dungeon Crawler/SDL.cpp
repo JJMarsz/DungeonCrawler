@@ -3,6 +3,7 @@
 
 SDL_Renderer* gRenderer = NULL;
 TTF_Font *gFont = NULL;
+TTF_Font *msg_font = NULL;
 SDL_Window* gWindow = NULL;
 
 std::unordered_map<RoomSize, int> room_map;
@@ -129,6 +130,7 @@ bool loadMedia()
 	SDL_Color textColor = { 255, 255, 255 };
 	//Open the font
 	gFont = TTF_OpenFont("PT_sans.ttf", TEXT_SIZE);
+	msg_font = TTF_OpenFont("PT_sans.ttf", MSG_TEXT_SIZE);
 	if (gFont == NULL) {
 		printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
 		success = false;
@@ -144,6 +146,7 @@ bool loadMedia()
 		creditstext.loadFromRenderedText("Credits", textColor, 200);
 
 	}
+
 
 	//Load spritesheet texture
 	if (!spriteSheetTexture.loadFromFile("textures/sprites.png")) {
@@ -881,7 +884,7 @@ void drawDungeon() {
 void drawDungeonMenu() {
 	//dungeon menu stuff
 	int health_ratio;
-	dungeonmenu.render(0, SCREEN_HEIGHT - 70);
+	dungeonmenu.render(0, SCREEN_HEIGHT - 120);
 	goldmenu.render(400, SCREEN_HEIGHT - 45);
 	//all char stuff
 	for (int i = 0; i < 3; i++) {
