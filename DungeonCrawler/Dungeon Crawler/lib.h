@@ -11,6 +11,8 @@
 #include <sstream>
 #include <queue>
 
+typedef void(*func)();
+
 #define TOTAL_MENU_BUTTONS	4
 
 //Screen dimension constants
@@ -135,8 +137,10 @@
 #define TILE_CHOICE_X			0
 #define TILE_CHOICE_Y			200
 
-#define TILE_VISITED_X			0
-#define TILE_VISITED_Y			250
+#define TILE_TRAP_X			0
+#define TILE_TRAP_Y			250
+
+
 
 
 #define TILE_WIDTH				50
@@ -222,11 +226,12 @@ enum {
 	INFOS,
 	CHOICES,
 	SEEN,
-	VISITED
+	TRAP_
 };
 
 enum MOD{
 	MOD_UP,
 	MOD_DOWN
 };
+
 #endif

@@ -1,6 +1,7 @@
 #include "Quest.h"
 
 std::vector<Quest> current_quests;
+EncounterList encounters;
 QuestList quests;
 Quest::Quest(){
 
@@ -11,6 +12,12 @@ int Quest::getXP() { return xp_reward; }
 std::string Quest::getTitle() { return name; }
 std::string Quest::getInfo() { return info; }
 Difficulty Quest::getDiff() { return diff; }
+func Quest::fetchTrap(TrapIndex index) {
+		return trapEnc[index];
+}
+void Quest::loadTrap(TrapIndex i) {
+	trapEnc.push_back(encounters.getTrap(i));
+}
 
 Quest::Quest(std::string name_, std::string info_, int gold, int xp, Difficulty diff_) {
 	name = name_;
@@ -18,6 +25,11 @@ Quest::Quest(std::string name_, std::string info_, int gold, int xp, Difficulty 
 	gold_reward = gold;
 	xp_reward = xp;
 	diff = diff_;
+	trapEnc.resize(0);
+	choiceEnc.resize(0);
+	lootEnc.resize(0);
+	infoEnc.resize(0);
+	enemyEnc.resize(0);
 }
 
 void initQuests() {
@@ -138,6 +150,8 @@ QuestList::QuestList() {
 	};
 	list[hardQuestIndex+1].complete = false;
 	list[hardQuestIndex+1].show = false;
+	for (int i = 0; i < NUM_QUEST; i++)
+		list[i].q.loadTrap(BASIC);
 }
 
 bool QuestList::isAvailable(int index) {
@@ -285,6 +299,3 @@ void QuestList::getHardQuest() {
 	}
 	current_quests.push_back(showQuest(index));
 }
-
-EncounterType Encounter::getType() { return type; }
-void Encounter::setType(EncounterType type_) { type = type_; }

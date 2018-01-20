@@ -6,6 +6,7 @@
 #include "LButton.h"
 #include "SDL.h"
 #include "dungeon.h"
+#include "Encounter.h"
 
 bool hover;
 //Modulation components
@@ -246,6 +247,8 @@ int main(int argc, char* args[])
 					if (hover) {
 						if (MouseDown && MouseUp) {
 							gParty.moveParty(x / 50 - (start_x / 50), y / 50);
+							if (current_dungeon.isEncounter(gParty.getX(), gParty.getY()) && !current_dungeon.getVisited(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+								handleEncounter();
 							//check to see if party sees something new in area
 							//done before LOS is updated to prevent player abuse by constantly rerolling
 							//once a tile has been spotted, it gets 1 roll to see what it is, no more

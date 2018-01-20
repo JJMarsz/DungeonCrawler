@@ -129,10 +129,12 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Quest.cpp" />
     <ClCompile Include="SDL.cpp" />
+    <ClCompile Include="Encounter.cpp" />
     <ClCompile Include="Town.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dungeon.h" />
+    <ClInclude Include="Encounter.h" />
     <ClInclude Include="LButton.h" />
     <ClInclude Include="lib.h" />
     <ClInclude Include="LTexture.h" />

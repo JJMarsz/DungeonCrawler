@@ -117,7 +117,6 @@ bool init()
 	room_map[MED] = (16 << 16) + 12;
 	room_map[SMALL] = (8 << 16) + 6;
 	state = MAIN_MENU;
-	chars = CharList();
 	return success;
 }
 
@@ -365,10 +364,10 @@ bool loadMedia()
 		tileSpriteClips[CHOICES].w = TILE_WIDTH;
 		tileSpriteClips[CHOICES].h = TILE_HEIGHT;
 
-		tileSpriteClips[VISITED].x = TILE_VISITED_X;
-		tileSpriteClips[VISITED].y = TILE_VISITED_Y;
-		tileSpriteClips[VISITED].w = TILE_WIDTH;
-		tileSpriteClips[VISITED].h = TILE_HEIGHT;
+		tileSpriteClips[TRAP_].x = TILE_TRAP_X;
+		tileSpriteClips[TRAP_].y = TILE_TRAP_Y;
+		tileSpriteClips[TRAP_].w = TILE_WIDTH;
+		tileSpriteClips[TRAP_].h = TILE_HEIGHT;
 
 	}
 	if (!charSST.loadFromFile("textures/charicons.png")) {
@@ -552,6 +551,9 @@ void close() {
 	tutorialtext.free();
 	creditstext.free();
 	messageBox.free();
+	hp0.free();
+	hp1.free();
+	hp2.free();
 
 	//Free Textures
 	spriteSheetTexture.free();
@@ -743,11 +745,11 @@ void drawMainMenu() {
 }
 
 int getTileIndex(int x, int y) {
-	if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth())).getType() == NONE)
+	if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth()))->getType() == NONE)
 		return EMPTY_;
 	/*if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth())).getType() == DEADEND)
 		return DEAD_;*/
-	if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth())).getType() == BARRIER)
+	if (current_dungeon.getTile(x + (y) * (current_dungeon.getWidth()))->getType() == BARRIER)
 		return EMPTY_;
 	//bitwise storage of adjacency
 	//	R	D	L	U
@@ -760,26 +762,26 @@ int getTileIndex(int x, int y) {
 	//check adjacent
 	//check up
 	if (y > 0) {
-		if (current_dungeon.getTile(x + (y-1) * (current_dungeon.getWidth())).getType() != NONE
-			&& current_dungeon.getTile(x + (y - 1) * (current_dungeon.getWidth())).getType() != BARRIER)
+		if (current_dungeon.getTile(x + (y-1) * (current_dungeon.getWidth()))->getType() != NONE
+			&& current_dungeon.getTile(x + (y - 1) * (current_dungeon.getWidth()))->getType() != BARRIER)
 			adj += 1;
 	}
 	//check left
 	if (x > 0) {
-		if (current_dungeon.getTile(x - 1 + (y) * (current_dungeon.getWidth())).getType() != NONE
-			&& current_dungeon.getTile(x - 1 + (y) * (current_dungeon.getWidth())).getType() != BARRIER)
+		if (current_dungeon.getTile(x - 1 + (y) * (current_dungeon.getWidth()))->getType() != NONE
+			&& current_dungeon.getTile(x - 1 + (y) * (current_dungeon.getWidth()))->getType() != BARRIER)
 			adj += 2;
 	}
 	//check down
 	if (y < current_dungeon.getHeight()-1) {
-		if (current_dungeon.getTile(x + (y + 1) * (current_dungeon.getWidth())).getType() != NONE
-			&& current_dungeon.getTile(x + (y + 1) * (current_dungeon.getWidth())).getType() != BARRIER)
+		if (current_dungeon.getTile(x + (y + 1) * (current_dungeon.getWidth()))->getType() != NONE
+			&& current_dungeon.getTile(x + (y + 1) * (current_dungeon.getWidth()))->getType() != BARRIER)
 			adj += 4;
 	}
 	//check right
 	if (x < current_dungeon.getWidth() - 1) {
-		if (current_dungeon.getTile(x + 1 + (y) * (current_dungeon.getWidth())).getType() != NONE
-			&& current_dungeon.getTile(x + 1 + (y) * (current_dungeon.getWidth())).getType() != BARRIER)
+		if (current_dungeon.getTile(x + 1 + (y) * (current_dungeon.getWidth()))->getType() != NONE
+			&& current_dungeon.getTile(x + 1 + (y) * (current_dungeon.getWidth()))->getType() != BARRIER)
 			adj += 8;
 	}
 	switch (adj) {
@@ -820,7 +822,7 @@ int getTileIndex(int x, int y) {
 int encounterExists(int x, int y) {
 	if (gParty.getX() == x && gParty.getY() == y)
 		return -1;
-	switch (current_dungeon.getTile(x + y * current_dungeon.getWidth()).getType()) {
+	switch (current_dungeon.getTile(x + y * current_dungeon.getWidth())->getType()) {
 	case BOSS:
 		return BOSSS;
 	case MOB:
@@ -831,6 +833,8 @@ int encounterExists(int x, int y) {
 		return INFOS;
 	case CHOICE:
 		return CHOICES;
+	case TRAP:
+		return TRAP_;
 	default:
 		return -1;
 	}
@@ -852,13 +856,15 @@ void drawDungeon() {
 		for (int y = 0; y < current_dungeon.getHeight(); y++) {
 			if (current_dungeon.getSightStatus(x + y * current_dungeon.getWidth())){
 				int index = getTileIndex(x, y);
-				if(index == EMPTY_)
+				if (index == EMPTY_) {
+					tileSST.setColor(r / 5, r / 5, r / 5);
 					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[SEEN]);
+					tileSST.setColor(255, 255, 255);
+				}
 				else if(!current_dungeon.getVisited(x + y * current_dungeon.getWidth())){
 					tileSST.setColor(200, 200, 200);
 					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
 					tileSST.setColor(255, 255, 255);
-
 				}
 				else
 					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
@@ -884,15 +890,24 @@ void drawDungeon() {
 void drawDungeonMenu() {
 	//dungeon menu stuff
 	int health_ratio;
+	SDL_Color textColor = { 255, 255, 255 };
 	dungeonmenu.render(0, SCREEN_HEIGHT - 120);
 	goldmenu.render(400, SCREEN_HEIGHT - 45);
 	//all char stuff
 	for (int i = 0; i < 3; i++) {
-		charSST.render(10 + i*120, SCREEN_HEIGHT - 60, &gParty.getChar(i).getIcon50());
-		health_ratio = (gParty.getChar(i).getMaxHP() - gParty.getChar(i).getHP()) / (gParty.getChar(i).getMaxHP() / 11);
+		charSST.render(10 + i*120, SCREEN_HEIGHT - 60, &gParty.getChar(i)->getIcon50());
+		health_ratio = (gParty.getChar(i)->getMaxHP() - gParty.getChar(i)->getHP()) / (gParty.getChar(i)->getMaxHP() / 11);
 		healthboxSST.render(70 + 120*i, SCREEN_HEIGHT - 60, &healthBoxClips[health_ratio]);
 		dungeonButtons[i].render();
+		
 	}
+	hp0.loadFromRenderedText(std::to_string(gParty.getChar(0)->getHP()) + "/" + std::to_string(gParty.getChar(0)->getMaxHP()), textColor, 200);
+	hp1.loadFromRenderedText(std::to_string(gParty.getChar(1)->getHP()) + "/" + std::to_string(gParty.getChar(1)->getMaxHP()), textColor, 200);
+	hp2.loadFromRenderedText(std::to_string(gParty.getChar(2)->getHP()) + "/" + std::to_string(gParty.getChar(2)->getMaxHP()), textColor, 200);
+
+	hp0.render(70, SCREEN_HEIGHT - 48);
+	hp1.render(190, SCREEN_HEIGHT - 48);
+	hp2.render(310, SCREEN_HEIGHT - 48);
 
 	dungText1.render(526, SCREEN_HEIGHT - 46);
 	dungText2.render(622, SCREEN_HEIGHT - 46);
@@ -997,9 +1012,9 @@ void drawTownMenu() {
 	completed.render(210, SCREEN_HEIGHT - 44);
 
 	//render character icons for selected characters
-	charSST.render(246, SCREEN_HEIGHT - 47, &gParty.getChar(0).getIcon25());
-	charSST.render(332, SCREEN_HEIGHT - 47, &gParty.getChar(1).getIcon25());
-	charSST.render(418, SCREEN_HEIGHT - 47, &gParty.getChar(2).getIcon25());
+	charSST.render(246, SCREEN_HEIGHT - 47, &gParty.getChar(0)->getIcon25());
+	charSST.render(332, SCREEN_HEIGHT - 47, &gParty.getChar(1)->getIcon25());
+	charSST.render(418, SCREEN_HEIGHT - 47, &gParty.getChar(2)->getIcon25());
 
 }
 

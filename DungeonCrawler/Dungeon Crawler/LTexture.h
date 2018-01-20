@@ -103,5 +103,6 @@ extern LTexture questXP;
 extern LTexture questDiff;
 extern LTexture acceptText;
 extern LTexture rejectText;
+extern LTexture hp0, hp1, hp2;
 #endif
 

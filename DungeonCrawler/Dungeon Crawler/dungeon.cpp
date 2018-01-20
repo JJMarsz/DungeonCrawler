@@ -2,7 +2,6 @@
 #include "SDL.h"
 
 Dungeon current_dungeon;
-std::queue<std::string> msg_queue;
 
 /* Disjoint Sets class definitions */
 void DisjointSets::addelements(int num) {
@@ -281,6 +280,22 @@ void Dungeon::populateDungeon(Difficulty diff) {
 		range_num++;
 	}
 
+	//trap encounters
+	srand(time(NULL));
+	range_num = 0;
+	enc = 2 + rand() % (total_enc - 1);
+	while (enc > 0) {
+		while (range_maps[range_num][count]->getType() != PATH) {
+			count = rand() % range;
+		}
+		range_maps[range_num][count]->setIndex(rand() % NUM_TRAP);
+		range_maps[range_num][count]->setType(TRAP);
+		//otherstuff
+
+		enc--;
+		range_num++;
+	}
+
 	//fill out deadends with encounters
 	srand(time(NULL));
 	std::vector<std::vector<Tile*>> dead_range_maps;
@@ -518,19 +533,19 @@ void Dungeon::initArea() {
 	for (int i = 0; i < 3; i++) {
 		//add all adjacent tiles
 		if (y > 0) {
-			if (getTile(x + (y - 1)*width).getType() == BARRIER || getTile(x + (y - 1)*width).getType() == NONE)
+			if (getTile(x + (y - 1)*width)->getType() == BARRIER || getTile(x + (y - 1)*width)->getType() == NONE)
 				dungMap[x + (y - 1)*width].setArea(BOSS_);
 		}
 		if (x > 0) {
-			if (getTile(x - 1 + (y)*width).getType() == BARRIER || getTile(x - 1 + (y)*width).getType() == NONE)
+			if (getTile(x - 1 + (y)*width)->getType() == BARRIER || getTile(x - 1 + (y)*width)->getType() == NONE)
 				dungMap[x - 1 + (y)*width].setArea(BOSS_);
 		}
 		if (y < getHeight() - 1) {
-			if (getTile(x + (y + 1)*width).getType() == BARRIER || getTile(x + (y + 1)*width).getType() == NONE)
+			if (getTile(x + (y + 1)*width)->getType() == BARRIER || getTile(x + (y + 1)*width)->getType() == NONE)
 				dungMap[x + (y + 1)*width].setArea(BOSS_);
 		}
 		if (x < getWidth() - 1) {
-			if (getTile(x + 1 + (y)*width).getType() == BARRIER || getTile(x + 1 + (y)*width).getType() == NONE)
+			if (getTile(x + 1 + (y)*width)->getType() == BARRIER || getTile(x + 1 + (y)*width)->getType() == NONE)
 				dungMap[x + 1 + (y)*width].setArea(BOSS_);
 		}
 		temp_x = x;
@@ -629,19 +644,19 @@ void Dungeon::setUnionNone(int x, int y) {
 	//union everythign adjacent as long as its NONE
 	int curr = x + (y)*width;
 	if (y > 1) {
-		if (getTile(x + (y - 1)*width).getType() == NONE && !pathAdjacent(x, y-1) && mapSet.find(curr) != mapSet.find(curr - width))
+		if (getTile(x + (y - 1)*width)->getType() == NONE && !pathAdjacent(x, y-1) && mapSet.find(curr) != mapSet.find(curr - width))
 			mapSet.setunion(curr, curr - width);
 	}
 	if (x > 0) {
-		if (getTile(x - 1 + (y)*width).getType() == NONE && !pathAdjacent(x - 1, y) && mapSet.find(curr) != mapSet.find(curr - 1))
+		if (getTile(x - 1 + (y)*width)->getType() == NONE && !pathAdjacent(x - 1, y) && mapSet.find(curr) != mapSet.find(curr - 1))
 			mapSet.setunion(curr, curr - 1);
 	}
 	if (y < getHeight() - 2) {
-		if (getTile(x + (y + 1)*width).getType() == NONE && !pathAdjacent(x, y + 1) && mapSet.find(curr) != mapSet.find(curr + width))
+		if (getTile(x + (y + 1)*width)->getType() == NONE && !pathAdjacent(x, y + 1) && mapSet.find(curr) != mapSet.find(curr + width))
 			mapSet.setunion(curr, curr + width);
 	}
 	if (x < getWidth() - 1) {
-		if (getTile(x + 1 + (y)*width).getType() == NONE && !pathAdjacent(x + 1, y) && mapSet.find(curr) != mapSet.find(curr + 1))
+		if (getTile(x + 1 + (y)*width)->getType() == NONE && !pathAdjacent(x + 1, y) && mapSet.find(curr) != mapSet.find(curr + 1))
 			mapSet.setunion(curr, curr + 1);
 	}
 }
@@ -757,8 +772,8 @@ void Dungeon::updateLOS() {
 }
 
 void Dungeon::perceptionCheck() {
-	int highest_wis = (gParty.getChar(0).getWis() < gParty.getChar(1).getWis()) ? gParty.getChar(1).getWis() : gParty.getChar(0).getWis();
-	highest_wis = (highest_wis < gParty.getChar(2).getWis()) ? gParty.getChar(2).getWis() : highest_wis;
+	int highest_wis = (gParty.getChar(0)->getWis() < gParty.getChar(1)->getWis()) ? gParty.getChar(1)->getWis() : gParty.getChar(0)->getWis();
+	highest_wis = (highest_wis < gParty.getChar(2)->getWis()) ? gParty.getChar(2)->getWis() : highest_wis;
 	srand(time(NULL));
 	int roll = rand() % 20 + 1;
 	//automatic fail
@@ -932,13 +947,14 @@ void Dungeon::perceptionCheck() {
 void Dungeon::setTile(int RMO_index, Tile newTile) {
 	dungMap[RMO_index] = newTile;
 }
-Tile Dungeon::getTile(int RMO_index) {
-	return dungMap[RMO_index];
+Tile* Dungeon::getTile(int RMO_index) {
+	return &dungMap[RMO_index];
 }
 int Dungeon::getWidth() { return width; }
 int Dungeon::getHeight() { return height; }
 bool Dungeon::isStart(int x, int y) { return ((x == start_x && y == start_y) ? true : false); }
 bool Dungeon::isEnd(int x, int y) { return ((x == end_x && y == end_y) ? true : false); }
+bool Dungeon::isEncounter(int x, int y) { return ((dungMap[x + y * width].getType() != PATH && dungMap[x + y * width].getType() != DEADEND) ? true : false); }
 int Dungeon::getStartX() { return start_x; }
 int Dungeon::getStartY() { return start_y; }
 Tile* Dungeon::getBoss() { return boss; }
@@ -981,6 +997,8 @@ void Tile::setPos(int x_, int y_) {x = x_;y = y_;}
 
 EncounterType Tile::getType() {return type;}
 void Tile::setType(EncounterType type_) { type = type_; }
+int Tile::getIndex() { return index; }
+void Tile::setIndex(int i) { index = i; }
 
 void Tile::operator=(const Tile& t) {
 	type = t.type;

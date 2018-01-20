@@ -1,3 +1,5 @@
-﻿  main.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\main.cpp(23): warning C4101: 'w': unreferenced local variable
+﻿  SDL.cpp
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(526): warning C4018: '<': signed/unsigned mismatch
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(919): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(999): warning C4101: 'i': unreferenced local variable
   Dungeon Crawler.vcxproj -> C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe

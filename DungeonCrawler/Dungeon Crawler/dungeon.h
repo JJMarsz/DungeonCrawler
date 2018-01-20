@@ -3,19 +3,8 @@
 
 #include "lib.h"
 #include "LButton.h"
+#include "Encounter.h"
 
-enum EncounterType {
-	NONE,
-	PATH,
-	LOOT,
-	INFO,
-	BOSS,
-	MOB,
-	DEADEND,
-	BARRIER,
-	CHOICE,
-	TRAP
-};
 
 enum Difficulty {
 	EASY,
@@ -50,6 +39,8 @@ public:
 	void setPos(int x_, int y_);
 	void setArea(Area a);
 	Area getArea();
+	int getIndex();
+	void setIndex(int i);
 private:
 	EncounterType type;
 	Tile* prev;
@@ -88,24 +79,32 @@ public:
 	};
 	Dungeon();
 	Dungeon(Difficulty type);
+
 	void setTile(int RMO_index, Tile newTile);
-	Tile getTile(int RMO_index);
-	int getWidth();
-	int getHeight();
+	Tile* getTile(int RMO_index);
+
 	bool isStart(int x, int y);
 	bool isEnd(int x, int y);
+	bool isEncounter(int x, int y);
+
 	int getStartX();
 	int getStartY();
+	int getWidth();
+	int getHeight();
+
 	Tile* getBoss();
 	Tile* getLoot(int i);
 	Tile* getMob(int i);
 	Tile* getInfo(int i);
+
 	void updateLOS();
 	void perceptionCheck();
+
 	bool getSightStatus(int i);
 	bool getSeen(int i);
 	bool getVisited(int i);
 	bool getScouted(int i);
+
 private:
 
 	bool pathAdjacent(int x, int y);
@@ -146,5 +145,4 @@ std::string diffToString(Difficulty diff);
 
 extern Dungeon current_dungeon;
 
-extern std::queue<std::string> msg_queue;
 #endif

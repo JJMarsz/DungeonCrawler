@@ -53,7 +53,7 @@ public:
 	void render(int x, int y);
 	void addXP(int xp_);
 	//Hit(int atk_roll, int dmg_roll);
-	//Attack()
+	void damage(int dmg);
 
 
 private:
@@ -87,7 +87,7 @@ public:
 	int getCompleted();
 	int getX();
 	int getY();
-	Character getChar(int index);
+	Character* getChar(int index);
 	bool isAdj(int x, int y);
 	void incCompleted();
 	int getGold();

@@ -2,8 +2,8 @@
 #define QUEST_H
 
 #include "lib.h"
-#include "dungeon.h"
 #include "LTexture.h"
+#include "dungeon.h"
 
 class Enemy {
 public:
@@ -33,20 +33,6 @@ private:
 	int atk_min;
 };
 
-class Encounter {
-public:
-	//Encounter(EncounterType type_);
-	EncounterType getType();
-	void setType(EncounterType type_);
-private:
-	/* For combat encounters */
-	//std::vector<Enemy> moblist;
-	/* for Info/Loot encounters */
-	//
-	/*  */
-
-	EncounterType type;
-};
 
 class Quest{
 public:
@@ -57,17 +43,24 @@ public:
 	std::string getTitle();
 	std::string getInfo();
 	Difficulty getDiff();
+	void loadTrap(TrapIndex i);
+	func fetchTrap(TrapIndex index);
 private:
 	/* Boss fight encounter */
-	Encounter Boss;
+	void(*Boss)();
 	/* Regular mob fight encounter */
-	std::vector<Encounter> enemyEnc;
+	std::vector<void(*)()> enemyEnc;
 	/* Info/Loot on dungeon or special dungeon move */
-	std::vector<Encounter> infoEnc;
+	std::vector<void(*)()> infoEnc;
 	/* Choice on one of party members */
-	std::vector<Encounter> choiceEnc;
+	std::vector<void(*)()> choiceEnc;
 	/* Things to generate in dead ends */
-	std::vector<Encounter> deadEnc;
+	std::vector<void(*)()> deadEnc;
+	/* Traps */
+	std::vector<void(*)()> trapEnc;
+	/* Loot */
+	std::vector<void(*)()> lootEnc;
+
 	std::string name;
 	std::string info;
 	int gold_reward;
@@ -102,6 +95,9 @@ private:
 	int hardQuestIndex;
 
 };
+
+
+extern EncounterList encounters;
 extern std::vector<Quest> current_quests;
 extern QuestList quests;
 

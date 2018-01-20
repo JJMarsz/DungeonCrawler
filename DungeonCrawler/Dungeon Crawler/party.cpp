@@ -1,5 +1,5 @@
 #include "party.h"
-#include "LTexture.h"
+#include "Encounter.h"
 
 
 Party gParty;
@@ -74,10 +74,12 @@ Party::Party() {
 	LOS = 1;
 }
 
+void Character::damage(int dmg) { health -= dmg; }
+
 int Party::getCompleted() { return completed; }
 int Party::getX() { return party_x; }
 int Party::getY() { return party_y; }
-Character Party::getChar(int index) { return charList[index]; }
+Character* Party::getChar(int index) { return &charList[index]; }
 int Party::getGold() { return gold; }
 int Party::getXP(int index) { return charList[index].getXP(); }
 int Party::getLOS() { return LOS; }
@@ -115,9 +117,9 @@ bool Party::isAdj(int x, int y) {
 	if (x < 0 || y < 0 || x >= current_dungeon.getWidth() || y >= current_dungeon.getHeight())
 		return false;
 	int RMO = x + y * current_dungeon.getWidth();
-	if (current_dungeon.getTile(RMO).getType() == NONE)
+	if (current_dungeon.getTile(RMO)->getType() == NONE)
 		return false;
-	if (current_dungeon.getTile(RMO).getType() == BARRIER)
+	if (current_dungeon.getTile(RMO)->getType() == BARRIER)
 		return false;
 	if (party_x + 1 + current_dungeon.getWidth()*party_y == RMO)
 		return true;
