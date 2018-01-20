@@ -1,7 +1,6 @@
 # DungeonCrawler
 
-At the moment, no game functionality exists as I am unit testing specific functions
-to ensure functionality. Expectation is to have a working Beta by the end of January.
+At the moment, You are able to enter the game, select a random quest, and traverse a dungeon, no encounters are implamented yet. Expectation is to have a working Beta by the end of January.
 
 
 
