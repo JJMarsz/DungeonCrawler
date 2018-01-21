@@ -41,8 +41,11 @@ public:
 	Area getArea();
 	int getIndex();
 	void setIndex(int i);
+	void setAlt(EncounterType alt_);
+	EncounterType getAlt();
 private:
 	EncounterType type;
+	EncounterType alt;
 	Tile* prev;
 	int x, y;
 	Area area;
@@ -93,17 +96,18 @@ public:
 	int getHeight();
 
 	Tile* getBoss();
-	Tile* getLoot(int i);
-	Tile* getMob(int i);
-	Tile* getInfo(int i);
+	std::vector<Tile*>* getLoot();
+	std::vector<Tile*>* getMob();
+	std::vector<Tile*>* getInfo();
 
 	void updateLOS();
-	void perceptionCheck();
+	bool perceptionCheck();
 
 	bool getSightStatus(int i);
 	bool getSeen(int i);
 	bool getVisited(int i);
 	bool getScouted(int i);
+	void scoutTile(int i);
 
 private:
 
@@ -137,6 +141,8 @@ private:
 	std::vector<Tile*> loot;
 	std::vector<Tile*> mob;
 	std::vector<Tile*> info;
+	std::vector<Tile*> choice;
+	std::vector<Tile*> trap;
 
 
 };

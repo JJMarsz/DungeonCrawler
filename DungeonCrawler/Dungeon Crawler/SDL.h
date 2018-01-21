@@ -70,7 +70,7 @@ extern TTF_Font* msg_font;
 extern SDL_Window* gWindow;
 extern std::unordered_map<RoomSize, int> room_map;
 extern ScreenState state;
-
+extern AbilityState ab;
 extern int r;
 
 #endif

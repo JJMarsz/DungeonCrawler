@@ -201,6 +201,7 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	}
 	//set it as boss
 	trav->setType(BOSS);
+	boss = trav;
 	//do other stuff to store boss info and such
 	boss = trav;
 
@@ -244,6 +245,7 @@ void Dungeon::populateDungeon(Difficulty diff) {
 			count = rand() % range;
 		}
 		range_maps[range_num][count]->setType(LOOT);
+		loot.push_back(range_maps[range_num][count]);
 		//otherstuff
 
 		enc--;
@@ -259,12 +261,13 @@ void Dungeon::populateDungeon(Difficulty diff) {
 			count = rand() % range;
 		}
 		range_maps[range_num][count]->setType(INFO);
+		info.push_back(range_maps[range_num][count]);
 		//otherstuff
 
 		enc--;
 		range_num++;
 	}
-
+	int timeout = 0;
 	//choice encounters
 	srand(time(NULL));
 	range_num = 0;
@@ -272,14 +275,20 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	while (enc > 0) {
 		while (range_maps[range_num][count]->getType() != PATH) {
 			count = rand() % range;
+			timeout++;
+			if (timeout > 300)
+				break;
 		}
+		if (timeout > 300)
+			break;
 		range_maps[range_num][count]->setType(CHOICE);
+		choice.push_back(range_maps[range_num][count]);
 		//otherstuff
 
 		enc--;
 		range_num++;
 	}
-
+	timeout = 0;
 	//trap encounters
 	srand(time(NULL));
 	range_num = 0;
@@ -287,9 +296,15 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	while (enc > 0) {
 		while (range_maps[range_num][count]->getType() != PATH) {
 			count = rand() % range;
+			timeout++;
+			if (timeout > 300)
+				break;
 		}
+		if (timeout > 300)
+			break;
 		range_maps[range_num][count]->setIndex(rand() % NUM_TRAP);
 		range_maps[range_num][count]->setType(TRAP);
+		trap.push_back(range_maps[range_num][count]);
 		//otherstuff
 
 		enc--;
@@ -771,19 +786,18 @@ void Dungeon::updateLOS() {
 
 }
 
-void Dungeon::perceptionCheck() {
+bool Dungeon::perceptionCheck() {
 	int highest_wis = (gParty.getChar(0)->getWis() < gParty.getChar(1)->getWis()) ? gParty.getChar(1)->getWis() : gParty.getChar(0)->getWis();
 	highest_wis = (highest_wis < gParty.getChar(2)->getWis()) ? gParty.getChar(2)->getWis() : highest_wis;
 	srand(time(NULL));
 	int roll = rand() % 20 + 1;
 	//automatic fail
 	if (roll == 1)
-		return;
+		return false;
 	int x = gParty.getX();
 	int y = gParty.getY();
 	//what need to be beat
-	int DC, stash;
-	std::string msg;
+	int DC;
 	switch (dif) {
 	case EASY:
 		DC = 0;
@@ -795,8 +809,32 @@ void Dungeon::perceptionCheck() {
 		DC = 3;
 		break;
 	}
-	stash = DC;
-	if (y > 0 ) {
+	switch (dungMap[x + (y)*width].getType()) {
+	case MOB:
+		DC += 12;
+		break;
+	case BOSS:
+		DC += 12;
+		break;
+	case TRAP:
+		DC += 12;
+		break;
+	case LOOT:
+		DC += 10;
+		break;
+	case INFO:
+		DC += 10;
+		break;
+	case CHOICE:
+		DC += 10;
+		break;
+	default:
+		return false;
+	}
+	if (sight[x + (y)*width].scouted)
+		roll += 5;
+	return (roll + highest_wis > DC);
+	/*if (y > 0 ) {
 		//if the tile is just a path, not an empty tile, and has never been seen before, attempt to see
 		if (dungMap[x + (y - 1)*width].getType() != PATH && dungMap[x + (y - 1)*width].getType() != NONE && !getSeen(x + (y - 1)*width) && dungMap[x + (y - 1)*width].getType() != DEADEND) {
 			switch (dungMap[x + (y - 1)*width].getType()) {
@@ -941,7 +979,7 @@ void Dungeon::perceptionCheck() {
 				msg_queue.push(msg + "to the right.");
 			}
 		}
-	}
+	}*/
 }
 
 void Dungeon::setTile(int RMO_index, Tile newTile) {
@@ -958,13 +996,26 @@ bool Dungeon::isEncounter(int x, int y) { return ((dungMap[x + y * width].getTyp
 int Dungeon::getStartX() { return start_x; }
 int Dungeon::getStartY() { return start_y; }
 Tile* Dungeon::getBoss() { return boss; }
-Tile* Dungeon::getLoot(int i) { return loot[i]; }
-Tile* Dungeon::getMob(int i) { return mob[i]; }
-Tile* Dungeon::getInfo(int i) { return info[i]; }
+std::vector<Tile*> *Dungeon::getLoot() { return &loot; }
+std::vector<Tile*> *Dungeon::getMob() { return &mob; }
+std::vector<Tile*> *Dungeon::getInfo() { return &info; }
 bool Dungeon::getSightStatus(int i) { return (sight[i].scouted || sight[i].visited || sight[i].seen); }
 bool Dungeon::getSeen(int i) { return sight[i].seen; }
 bool Dungeon::getVisited(int i) { return sight[i].visited; }
 bool Dungeon::getScouted(int i) { return sight[i].scouted; }
+void Dungeon::scoutTile(int i) {
+	//i is RMO index
+	sight[i].scouted = true;
+	EncounterType no = dungMap[i].getType();
+	if (no == DEADEND || no == PATH)
+		return;
+	srand(time(NULL));
+	EncounterType alt = no;
+	while(alt == no || alt == BOSS || alt == DEADEND || alt == PATH || alt == BARRIER || alt == NONE)
+		alt = (EncounterType)(rand() % (sizeof(EncounterType)));
+	dungMap[i].setAlt(alt);
+	msg_queue.push("You notice something peculiar in the room you peeked.");
+}
 
 
 /* Tile class defenitions */
@@ -996,9 +1047,11 @@ int Tile::getY() { return y; }
 void Tile::setPos(int x_, int y_) {x = x_;y = y_;}
 
 EncounterType Tile::getType() {return type;}
+EncounterType Tile::getAlt() { return alt; }
 void Tile::setType(EncounterType type_) { type = type_; }
 int Tile::getIndex() { return index; }
 void Tile::setIndex(int i) { index = i; }
+void Tile::setAlt(EncounterType alt_) { alt = alt_; }
 
 void Tile::operator=(const Tile& t) {
 	type = t.type;

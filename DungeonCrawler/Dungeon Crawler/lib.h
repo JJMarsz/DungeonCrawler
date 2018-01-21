@@ -229,6 +229,13 @@ enum {
 	TRAP_
 };
 
+enum AbilityState {
+	PEEK,
+	SCOUT,
+	REST,
+	NOPE
+};
+
 enum MOD{
 	MOD_UP,
 	MOD_DOWN

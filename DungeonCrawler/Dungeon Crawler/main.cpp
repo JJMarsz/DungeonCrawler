@@ -21,6 +21,7 @@ int main(int argc, char* args[])
 	int prev_x = -1, prev_y = -1;
 	bool MouseDown = false;
 	bool MouseUp = false;
+	bool MouseRight = false;
 	int w;
 	//Start up SDL and create window
 	if (!init())
@@ -56,9 +57,21 @@ int main(int argc, char* args[])
 						break;
 					case SDL_MOUSEBUTTONDOWN:
 						MouseDown = true;
+						if (e.button.button == SDL_BUTTON_RIGHT)
+							MouseRight = true;
+						else
+							MouseRight = false;
 						break;
 					case SDL_MOUSEBUTTONUP:
 						MouseUp = true;
+						if (e.button.button == SDL_BUTTON_RIGHT && MouseRight == true)
+							MouseRight = true;
+						else
+							MouseRight = false;
+						break;
+					case SDL_KEYDOWN:
+						if(e.key.keysym.sym == SDLK_ESCAPE)
+							ab = NOPE;
 						break;
 					default:
 						break;
@@ -134,6 +147,7 @@ int main(int argc, char* args[])
 								if (prev_x != x || prev_y != y) {
 									MouseDown = false;
 									MouseUp = false;
+									MouseRight = false;
 								}
 								prev_x = x;
 								prev_y = y;
@@ -141,7 +155,7 @@ int main(int argc, char* args[])
 						}
 						else {//new message or display current one
 							//display new message or end displaying messages
-							if (MouseDown == true && MouseUp == true) {
+							if (MouseDown == true && MouseUp == true && MouseRight == false) {
 								msg_queue.pop();
 								if (msg_queue.empty()) {
 									display_message = false;
@@ -245,14 +259,14 @@ int main(int argc, char* args[])
 						mod_state = MOD_UP;
 					SDL_Delay(10);
 					if (hover) {
-						if (MouseDown && MouseUp) {
+						if (MouseDown && MouseUp && !MouseRight && ab == NOPE) {
 							gParty.moveParty(x / 50 - (start_x / 50), y / 50);
 							if (current_dungeon.isEncounter(gParty.getX(), gParty.getY()) && !current_dungeon.getVisited(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
 								handleEncounter();
 							//check to see if party sees something new in area
 							//done before LOS is updated to prevent player abuse by constantly rerolling
 							//once a tile has been spotted, it gets 1 roll to see what it is, no more
-							current_dungeon.perceptionCheck();
+							//current_dungeon.perceptionCheck();
 							//update line of sight
 							current_dungeon.updateLOS();
 							/* prevent double clicking */
@@ -262,7 +276,24 @@ int main(int argc, char* args[])
 							hover = false;
 							break;
 						}
-						tileSST.render(x + (start_x % 50), y, &tileSpriteClips[HOVER]);
+
+						if (ab == PEEK) {
+							tileSST.setColor(100, 0, 0);
+							tileSST.render(x + (start_x % 50), y, &tileSpriteClips[HOVER]);
+							tileSST.setColor(255, 255, 255);
+							if (MouseDown && MouseUp && !MouseRight) {
+								current_dungeon.scoutTile(x / 50 - (start_x / 50) + (y / 50)*current_dungeon.getWidth());
+								ab = NOPE;
+								hover = false;
+							}
+						}
+						else
+							tileSST.render(x + (start_x % 50), y, &tileSpriteClips[HOVER]);
+
+						if (MouseDown && MouseUp && !MouseRight) {
+							MouseDown = false;
+							MouseUp = false;
+						}
 					}
 					if (display_message == true) {
 						messageBox.render((SCREEN_WIDTH - messageBox.getWidth())/2, 614);

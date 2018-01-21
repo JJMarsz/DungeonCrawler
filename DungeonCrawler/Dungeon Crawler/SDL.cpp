@@ -8,6 +8,7 @@ SDL_Window* gWindow = NULL;
 
 std::unordered_map<RoomSize, int> room_map;
 ScreenState state;
+AbilityState ab = NOPE;
 int r = 1000;
 
 /* SDL functions */
@@ -108,6 +109,7 @@ bool init()
 	for (i = 0; i < 3; i++)
 		dungeonButtons[i].setConstraints(90, 46);
 	acceptrejectButtons[2].setHandler(returnToTown);
+	dungeonButtons[2].setHandler(peek);
 	
 	//8,6 small
 	//16,12 med
@@ -238,6 +240,7 @@ bool loadMedia()
 		success = false;
 	}
 	else {
+		tileSST.setBlendMode(SDL_BLENDMODE_BLEND);
 		//way too many tiles
 		tileSpriteClips[LEFT_].x = TILE_LEFT_X;
 		tileSpriteClips[LEFT_].y = TILE_LEFT_Y;
@@ -819,10 +822,16 @@ int getTileIndex(int x, int y) {
 		return EMPTY_;
 	}
 }
-int encounterExists(int x, int y) {
+int encounterExists(int x, int y, bool alt) {
 	if (gParty.getX() == x && gParty.getY() == y)
 		return -1;
-	switch (current_dungeon.getTile(x + y * current_dungeon.getWidth())->getType()) {
+	EncounterType target;
+	if (!alt) 
+		target = current_dungeon.getTile(x + y * current_dungeon.getWidth())->getType();
+	else
+		target = current_dungeon.getTile(x + y * current_dungeon.getWidth())->getAlt();
+
+	switch (target) {
 	case BOSS:
 		return BOSSS;
 	case MOB:
@@ -839,6 +848,15 @@ int encounterExists(int x, int y) {
 		return -1;
 	}
 }
+
+bool charAdj(int x, int y) {
+	int RMO = gParty.getX() + gParty.getY()*current_dungeon.getWidth();
+	int trap_RMO = x + y * current_dungeon.getWidth();
+	if (RMO + 1 == trap_RMO || RMO - 1 == trap_RMO || RMO - current_dungeon.getWidth() == trap_RMO || RMO + current_dungeon.getWidth() == trap_RMO)
+		return true;
+	return false;
+}
+
 void drawDungeon() {
 	SDL_Rect topViewport;
 	topViewport.x = 0;
@@ -871,9 +889,20 @@ void drawDungeon() {
 				//do scout check
 
 				//check if something is at this tile
-				index = encounterExists(x, y);
+				index = encounterExists(x, y, false);
 				if (index != -1 && current_dungeon.getScouted(x + y * current_dungeon.getWidth()) && !current_dungeon.getVisited(x + y * current_dungeon.getWidth())) {
-					tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
+					tileSST.setAlpha(100);
+					srand(time(NULL));
+					int alt_index = encounterExists(x, y, true);
+					if (rand() % 2 == 1) {
+						tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
+						tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[alt_index]);
+					}
+					else {
+						tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[alt_index]);
+						tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
+					}
+					tileSST.setAlpha(255);
 				}
 			}
 			else {
@@ -896,7 +925,11 @@ void drawDungeonMenu() {
 	//all char stuff
 	for (int i = 0; i < 3; i++) {
 		charSST.render(10 + i*120, SCREEN_HEIGHT - 60, &gParty.getChar(i)->getIcon50());
-		health_ratio = (gParty.getChar(i)->getMaxHP() - gParty.getChar(i)->getHP()) / (gParty.getChar(i)->getMaxHP() / 11);
+		double slice = (double)(gParty.getChar(i)->getMaxHP()) / 11;
+		double diff = (gParty.getChar(i)->getMaxHP() - gParty.getChar(i)->getHP());
+		int ratio = diff / slice;
+		ratio += .5;
+		health_ratio =  (int)ratio;
 		healthboxSST.render(70 + 120*i, SCREEN_HEIGHT - 60, &healthBoxClips[health_ratio]);
 		dungeonButtons[i].render();
 		

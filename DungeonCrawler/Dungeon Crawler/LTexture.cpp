@@ -146,11 +146,11 @@ bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 }
 
 void LTexture::setBlendMode(SDL_BlendMode blending) {
-
+	SDL_SetTextureBlendMode(mTexture, blending);
 }
 
 void LTexture::setAlpha(Uint8 alpha) {
-
+	SDL_SetTextureAlphaMod(mTexture, alpha);
 }
 
 

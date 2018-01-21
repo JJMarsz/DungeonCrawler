@@ -280,8 +280,7 @@ void rest(int index) {
 }
 
 void peek(int index) {
-	//check if adjacent tile is a special tile
-
+	ab = PEEK;
 }
 
 void scout(int index) {
