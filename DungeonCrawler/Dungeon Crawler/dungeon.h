@@ -99,6 +99,8 @@ public:
 	std::vector<Tile*>* getLoot();
 	std::vector<Tile*>* getMob();
 	std::vector<Tile*>* getInfo();
+	std::vector<Tile*>* getChoice();
+	std::vector<Tile*>* getTrap();
 
 	void updateLOS();
 	bool perceptionCheck();
@@ -107,7 +109,7 @@ public:
 	bool getSeen(int i);
 	bool getVisited(int i);
 	bool getScouted(int i);
-	void scoutTile(int i);
+	void scoutTile(int i, bool ambiguous);
 
 private:
 

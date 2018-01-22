@@ -256,10 +256,20 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	srand(time(NULL));
 	range_num = 0;
 	enc = 2 + rand() % (total_enc - 1);
+	std::vector<bool> chosen;
+	chosen.resize(NUM_INFO);
 	while (enc > 0) {
 		while (range_maps[range_num][count]->getType() != PATH) {
 			count = rand() % range;
 		}
+		int index = rand() % NUM_INFO;
+		if (chosen[BOSS_REVEAL] == true) {
+			while (index == BOSS_REVEAL)
+				index = rand() % NUM_INFO;
+		}
+		if (index == BOSS_REVEAL)
+			chosen[BOSS_REVEAL] = true;
+		range_maps[range_num][count]->setIndex(index);
 		range_maps[range_num][count]->setType(INFO);
 		info.push_back(range_maps[range_num][count]);
 		//otherstuff
@@ -999,11 +1009,13 @@ Tile* Dungeon::getBoss() { return boss; }
 std::vector<Tile*> *Dungeon::getLoot() { return &loot; }
 std::vector<Tile*> *Dungeon::getMob() { return &mob; }
 std::vector<Tile*> *Dungeon::getInfo() { return &info; }
+std::vector<Tile*>* Dungeon::getChoice() { return &choice; }
+std::vector<Tile*>* Dungeon::getTrap() { return &trap; }
 bool Dungeon::getSightStatus(int i) { return (sight[i].scouted || sight[i].visited || sight[i].seen); }
 bool Dungeon::getSeen(int i) { return sight[i].seen; }
 bool Dungeon::getVisited(int i) { return sight[i].visited; }
 bool Dungeon::getScouted(int i) { return sight[i].scouted; }
-void Dungeon::scoutTile(int i) {
+void Dungeon::scoutTile(int i, bool ambiguous) {
 	//i is RMO index
 	sight[i].scouted = true;
 	EncounterType no = dungMap[i].getType();
@@ -1011,6 +1023,10 @@ void Dungeon::scoutTile(int i) {
 		return;
 	srand(time(NULL));
 	EncounterType alt = no;
+	if (ambiguous == false) {
+		dungMap[i].setAlt(alt);
+		return;
+	}
 	while(alt == no || alt == BOSS || alt == DEADEND || alt == PATH || alt == BARRIER || alt == NONE)
 		alt = (EncounterType)(rand() % (sizeof(EncounterType)));
 	dungMap[i].setAlt(alt);

@@ -291,7 +291,7 @@ int main(int argc, char* args[])
 							tileSST.setColor(255, 255, 255);
 							if (MouseDown && MouseUp && !MouseRight) {
 								if (gParty.usePeek()) {
-									current_dungeon.scoutTile(x / 50 - (start_x / 50) + (y / 50)*current_dungeon.getWidth());
+									current_dungeon.scoutTile(x / 50 - (start_x / 50) + (y / 50)*current_dungeon.getWidth(), true);
 									msg_queue.push("The party peeks the nearby room.");
 									ab = NOPE;
 								}
@@ -307,10 +307,10 @@ int main(int argc, char* args[])
 							tileSST.setColor(255, 255, 255);
 							if (MouseDown && MouseUp && !MouseRight) {
 								if (gParty.useScout()) {
-									current_dungeon.scoutTile(x / 50 - (start_x / 50) + (y / 50)*current_dungeon.getWidth());
-									current_dungeon.scoutTile((x + 50) / 50 - (start_x / 50) + (y / 50)*current_dungeon.getWidth());
-									current_dungeon.scoutTile(x / 50 - (start_x / 50) + ((y + 50) / 50)*current_dungeon.getWidth());
-									current_dungeon.scoutTile((x + 50) / 50 - (start_x / 50) + ((y + 50) / 50)*current_dungeon.getWidth());
+									current_dungeon.scoutTile(x / 50 - (start_x / 50) + (y / 50)*current_dungeon.getWidth(), true);
+									current_dungeon.scoutTile((x + 50) / 50 - (start_x / 50) + (y / 50)*current_dungeon.getWidth(), true);
+									current_dungeon.scoutTile(x / 50 - (start_x / 50) + ((y + 50) / 50)*current_dungeon.getWidth(), true);
+									current_dungeon.scoutTile((x + 50) / 50 - (start_x / 50) + ((y + 50) / 50)*current_dungeon.getWidth(), true);
 									msg_queue.push("The party scouts a region of the dungeon.");
 									ab = NOPE;
 								}

@@ -44,7 +44,9 @@ public:
 	std::string getInfo();
 	Difficulty getDiff();
 	void loadTrap(TrapIndex i);
+	void loadInfo(InfoIndex i);
 	func fetchTrap(TrapIndex index);
+	func fetchInfo(InfoIndex index);
 private:
 	/* Boss fight encounter */
 	void(*Boss)();

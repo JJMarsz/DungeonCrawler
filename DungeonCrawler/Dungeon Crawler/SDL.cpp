@@ -1059,7 +1059,6 @@ void drawPartyUp() {
 }
 
 void drawTownMenu() {
-	int i;
 	townmenu.render(0, SCREEN_HEIGHT - 60, NULL);
 	state = TOWN_BUTTON_LEFT;
 	townButtons[0].render();
