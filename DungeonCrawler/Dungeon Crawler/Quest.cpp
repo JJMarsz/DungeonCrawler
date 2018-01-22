@@ -14,8 +14,10 @@ std::string Quest::getInfo() { return info; }
 Difficulty Quest::getDiff() { return diff; }
 func Quest::fetchTrap(TrapIndex index) { return trapEnc[index]; }
 func Quest::fetchInfo(InfoIndex index) { return infoEnc[index]; }
+func Quest::fetchLoot(LootIndex index) { return lootEnc[index]; }
 void Quest::loadTrap(TrapIndex i) { trapEnc.push_back(encounters.getTrap(i));}
 void Quest::loadInfo(InfoIndex i) { infoEnc.push_back(encounters.getInfo(i)); }
+void Quest::loadLoot(LootIndex i) { lootEnc.push_back(encounters.getLoot(i)); }
 
 Quest::Quest(std::string name_, std::string info_, int gold, int xp, Difficulty diff_) {
 	name = name_;
@@ -150,12 +152,15 @@ QuestList::QuestList() {
 	list[hardQuestIndex+1].show = false;
 	for (int i = 0; i < NUM_QUEST; i++) {
 		list[i].q.loadTrap(BASIC);
+
 		list[i].q.loadInfo(AREA_REVEAL);
 		list[i].q.loadInfo(BOSS_REVEAL);
 		list[i].q.loadInfo(MOB_REVEAL);
 		list[i].q.loadInfo(LOOT_REVEAL);
 		list[i].q.loadInfo(CHOICE_REVEAL);
 		list[i].q.loadInfo(TRAP_REVEAL);
+
+		list[i].q.loadLoot(GOLD);
 	}
 }
 

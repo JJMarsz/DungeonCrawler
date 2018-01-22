@@ -947,6 +947,7 @@ void drawDungeonMenu() {
 	int health_ratio;
 	SDL_Color textColor = { 255, 255, 255 };
 	dungeonmenu.render(0, SCREEN_HEIGHT - 120);
+	goldmenu.loadFromRenderedText(std::to_string(gParty.getGold()), textColor, 200);
 	goldmenu.render(400, SCREEN_HEIGHT - 45);
 	//all char stuff
 	for (int i = 0; i < 3; i++) {

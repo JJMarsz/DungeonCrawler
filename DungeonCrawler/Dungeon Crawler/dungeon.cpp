@@ -244,6 +244,7 @@ void Dungeon::populateDungeon(Difficulty diff) {
 		while (range_maps[range_num][count]->getType() != PATH) {
 			count = rand() % range;
 		}
+		range_maps[range_num][count]->setIndex(rand() % NUM_LOOT);
 		range_maps[range_num][count]->setType(LOOT);
 		loot.push_back(range_maps[range_num][count]);
 		//otherstuff

@@ -17,10 +17,15 @@ EncounterList::EncounterList() {
 	infoList[LOOT_REVEAL] = lootReveal;
 	infoList[CHOICE_REVEAL] = choiceReveal;
 	infoList[TRAP_REVEAL] = trapReveal;
+
+	//loot setup
+	lootList.resize(NUM_LOOT);
+	lootList[GOLD] = goldLoot;
 }
 
 func EncounterList::getTrap(TrapIndex index) { return trapList[index]; }
 func EncounterList::getInfo(InfoIndex index) { return infoList[index]; }
+func EncounterList::getLoot(LootIndex index) { return lootList[index]; }
 
 void handleEncounter() {
 	//dispatcher to appropriate encounter handler
@@ -32,6 +37,9 @@ void handleEncounter() {
 		break;
 	case INFO:
 		current_quests[quest_index].fetchInfo((InfoIndex)tile->getIndex())();
+		break;
+	case LOOT:
+		current_quests[quest_index].fetchLoot((LootIndex)tile->getIndex())();
 		break;
 	default:
 		break;
@@ -202,6 +210,7 @@ void areaReveal() {
 
 void well() {
 	//heals or damages
+
 }
 
 void mysticObelisk() {
@@ -219,5 +228,55 @@ void ancientTome() {
 
 }
 
-
 //loot handlers
+void goldLoot() {
+	//if scouted, add mod 
+	//base off of loot table
+	int highest_wis = (gParty.getChar(0)->getWis() < gParty.getChar(1)->getWis()) ? gParty.getChar(1)->getWis() : gParty.getChar(0)->getWis();
+	highest_wis = (highest_wis < gParty.getChar(2)->getWis()) ? gParty.getChar(2)->getWis() : highest_wis;
+	srand(time(NULL));
+	int roll = rand() % 20 + 1;
+	//automatic fail
+	if (roll == 1) {
+		msg_queue.push("There doesn't seem to be anything here.");
+		return;
+	}
+	int x = gParty.getX();
+	int y = gParty.getY();
+	//what need to be beat
+	int lowDC = 12;
+	int medDC = 16;
+	int highDC = 20;
+	int gold = 0;
+	if (current_dungeon.getScouted(x + y * current_dungeon.getWidth()))
+		roll += 5;
+	if (roll + highest_wis > highDC) {
+		gold = (rand() % 6) * 5 + 20;
+		msg_queue.push("The party finds some gold lying around.");
+	}
+	else if (roll + highest_wis > medDC) {
+		gold = (rand() % 8) * 5 + 40;
+		msg_queue.push("The party uncovers a good amount of gold.");
+	}
+	else if (roll + highest_wis > lowDC) {
+		gold = (rand() % 10) * 5 + 60;
+		msg_queue.push("The party discovers a trove of gold!");
+	}
+	else {
+		msg_queue.push("There doesn't seem to be anything here.");
+	}
+
+	switch (current_quests[quest_index].getDiff()) {
+	case MED:
+		gold += 20;
+		break;
+	case HARD:
+		gold += 40;
+		break;
+	default:
+		break;
+	}
+	gParty.addGold(gold);
+
+
+}

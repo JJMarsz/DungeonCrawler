@@ -32,11 +32,17 @@ enum InfoIndex {
 	TRAP_REVEAL
 };
 
+#define NUM_LOOT	1
+enum LootIndex {
+	GOLD
+};
+
 class EncounterList {
 public:
 	EncounterList();
 	func getTrap(TrapIndex index);
 	func getInfo(InfoIndex index);
+	func getLoot(LootIndex index);
 private:
 	//these vectors contain pointers to every encounter function within the game
 	//quests will index into these and copy the ptrs to use during population
@@ -62,4 +68,6 @@ void mobReveal();
 void lootReveal();
 void choiceReveal();
 void trapReveal();
+
+void goldLoot();
 #endif

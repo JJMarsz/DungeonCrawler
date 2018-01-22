@@ -45,8 +45,10 @@ public:
 	Difficulty getDiff();
 	void loadTrap(TrapIndex i);
 	void loadInfo(InfoIndex i);
+	void loadLoot(LootIndex i);
 	func fetchTrap(TrapIndex index);
 	func fetchInfo(InfoIndex index);
+	func fetchLoot(LootIndex index);
 private:
 	/* Boss fight encounter */
 	void(*Boss)();
