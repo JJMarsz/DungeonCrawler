@@ -280,12 +280,14 @@ void rest(int index) {
 }
 
 void peek(int index) {
-	ab = PEEK;
+	if(gParty.checkPeek())
+		ab = PEEK;
 }
 
 void scout(int index) {
 	//reveal a 2x2 or 3x3 area of the map
-
+	if(gParty.checkScout())
+		ab = SCOUT;
 }
 
 void returnToTown(int index) {
@@ -294,6 +296,8 @@ void returnToTown(int index) {
 	gParty.incCompleted();
 	gParty.addGold(current_quests[quest_index].getGold());
 	gParty.addXP(current_quests[quest_index].getXP());
+	gParty.resetAbilities();
+	gParty.resetHealth();
 	//check if game is done
 	if (gParty.getCompleted() >= END_GAME) {
 		state = END;

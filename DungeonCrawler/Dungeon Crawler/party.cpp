@@ -72,9 +72,17 @@ Party::Party() {
 	charList.resize(0);
 	gold = 0;
 	LOS = 1;
+	scoutUp = false;
+	scout = 1;
+	scout_max = 1;
+	peek = 2;
+	peek_max = 2;
+	rest = 1;
+	rest_max = 1;
 }
 
 void Character::damage(int dmg) { health -= dmg; }
+void Character::heal(int heal) { health += heal; if (health > max_health) { health = max_health; } }
 
 int Party::getCompleted() { return completed; }
 int Party::getX() { return party_x; }
@@ -83,8 +91,22 @@ Character* Party::getChar(int index) { return &charList[index]; }
 int Party::getGold() { return gold; }
 int Party::getXP(int index) { return charList[index].getXP(); }
 int Party::getLOS() { return LOS; }
-
 void Party::incCompleted() { completed++; }
+bool Party::useScout() { scout--; return (scout >= 0); }
+bool Party::usePeek() { peek--; return (peek >= 0); }
+bool Party::checkScout() { return (scout > 0); }
+bool Party::checkPeek() { return (peek > 0); }
+void Party::resetAbilities(){
+	scout = scout_max;
+	peek = peek_max;
+	rest = rest_max;
+}
+
+void Party::resetHealth() {
+	for (int i = 0; i < 3; i++)
+		charList[i].heal(10000);
+}
+
 bool Party::addChar(int index) {
 	if (numChar < 3)
 		charList.push_back(chars.getChar(index));

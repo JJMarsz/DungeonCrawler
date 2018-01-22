@@ -76,6 +76,7 @@ void gotoShop(int index);
 void returnToTown(int index);
 
 void peek(int index);
+void scout(int index);
 
 void emptyHandler(int index);
 

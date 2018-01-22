@@ -54,6 +54,7 @@ public:
 	void addXP(int xp_);
 	//Hit(int atk_roll, int dmg_roll);
 	void damage(int dmg);
+	void heal(int heal);
 
 
 private:
@@ -97,7 +98,12 @@ public:
 	int getLOS();
 	void addXP(int xp_);
 	bool subXP(int xp_);
-
+	bool useScout();
+	bool usePeek();
+	bool checkPeek();
+	bool checkScout();
+	void resetAbilities();
+	void resetHealth();
 
 private:
 	int numChar;
@@ -105,7 +111,16 @@ private:
 	int gold;
 	std::vector<Character> charList;
 	int party_x, party_y;
+
+	//upgrades
 	int LOS;
+	int peek;
+	int peek_max;
+	bool scoutUp;
+	int scout;
+	int scout_max;
+	int rest;
+	int rest_max;
 };
 
 /* contains available characters */

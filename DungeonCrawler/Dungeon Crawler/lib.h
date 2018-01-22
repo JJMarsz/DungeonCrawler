@@ -137,9 +137,14 @@ typedef void(*func)();
 #define TILE_CHOICE_X			0
 #define TILE_CHOICE_Y			200
 
-#define TILE_TRAP_X			0
-#define TILE_TRAP_Y			250
+#define TILE_TRAP_X				0
+#define TILE_TRAP_Y				250
 
+#define TILE_MED_HOVER_X		0
+#define TILE_MED_HOVER_Y		300
+
+#define TILE_BIG_HOVER_X		100
+#define TILE_BIG_HOVER_Y		250
 
 
 
@@ -226,7 +231,9 @@ enum {
 	INFOS,
 	CHOICES,
 	SEEN,
-	TRAP_
+	TRAP_,
+	MED_HOVER,
+	BIG_HOVER
 };
 
 enum AbilityState {

@@ -1014,7 +1014,6 @@ void Dungeon::scoutTile(int i) {
 	while(alt == no || alt == BOSS || alt == DEADEND || alt == PATH || alt == BARRIER || alt == NONE)
 		alt = (EncounterType)(rand() % (sizeof(EncounterType)));
 	dungMap[i].setAlt(alt);
-	msg_queue.push("You notice something peculiar in the room you peeked.");
 }
 
 

@@ -72,7 +72,7 @@ bool init()
 	//set up relevant data structures
 	spriteClips.resize(6);
 	buttonSpriteClips.resize(12);
-	tileSpriteClips.resize(31);
+	tileSpriteClips.resize(33);
 	texts.reserve(20);
 	charClips.resize(NUM_CHAR*3);
 	Buttons.resize(12);
@@ -110,6 +110,7 @@ bool init()
 		dungeonButtons[i].setConstraints(90, 46);
 	acceptrejectButtons[2].setHandler(returnToTown);
 	dungeonButtons[2].setHandler(peek);
+	dungeonButtons[1].setHandler(scout);
 	
 	//8,6 small
 	//16,12 med
@@ -371,6 +372,16 @@ bool loadMedia()
 		tileSpriteClips[TRAP_].y = TILE_TRAP_Y;
 		tileSpriteClips[TRAP_].w = TILE_WIDTH;
 		tileSpriteClips[TRAP_].h = TILE_HEIGHT;
+
+		tileSpriteClips[MED_HOVER].x = TILE_MED_HOVER_X;
+		tileSpriteClips[MED_HOVER].y = TILE_MED_HOVER_Y;
+		tileSpriteClips[MED_HOVER].w = TILE_WIDTH * 2;
+		tileSpriteClips[MED_HOVER].h = TILE_HEIGHT * 2;
+
+		tileSpriteClips[BIG_HOVER].x = TILE_BIG_HOVER_X;
+		tileSpriteClips[BIG_HOVER].y = TILE_BIG_HOVER_Y;
+		tileSpriteClips[BIG_HOVER].w = TILE_WIDTH * 3;
+		tileSpriteClips[BIG_HOVER].h = TILE_HEIGHT * 3;
 
 	}
 	if (!charSST.loadFromFile("textures/charicons.png")) {
