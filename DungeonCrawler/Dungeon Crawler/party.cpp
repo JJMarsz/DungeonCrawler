@@ -94,8 +94,13 @@ int Party::getLOS() { return LOS; }
 void Party::incCompleted() { completed++; }
 bool Party::useScout() { scout--; return (scout >= 0); }
 bool Party::usePeek() { peek--; return (peek >= 0); }
+bool Party::useRest() { rest--; return (rest >= 0); }
 bool Party::checkScout() { return (scout > 0); }
 bool Party::checkPeek() { return (peek > 0); }
+bool Party::checkRest() { return (rest > 0); }
+int Party::getRest() { return rest; }
+int Party::getPeek() { return peek; }
+int Party::getScout() { return scout; }
 void Party::resetAbilities(){
 	scout = scout_max;
 	peek = peek_max;

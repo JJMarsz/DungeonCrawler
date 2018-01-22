@@ -817,6 +817,8 @@ bool Dungeon::perceptionCheck() {
 		DC += 12;
 		break;
 	case TRAP:
+		if (sight[x + (y)*width].scouted)
+			DC -= 5;
 		DC += 12;
 		break;
 	case LOOT:
@@ -831,8 +833,6 @@ bool Dungeon::perceptionCheck() {
 	default:
 		return false;
 	}
-	if (sight[x + (y)*width].scouted)
-		roll += 5;
 	return (roll + highest_wis > DC);
 	/*if (y > 0 ) {
 		//if the tile is just a path, not an empty tile, and has never been seen before, attempt to see

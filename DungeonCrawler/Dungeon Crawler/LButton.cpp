@@ -276,7 +276,13 @@ void questReject(int index) {
 }
 
 void rest(int index) {
-
+	if (gParty.checkRest()) {
+		if (gParty.useRest()) {
+			for (int i = 0; i < 3; i++)
+				gParty.getChar(i)->heal(gParty.getChar(i)->getMaxHP() / 4);
+			ab = REST;
+		}
+	}
 }
 
 void peek(int index) {

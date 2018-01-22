@@ -248,4 +248,11 @@ enum MOD{
 	MOD_DOWN
 };
 
+enum UpgradeState {
+	ONE,
+	TWO,
+	THREE,
+	FOUR
+};
+
 #endif

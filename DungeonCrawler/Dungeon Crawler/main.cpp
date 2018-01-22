@@ -321,9 +321,6 @@ int main(int argc, char* args[])
 								hover = false;
 							}
 							break;
-						case REST:
-
-							break;
 						default: 
 							break;
 						}
@@ -332,6 +329,12 @@ int main(int argc, char* args[])
 							MouseDown = false;
 							MouseUp = false;
 						}
+					}
+					if (ab == REST) {
+						MouseDown = false;
+						MouseUp = false;
+						msg_queue.push("The party rests to regain their strength.");
+						ab = NOPE;
 					}
 					if (display_message == true) {
 						messageBox.render((SCREEN_WIDTH - messageBox.getWidth())/2, 614);

@@ -34,6 +34,7 @@ LTexture dungText1, dungText2, dungText3;
 LTexture newgametext, loadgametext, tutorialtext, creditstext;
 LTexture messageBox;
 LTexture hp0, hp1, hp2;
+LTexture multiplierSST;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> buttonSpriteClips;
@@ -44,6 +45,7 @@ std::vector<SDL_Rect> questPageClips;
 std::vector<SDL_Rect> acceptrejectClips;
 std::vector<SDL_Rect> healthBoxClips;
 std::vector<SDL_Rect> dungeonButtonClips;
+std::vector<SDL_Rect> multiplyClips;
 std::vector<LTexture*> texts;
 
 /* Texture class defenitions */

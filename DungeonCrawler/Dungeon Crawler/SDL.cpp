@@ -93,6 +93,7 @@ bool init()
 	healthBoxClips.resize(11);
 	dungeonButtonClips.resize(4);
 	dungeonButtons.resize(3);
+	multiplyClips.resize(5);
 	int i;
 	for (i = 0; i<TOTAL_BUTTONS; i++)
 		Buttons[i].setConstraints(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -111,6 +112,7 @@ bool init()
 	acceptrejectButtons[2].setHandler(returnToTown);
 	dungeonButtons[2].setHandler(peek);
 	dungeonButtons[1].setHandler(scout);
+	dungeonButtons[0].setHandler(rest);
 	
 	//8,6 small
 	//16,12 med
@@ -530,6 +532,18 @@ bool loadMedia()
 		dungeonButtons[1].setPosition(598, SCREEN_HEIGHT - 58);
 		dungeonButtons[2].setPosition(698, SCREEN_HEIGHT - 58);
 	}
+	if (!multiplierSST.loadFromFile("textures/multiply.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		for (i = 0; i < 5; i++) {
+			multiplyClips[i].x = i * 22;
+			multiplyClips[i].y = 0;
+			multiplyClips[i].w = 22;
+			multiplyClips[i].h = 22;
+		}
+	}
 	return success;
 }
 
@@ -568,6 +582,7 @@ void close() {
 	hp0.free();
 	hp1.free();
 	hp2.free();
+	multiplierSST.free();
 
 	//Free Textures
 	spriteSheetTexture.free();
@@ -945,6 +960,10 @@ void drawDungeonMenu() {
 		dungeonButtons[i].render();
 		
 	}
+	multiplierSST.render(SCREEN_WIDTH - 225, SCREEN_HEIGHT - 65, &multiplyClips[gParty.getRest()]);
+	multiplierSST.render(SCREEN_WIDTH - 125, SCREEN_HEIGHT - 65, &multiplyClips[gParty.getScout()]);
+	multiplierSST.render(SCREEN_WIDTH - 25, SCREEN_HEIGHT - 65, &multiplyClips[gParty.getPeek()]);
+
 	hp0.loadFromRenderedText(std::to_string(gParty.getChar(0)->getHP()) + "/" + std::to_string(gParty.getChar(0)->getMaxHP()), textColor, 200);
 	hp1.loadFromRenderedText(std::to_string(gParty.getChar(1)->getHP()) + "/" + std::to_string(gParty.getChar(1)->getMaxHP()), textColor, 200);
 	hp2.loadFromRenderedText(std::to_string(gParty.getChar(2)->getHP()) + "/" + std::to_string(gParty.getChar(2)->getMaxHP()), textColor, 200);

@@ -98,10 +98,15 @@ public:
 	int getLOS();
 	void addXP(int xp_);
 	bool subXP(int xp_);
+	int getRest();
+	int getPeek();
+	int getScout();
 	bool useScout();
 	bool usePeek();
+	bool useRest();
 	bool checkPeek();
 	bool checkScout();
+	bool checkRest();
 	void resetAbilities();
 	void resetHealth();
 
