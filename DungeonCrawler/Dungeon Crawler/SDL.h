@@ -8,7 +8,6 @@
 #include "LButton.h"
 #include "dungeon.h"
 #include "party.h"
-#include "LTexture.h"
 
 //Starts up SDL and creates window
 bool init();

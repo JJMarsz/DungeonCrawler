@@ -1,4 +1,4 @@
-#include "LTexture.h"
+#include "LButton.h"
 
 
 LTexture buttonSpriteSheetTexture;
@@ -38,14 +38,9 @@ LTexture multiplierSST;
 LTexture choicemenu;
 
 std::vector<SDL_Rect> spriteClips;
-std::vector<SDL_Rect> buttonSpriteClips;
 std::vector<SDL_Rect> tileSpriteClips;
 std::vector<SDL_Rect> charClips;
-std::vector<SDL_Rect> townButtonClips;
-std::vector<SDL_Rect> questPageClips;
-std::vector<SDL_Rect> acceptrejectClips;
 std::vector<SDL_Rect> healthBoxClips;
-std::vector<SDL_Rect> dungeonButtonClips;
 std::vector<SDL_Rect> multiplyClips;
 std::vector<LTexture*> texts;
 

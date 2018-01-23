@@ -81,14 +81,9 @@ extern LTexture multiplierSST;
 extern LTexture choicemenu;
 
 extern std::vector<SDL_Rect> spriteClips;
-extern std::vector<SDL_Rect> buttonSpriteClips;
 extern std::vector<SDL_Rect> tileSpriteClips;
 extern std::vector<SDL_Rect> charClips;
-extern std::vector<SDL_Rect> questPageClips;
-extern std::vector<SDL_Rect> acceptrejectClips;
-extern std::vector<SDL_Rect> townButtonClips;
 extern std::vector<SDL_Rect> healthBoxClips;
-extern std::vector<SDL_Rect> dungeonButtonClips;
 extern std::vector<SDL_Rect> multiplyClips;
 
 extern std::vector<LTexture*> texts;

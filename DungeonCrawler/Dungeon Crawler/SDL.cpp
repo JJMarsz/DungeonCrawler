@@ -71,7 +71,6 @@ bool init()
 
 	//set up relevant data structures
 	spriteClips.resize(6);
-	buttonSpriteClips.resize(12);
 	tileSpriteClips.resize(33);
 	texts.reserve(20);
 	charClips.resize(NUM_CHAR*4);
@@ -85,13 +84,9 @@ bool init()
 	townButtons.resize(2);
 	townButtons[0].setHandler(gotoShop);
 	townButtons[1].setHandler(gotoCharUp);
-	townButtonClips.resize(8);
 	questButtons.resize(3);
-	questPageClips.resize(4);
-	acceptrejectClips.resize(12);
 	acceptrejectButtons.resize(3);
 	healthBoxClips.resize(11);
-	dungeonButtonClips.resize(4);
 	dungeonButtons.resize(3);
 	multiplyClips.resize(5);
 	int i;
@@ -127,6 +122,9 @@ bool init()
 
 bool loadMedia()
 {
+
+	std::vector<SDL_Rect> clips;
+	clips.resize(4);
 	int i;
 	//Loading success flag
 	bool success = true;
@@ -192,24 +190,36 @@ bool loadMedia()
 		//Set sprites
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; ++i)
 		{
-			buttonSpriteClips[i].x = 0;
-			buttonSpriteClips[i].y = i * 60;
-			buttonSpriteClips[i].w = BUTTON_WIDTH;
-			buttonSpriteClips[i].h = BUTTON_HEIGHT;
+			clips[i].x = 0;
+			clips[i].y = i * 60;
+			clips[i].w = BUTTON_WIDTH;
+			clips[i].h = BUTTON_HEIGHT;
+		}
+		for (i = 0; i < 12; i++) {
+			Buttons[i].setClips(clips);
+			Buttons[i].setSST(&buttonSpriteSheetTexture);
 		}
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; ++i)
 		{
-			buttonSpriteClips[i+4].x = 0;
-			buttonSpriteClips[i+4].y = (i+4) * 60;
-			buttonSpriteClips[i+4].w = 2*BUTTON_WIDTH;
-			buttonSpriteClips[i+4].h = BUTTON_HEIGHT;
+			clips[i].x = 0;
+			clips[i].y = (i+4) * 60;
+			clips[i].w = 2*BUTTON_WIDTH;
+			clips[i].h = BUTTON_HEIGHT;
+		}
+		for (i = 0; i < 4; i++) {
+			menuButtons[i].setClips(clips);
+			menuButtons[i].setSST(&buttonSpriteSheetTexture);
 		}
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; ++i) 
 		{
-			buttonSpriteClips[i+8].x = 2 * BUTTON_WIDTH + (i)*200;
-			buttonSpriteClips[i+8].y = 0;
-			buttonSpriteClips[i+8].w = CHAR_BUTTON_WIDTH;
-			buttonSpriteClips[i+8].h = CHAR_BUTTON_HEIGHT;
+			clips[i].x = 2 * BUTTON_WIDTH + (i)*200;
+			clips[i].y = 0;
+			clips[i].w = CHAR_BUTTON_WIDTH;
+			clips[i].h = CHAR_BUTTON_HEIGHT;
+		}
+		for (i = 0; i < 3; i++) {
+			charButtons[i].setClips(clips);
+			charButtons[i].setSST(&buttonSpriteSheetTexture);
 		}
 		//Set buttons to locations
 		Buttons[0].setPosition(BUTTON_ONE_X, BUTTON_Y);
@@ -426,18 +436,23 @@ bool loadMedia()
 	else {
 		//left button
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
-			townButtonClips[i].x = 0;
-			townButtonClips[i].y = i * 50;
-			townButtonClips[i].w = 100;
-			townButtonClips[i].h = 50;
+			clips[i].x = 0;
+			clips[i].y = i * 50;
+			clips[i].w = 100;
+			clips[i].h = 50;
 		}
+		townButtons[0].setSST(&townButtonSST);
+		townButtons[0].setClips(clips);
 		//right button
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
-			townButtonClips[i+4].x = 100;
-			townButtonClips[i+4].y = i * 50;
-			townButtonClips[i+4].w = 100;
-			townButtonClips[i+4].h = 50;
+			clips[i].x = 100;
+			clips[i].y = i * 50;
+			clips[i].w = 100;
+			clips[i].h = 50;
 		}
+		townButtons[1].setSST(&townButtonSST);
+		townButtons[1].setClips(clips);
+
 		townButtons[0].setPosition(25, SCREEN_HEIGHT - 60);
 		townButtons[1].setPosition(SCREEN_WIDTH - 125, SCREEN_HEIGHT - 60);
 	}
@@ -451,10 +466,14 @@ bool loadMedia()
 	}
 	else {
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
-			questPageClips[i].x = QUEST_PAGE_WIDTH * i;
-			questPageClips[i].y = 0;
-			questPageClips[i].w = QUEST_PAGE_WIDTH;
-			questPageClips[i].h = QUEST_PAGE_HEIGHT;
+			clips[i].x = QUEST_PAGE_WIDTH * i;
+			clips[i].y = 0;
+			clips[i].w = QUEST_PAGE_WIDTH;
+			clips[i].h = QUEST_PAGE_HEIGHT;
+		}
+		for (i = 0; i < 3; i++) {
+			questButtons[i].setSST(&questSST);
+			questButtons[i].setClips(clips);
 		}
 		questButtons[0].setPosition(QUEST_ONE_X, QUEST_Y);
 		questButtons[1].setPosition(QUEST_TWO_X, QUEST_Y);
@@ -467,23 +486,30 @@ bool loadMedia()
 	}
 	else {
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
-			acceptrejectClips[i].x = 0;
-			acceptrejectClips[i].y = i * 30;
-			acceptrejectClips[i].w = 70;
-			acceptrejectClips[i].h = 30;
+			clips[i].x = 0;
+			clips[i].y = i * 30;
+			clips[i].w = 70;
+			clips[i].h = 30;
 		}
+		acceptrejectButtons[0].setSST(&acceptrejectSST);
+		acceptrejectButtons[0].setClips(clips);
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
-			acceptrejectClips[i+4].x = 70;
-			acceptrejectClips[i+4].y = i * 30;
-			acceptrejectClips[i+4].w = 70;
-			acceptrejectClips[i+4].h = 30;
+			clips[i].x = 70;
+			clips[i].y = i * 30;
+			clips[i].w = 70;
+			clips[i].h = 30;
 		}
+		acceptrejectButtons[1].setSST(&acceptrejectSST);
+		acceptrejectButtons[1].setClips(clips);
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
-			acceptrejectClips[i + 8].x = 140;
-			acceptrejectClips[i + 8].y = i * 30;
-			acceptrejectClips[i + 8].w = 70;
-			acceptrejectClips[i + 8].h = 30;
+			clips[i].x = 140;
+			clips[i].y = i * 30;
+			clips[i].w = 70;
+			clips[i].h = 30;
 		}
+		acceptrejectButtons[2].setSST(&acceptrejectSST);
+		acceptrejectButtons[2].setClips(clips);
+
 		acceptrejectButtons[0].setPosition(275, 377);
 		acceptrejectButtons[1].setPosition(455, 377);
 		acceptrejectButtons[2].setPosition(365, 377);
@@ -528,10 +554,14 @@ bool loadMedia()
 	}
 	else {
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
-			dungeonButtonClips[i].y = i * 46;
-			dungeonButtonClips[i].x = 0;
-			dungeonButtonClips[i].w = 90;
-			dungeonButtonClips[i].h = 46;
+			clips[i].y = i * 46;
+			clips[i].x = 0;
+			clips[i].w = 90;
+			clips[i].h = 46;
+		}
+		for (i = 0; i < 3; i++) {
+			dungeonButtons[i].setSST(&dungeonButtonSST);
+			dungeonButtons[i].setClips(clips);
 		}
 		dungeonButtons[0].setPosition(498, SCREEN_HEIGHT - 58);
 		dungeonButtons[1].setPosition(598, SCREEN_HEIGHT - 58);

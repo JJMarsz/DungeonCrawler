@@ -29,6 +29,10 @@ public:
 
 	//set size
 	void setConstraints(int w, int h);
+	
+	//setters
+	void setSST(LTexture *SST_);
+	void setClips(std::vector<SDL_Rect>  vec_);
 
 	//getters
 	int getWidth();
@@ -53,8 +57,11 @@ private:
 	//disabled
 	bool disabled;
 
-	//clip array
+	//clip vector ptr
+	std::vector<SDL_Rect> vec;
 
+	//SST
+	LTexture *SST;
 
 };
 

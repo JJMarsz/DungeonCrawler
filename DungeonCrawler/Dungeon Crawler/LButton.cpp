@@ -87,7 +87,7 @@ void LButton::setSprite(LButtonSprite newsprite) {
 
 void LButton::render() {
 	//Show current button sprite
-	switch (state) {
+	/*switch (state) {
 	case REWARD:
 		acceptrejectSST.render(mPosition.x, mPosition.y, &acceptrejectClips[mCurrentSprite+8]);
 		break;
@@ -131,7 +131,8 @@ void LButton::render() {
 		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite + 8]);
 		break;
 
-	};
+	};*/
+	SST->render(mPosition.x, mPosition.y, &vec[mCurrentSprite]);
 
 }
 
@@ -144,6 +145,9 @@ void LButton::setConstraints(int w, int h) {
 	height = h;
 }
 
+void LButton::setSST(LTexture* SST_) { SST = SST_; }
+void LButton::setClips(std::vector<SDL_Rect>  vec_) { vec = vec_; }
+
 int LButton::getWidth() {
 	return width;
 }
@@ -151,6 +155,7 @@ int LButton::getWidth() {
 int LButton::getHeight() {
 	return height;
 }
+
 
 //different button clicked function handlers
 void newGame(int index) {

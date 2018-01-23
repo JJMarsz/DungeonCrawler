@@ -2,7 +2,7 @@
 #define PARTY_H
 
 #include "lib.h"
-#include "LTexture.h"
+#include "LButton.h"
 
 #define NUM_CHAR	5
 #define MAX_STAT	20

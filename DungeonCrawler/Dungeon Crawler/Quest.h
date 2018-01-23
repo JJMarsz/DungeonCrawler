@@ -2,7 +2,7 @@
 #define QUEST_H
 
 #include "lib.h"
-#include "LTexture.h"
+#include "LButton.h"
 #include "dungeon.h"
 
 class Enemy {
