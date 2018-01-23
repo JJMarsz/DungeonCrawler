@@ -126,6 +126,11 @@ int main(int argc, char* args[])
 						townButtons[0].handleEvent(&e, 0);
 						townButtons[1].handleEvent(&e, 1);
 						break;
+					case CHOOSE:
+						for (i = 0; i < 4; ++i) {
+							choiceButtons[i].handleEvent(&e, i);
+						}
+						break;
 					case DUNGEON:
 						if (msg_queue.empty()) {
 							dungeonButtons[0].handleEvent(&e, 0);
@@ -250,10 +255,15 @@ int main(int argc, char* args[])
 
 					break;
 				case CHOOSE:
-					state = DUNGEON;
+					if (!display_message) {
+						message = msg_queue.front();
+						messageBox.loadFromRenderedText(message, color, 800);
+						display_message = true;
+					}
 					drawDungeon();
 					drawDungeonMenu();
-					choicemenu.render((SCREEN_WIDTH - CHOICE_MENU_WIDTH)/2, 200);
+					drawChoiceMenu();
+					messageBox.render((SCREEN_WIDTH - messageBox.getWidth()) / 2, 614);
 					break;
 				case DUNGEON:
 					if (current_dungeon.isEnd(gParty.getX(), gParty.getY()))

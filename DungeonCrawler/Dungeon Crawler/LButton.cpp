@@ -13,6 +13,7 @@ std::vector<LButton> questButtons;
 std::vector<LButton> acceptrejectButtons;
 std::vector<LButton> townButtons;
 std::vector<LButton> dungeonButtons;
+std::vector<LButton> choiceButtons;
 
 /* Button class defenitions */
 LButton::LButton()
@@ -86,54 +87,7 @@ void LButton::setSprite(LButtonSprite newsprite) {
 }
 
 void LButton::render() {
-	//Show current button sprite
-	/*switch (state) {
-	case REWARD:
-		acceptrejectSST.render(mPosition.x, mPosition.y, &acceptrejectClips[mCurrentSprite+8]);
-		break;
-	case ROOM_MAIN:
-		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite]);
-		break;
-	case MAIN_MENU:
-		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite + 4]);
-		break;
-	case SELECTED_QUEST_ACCEPT:
-		acceptrejectSST.render(mPosition.x, mPosition.y, &acceptrejectClips[mCurrentSprite]);
-		break;
-	case SELECTED_QUEST_REJECT:
-		acceptrejectSST.render(mPosition.x, mPosition.y, &acceptrejectClips[mCurrentSprite+4]);
-		break;
-	case SELECTED_QUEST:
-	case TOWN_QUEST_BOARD:
-		questSST.render(mPosition.x, mPosition.y, &questPageClips[mCurrentSprite]);
-		break;
-	case DUNGEON:
-		dungeonButtonSST.render(mPosition.x, mPosition.y, &dungeonButtonClips[mCurrentSprite]);
-		break;
-	case TOWN_CHAR_UP:
-
-		break;
-	case TOWN_PARTY_UP:
-
-		break;
-	case TOWN_SHOP:
-
-		break;
-	case TOWN_BUTTON_LEFT:
-		townButtonSST.render(mPosition.x, mPosition.y, &townButtonClips[mCurrentSprite]);
-		break;
-	case TOWN_BUTTON_RIGHT:
-		townButtonSST.render(mPosition.x, mPosition.y, &townButtonClips[mCurrentSprite + 4]);
-		break;
-	case PICK_CHAR1:
-	case PICK_CHAR2:
-	case PICK_CHAR3:
-		buttonSpriteSheetTexture.render(mPosition.x, mPosition.y, &buttonSpriteClips[mCurrentSprite + 8]);
-		break;
-
-	};*/
 	SST->render(mPosition.x, mPosition.y, &vec[mCurrentSprite]);
-
 }
 
 void LButton::setHandler(void(*new_handler)(int index)) {

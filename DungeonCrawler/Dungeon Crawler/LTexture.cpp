@@ -36,6 +36,7 @@ LTexture messageBox;
 LTexture hp0, hp1, hp2;
 LTexture multiplierSST;
 LTexture choicemenu;
+LTexture choiceButtonSST;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> tileSpriteClips;

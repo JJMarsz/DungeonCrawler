@@ -84,6 +84,7 @@ extern LTexture newgametext, loadgametext, tutorialtext, creditstext;
 extern LTexture messageBox;
 extern LTexture multiplierSST;
 extern LTexture choicemenu;
+extern LTexture choiceButtonSST;
 
 extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> tileSpriteClips;

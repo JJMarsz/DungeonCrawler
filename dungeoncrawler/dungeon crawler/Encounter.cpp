@@ -221,12 +221,14 @@ void areaReveal() {
 void well() {
 	//heals or damages
 	state = CHOOSE;
+	msg_queue.push("The party sees a well in this erie room. It beckons for someone to drink from it.");
 
 }
 
 void mysticObelisk() {
 	//gain an xp or loose an xp
 	state = CHOOSE;
+	msg_queue.push("The party comes across a large obelisk. It calls for one of the party members.");
 
 }
 

@@ -89,6 +89,7 @@ bool init()
 	healthBoxClips.resize(11);
 	dungeonButtons.resize(3);
 	multiplyClips.resize(5);
+	choiceButtons.resize(4);
 	int i;
 	for (i = 0; i<TOTAL_BUTTONS; i++)
 		Buttons[i].setConstraints(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -104,6 +105,8 @@ bool init()
 		acceptrejectButtons[i].setConstraints(70, 30);
 	for (i = 0; i < 3; i++)
 		dungeonButtons[i].setConstraints(90, 46);
+	for (i = 0; i < 4; i++)
+		choiceButtons[i].setConstraints(100, 100);
 	acceptrejectButtons[2].setHandler(returnToTown);
 	dungeonButtons[2].setHandler(peek);
 	dungeonButtons[1].setHandler(scout);
@@ -587,6 +590,23 @@ bool loadMedia()
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
+	if (!choiceButtonSST.loadFromFile("textures/choicebutton.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
+			clips[i].y = i * 100;
+			clips[i].x = 0;
+			clips[i].w = 100;
+			clips[i].h = 100;
+		}
+		for (i = 0; i < 4; i++) {
+			choiceButtons[i].setSST(&choiceButtonSST);
+			choiceButtons[i].setClips(clips);
+			choiceButtons[i].setPosition((SCREEN_WIDTH - CHOICE_MENU_WIDTH) / 2 + 12 + 110 * i, 212);
+		}
+	}
 	return success;
 }
 
@@ -600,6 +620,8 @@ void close() {
 	//Free global font
 	TTF_CloseFont(gFont);
 	gFont = NULL;
+	TTF_CloseFont(msg_font);
+	msg_font = NULL;
 	leftText.free();
 	rightText.free();
 	goldmenu.free();
@@ -646,6 +668,7 @@ void close() {
 	healthboxSST.free();
 	dungeonButtonSST.free();
 	choicemenu.free();
+	choiceButtonSST.free();
 
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
@@ -925,6 +948,13 @@ bool charAdj(int x, int y) {
 	if (RMO + 1 == trap_RMO || RMO - 1 == trap_RMO || RMO - current_dungeon.getWidth() == trap_RMO || RMO + current_dungeon.getWidth() == trap_RMO)
 		return true;
 	return false;
+}
+
+void drawChoiceMenu() {
+
+	choicemenu.render((SCREEN_WIDTH - CHOICE_MENU_WIDTH) / 2, 200);
+	for (int i = 0; i < 4; i++)
+		choiceButtons[i].render();
 }
 
 void drawDungeon() {

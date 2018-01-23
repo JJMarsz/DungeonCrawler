@@ -98,5 +98,6 @@ extern std::vector<LButton> questButtons;
 extern std::vector<LButton> townButtons;
 extern std::vector<LButton> acceptrejectButtons;
 extern std::vector<LButton> dungeonButtons;
+extern std::vector<LButton> choiceButtons;
 
 #endif

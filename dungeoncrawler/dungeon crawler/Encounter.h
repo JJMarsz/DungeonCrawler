@@ -41,8 +41,8 @@ enum LootIndex {
 
 #define NUM_CHOICE	2
 enum ChoiceIndex {
+	WELL,
 	OBELISK,
-	WELL
 };
 
 class EncounterList {
