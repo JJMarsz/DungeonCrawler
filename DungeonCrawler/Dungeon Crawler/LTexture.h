@@ -35,6 +35,9 @@ public:
 	//Renders texture at given point
 	void render(int x, int y, SDL_Rect* clip = NULL);
 
+	//font setter
+	void setFont(TTF_Font* font_);
+
 	//Gets image dimensions
 	int getWidth();
 	int getHeight();
@@ -46,6 +49,8 @@ private:
 	//Image dimensions
 	int mWidth;
 	int mHeight;
+
+	TTF_Font* font;
 };
 
 

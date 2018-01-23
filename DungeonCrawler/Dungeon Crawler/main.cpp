@@ -250,6 +250,7 @@ int main(int argc, char* args[])
 
 					break;
 				case CHOOSE:
+					state = DUNGEON;
 					drawDungeon();
 					drawDungeonMenu();
 					choicemenu.render((SCREEN_WIDTH - CHOICE_MENU_WIDTH)/2, 200);

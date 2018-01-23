@@ -51,6 +51,7 @@ LTexture::LTexture()
 	mTexture = NULL;
 	mWidth = 0;
 	mHeight = 0;
+	font = NULL;
 }
 
 LTexture::~LTexture()
@@ -100,6 +101,7 @@ bool LTexture::loadFromFile(std::string path)
 	return mTexture != NULL;
 }
 
+void LTexture::setFont(TTF_Font* font_) { font = font_; }
 bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor_, int w) {
 	//Get rid of preexisting texture
 	free();
@@ -107,14 +109,11 @@ bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 		w = 200;
 	//Render text surface
 	SDL_Surface* textSurface;
-	switch (state) {
-	case DUNGEON:
-		textSurface = TTF_RenderText_Blended_Wrapped(msg_font, textureText.c_str(), textColor_, w);
-		break;
-	default:
+	if(font == NULL)
 		textSurface = TTF_RenderText_Blended_Wrapped(gFont, textureText.c_str(), textColor_, w);
-		break;
-	}
+	else
+		textSurface = TTF_RenderText_Blended_Wrapped(font, textureText.c_str(), textColor_, w);
+	
 	
 	if (textSurface == NULL)
 	{

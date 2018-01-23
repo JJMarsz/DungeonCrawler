@@ -133,6 +133,10 @@ bool loadMedia()
 	//Open the font
 	gFont = TTF_OpenFont("PT_sans.ttf", TEXT_SIZE);
 	msg_font = TTF_OpenFont("PT_sans.ttf", MSG_TEXT_SIZE);
+	messageBox.setFont(msg_font);
+	hp0.setFont(msg_font);
+	hp1.setFont(msg_font);
+	hp2.setFont(msg_font);
 	if (gFont == NULL) {
 		printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
 		success = false;
