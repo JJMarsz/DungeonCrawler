@@ -36,6 +36,8 @@ SDL_Rect Character::getIcon25() { return icon_25; }
 void Character::setIcon25(SDL_Rect sprite_) { icon_25 = sprite_; }
 SDL_Rect Character::getIcon50() { return icon_50; }
 void Character::setIcon50(SDL_Rect sprite_) { icon_50 = sprite_; }
+SDL_Rect Character::getIcon100() { return icon_100; }
+void Character::setIcon100(SDL_Rect sprite_) { icon_100 = sprite_; }
 
 int Character::getXP() { return xp; }
 int Character::getStr() { return str; }
@@ -247,8 +249,9 @@ void CharList::loadSprites() {
 	picked[0] = false;
 	showed[0] = false;
 	charList[0].setBigClip(charClips[0]);
-	charList[0].setIcon50(charClips[NUM_CHAR]);
-	charList[0].setIcon25(charClips[NUM_CHAR*2]);
+	charList[0].setIcon100(charClips[NUM_CHAR]);
+	charList[0].setIcon50(charClips[NUM_CHAR * 2]);
+	charList[0].setIcon25(charClips[NUM_CHAR*3]);
 	charList[0].setInfo(
 		"Temp text for now, Figther."
 	);
@@ -257,8 +260,9 @@ void CharList::loadSprites() {
 	picked[1] = false;
 	showed[1] = false;
 	charList[1].setBigClip(charClips[1]);
-	charList[1].setIcon50(charClips[1 + NUM_CHAR]);
-	charList[1].setIcon25(charClips[1 + NUM_CHAR * 2]);
+	charList[1].setIcon100(charClips[1 + NUM_CHAR]);
+	charList[1].setIcon50(charClips[1 + NUM_CHAR*2]);
+	charList[1].setIcon25(charClips[1 + NUM_CHAR * 3]);
 	charList[1].setInfo(
 		"Temp text for now, Barbarian."
 	);
@@ -267,8 +271,9 @@ void CharList::loadSprites() {
 	picked[2] = false;
 	showed[2] = false;
 	charList[2].setBigClip(charClips[2]);
-	charList[2].setIcon50(charClips[2 + NUM_CHAR]);
-	charList[2].setIcon25(charClips[2 + NUM_CHAR * 2]);
+	charList[2].setIcon100(charClips[2 + NUM_CHAR]);
+	charList[2].setIcon50(charClips[2 + NUM_CHAR*2]);
+	charList[2].setIcon25(charClips[2 + NUM_CHAR * 3]);
 	charList[2].setInfo(
 		"Temp text for now, Paladin."
 	);
@@ -277,8 +282,9 @@ void CharList::loadSprites() {
 	picked[3] = false;
 	showed[3] = false;
 	charList[3].setBigClip(charClips[3]);
-	charList[3].setIcon50(charClips[3 + NUM_CHAR]);
-	charList[3].setIcon25(charClips[3 + NUM_CHAR * 2]);
+	charList[3].setIcon100(charClips[3 + NUM_CHAR]);
+	charList[3].setIcon50(charClips[3 + NUM_CHAR*2]);
+	charList[3].setIcon25(charClips[3 + NUM_CHAR * 3]);
 	charList[3].setInfo(
 		"Temp text for now, Rogue."
 	);
@@ -287,8 +293,9 @@ void CharList::loadSprites() {
 	picked[4] = false;
 	showed[4] = false;
 	charList[4].setBigClip(charClips[4]);
-	charList[4].setIcon50(charClips[4 + NUM_CHAR]);
-	charList[4].setIcon25(charClips[4 + NUM_CHAR * 2]);
+	charList[4].setIcon100(charClips[4 + NUM_CHAR]);
+	charList[4].setIcon50(charClips[4 + NUM_CHAR*2]);
+	charList[4].setIcon25(charClips[4 + NUM_CHAR * 3]);
 	charList[4].setInfo(
 		"Temp text for now, Ranger."
 	);

@@ -292,6 +292,7 @@ void Dungeon::populateDungeon(Difficulty diff) {
 		}
 		if (timeout > 300)
 			break;
+		range_maps[range_num][count]->setIndex(rand() % NUM_CHOICE);
 		range_maps[range_num][count]->setType(CHOICE);
 		choice.push_back(range_maps[range_num][count]);
 		//otherstuff
@@ -339,6 +340,7 @@ void Dungeon::populateDungeon(Difficulty diff) {
 		count = rand() % deadends[i].length;
 
 		dead_range_maps[i][count]->setType(CHOICE);
+		dead_range_maps[i][count]->setIndex(rand() % NUM_TRAP);
 	}
 }
 

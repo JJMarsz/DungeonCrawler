@@ -249,6 +249,11 @@ int main(int argc, char* args[])
 					state = TOWN_PARTY_UP;
 
 					break;
+				case CHOOSE:
+					drawDungeon();
+					drawDungeonMenu();
+					choicemenu.render((SCREEN_WIDTH - CHOICE_MENU_WIDTH)/2, 200);
+					break;
 				case DUNGEON:
 					if (current_dungeon.isEnd(gParty.getX(), gParty.getY()))
 						state = REWARD;

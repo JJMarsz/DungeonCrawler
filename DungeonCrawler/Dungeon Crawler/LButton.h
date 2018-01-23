@@ -53,6 +53,9 @@ private:
 	//disabled
 	bool disabled;
 
+	//clip array
+
+
 };
 
 extern int quest_index;

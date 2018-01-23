@@ -1,7 +1,17 @@
-﻿  SDL.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(554): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(921): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(957): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(958): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(983): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+﻿  dungeon.cpp
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(63): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(169): warning C4018: '<': signed/unsigned mismatch
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(195): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(227): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(239): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(257): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(283): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(305): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(327): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(330): warning C4018: '<': signed/unsigned mismatch
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(339): warning C4018: '<': signed/unsigned mismatch
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(424): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(445): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(805): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(1027): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Dungeon Crawler.vcxproj -> C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe

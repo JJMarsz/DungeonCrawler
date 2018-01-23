@@ -78,6 +78,7 @@ extern LTexture dungText1, dungText2, dungText3;
 extern LTexture newgametext, loadgametext, tutorialtext, creditstext;
 extern LTexture messageBox;
 extern LTexture multiplierSST;
+extern LTexture choicemenu;
 
 extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> buttonSpriteClips;

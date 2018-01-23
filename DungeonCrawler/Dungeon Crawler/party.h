@@ -37,6 +37,8 @@ public:
 	void setIcon25(SDL_Rect sprite_);
 	SDL_Rect getIcon50();
 	void setIcon50(SDL_Rect sprite_);
+	SDL_Rect getIcon100();
+	void setIcon100(SDL_Rect sprite_);
 
 	int getStr();
 	int getDex();
@@ -72,6 +74,7 @@ private:
 	int AC;
 	int xp;
 	SDL_Rect sprite;
+	SDL_Rect icon_100;
 	SDL_Rect icon_50;
 	SDL_Rect icon_25;
 

@@ -74,7 +74,7 @@ bool init()
 	buttonSpriteClips.resize(12);
 	tileSpriteClips.resize(33);
 	texts.reserve(20);
-	charClips.resize(NUM_CHAR*3);
+	charClips.resize(NUM_CHAR*4);
 	Buttons.resize(12);
 	charButtons.resize(3);
 	menuButtons.resize(4);
@@ -397,16 +397,21 @@ bool loadMedia()
 			charClips[i].y = 0;
 			charClips[i].w = 200;
 			charClips[i].h = 200;
-			/* small 50x50 */
+			/* med 100x100 */
 			charClips[i + NUM_CHAR].x = i * 200;
 			charClips[i + NUM_CHAR].y = 200;
-			charClips[i + NUM_CHAR].w = 50;
-			charClips[i + NUM_CHAR].h = 50;
-			/* small 25x25 */
-			charClips[i + 2*NUM_CHAR].x = i * 200 + 50;
+			charClips[i + NUM_CHAR].w = 100;
+			charClips[i + NUM_CHAR].h = 100;
+			/* small 50x50 */
+			charClips[i + 2*NUM_CHAR].x = i * 200 + 100;
 			charClips[i + 2*NUM_CHAR].y = 200;
-			charClips[i + 2*NUM_CHAR].w = 25;
-			charClips[i + 2*NUM_CHAR].h = 25;
+			charClips[i + 2*NUM_CHAR].w = 50;
+			charClips[i + 2*NUM_CHAR].h = 50;
+			/* small 25x25 */
+			charClips[i + 3*NUM_CHAR].x = i * 200 + 150;
+			charClips[i + 3*NUM_CHAR].y = 200;
+			charClips[i + 3*NUM_CHAR].w = 25;
+			charClips[i + 3*NUM_CHAR].h = 25;
 		}
 	}
 	chars.loadSprites(); 
@@ -544,6 +549,10 @@ bool loadMedia()
 			multiplyClips[i].h = 22;
 		}
 	}
+	if (!choicemenu.loadFromFile("textures/choicemenu.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
 	return success;
 }
 
@@ -602,6 +611,7 @@ void close() {
 	dungeonmenu.free();
 	healthboxSST.free();
 	dungeonButtonSST.free();
+	choicemenu.free();
 
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);

@@ -46,9 +46,11 @@ public:
 	void loadTrap(TrapIndex i);
 	void loadInfo(InfoIndex i);
 	void loadLoot(LootIndex i);
+	void loadChoice(ChoiceIndex i);
 	func fetchTrap(TrapIndex index);
 	func fetchInfo(InfoIndex index);
 	func fetchLoot(LootIndex index);
+	func fetchChoice(ChoiceIndex index);
 private:
 	/* Boss fight encounter */
 	void(*Boss)();

@@ -35,6 +35,7 @@ LTexture newgametext, loadgametext, tutorialtext, creditstext;
 LTexture messageBox;
 LTexture hp0, hp1, hp2;
 LTexture multiplierSST;
+LTexture choicemenu;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> buttonSpriteClips;

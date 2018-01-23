@@ -21,11 +21,18 @@ EncounterList::EncounterList() {
 	//loot setup
 	lootList.resize(NUM_LOOT);
 	lootList[GOLD] = goldLoot;
+
+	//choice setup
+	choiceList.resize(NUM_CHOICE);
+	choiceList[OBELISK] = mysticObelisk;
+	choiceList[WELL] = well;
+
 }
 
 func EncounterList::getTrap(TrapIndex index) { return trapList[index]; }
 func EncounterList::getInfo(InfoIndex index) { return infoList[index]; }
 func EncounterList::getLoot(LootIndex index) { return lootList[index]; }
+func EncounterList::getChoice(ChoiceIndex index) { return choiceList[index]; }
 
 void handleEncounter() {
 	//dispatcher to appropriate encounter handler
@@ -40,6 +47,9 @@ void handleEncounter() {
 		break;
 	case LOOT:
 		current_quests[quest_index].fetchLoot((LootIndex)tile->getIndex())();
+		break;
+	case CHOICE:
+		current_quests[quest_index].fetchChoice((ChoiceIndex)tile->getIndex())();
 		break;
 	default:
 		break;
@@ -210,11 +220,13 @@ void areaReveal() {
 
 void well() {
 	//heals or damages
+	state = CHOOSE;
 
 }
 
 void mysticObelisk() {
 	//gain an xp or loose an xp
+	state = CHOOSE;
 
 }
 

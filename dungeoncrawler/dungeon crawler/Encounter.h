@@ -3,6 +3,8 @@
 
 #include "lib.h"
 
+#define CHOICE_MENU_WIDTH	454
+#define CHOICE_MENU_HEIGHT	124
 
 enum EncounterType {
 	NONE,
@@ -37,12 +39,19 @@ enum LootIndex {
 	GOLD
 };
 
+#define NUM_CHOICE	2
+enum ChoiceIndex {
+	OBELISK,
+	WELL
+};
+
 class EncounterList {
 public:
 	EncounterList();
 	func getTrap(TrapIndex index);
 	func getInfo(InfoIndex index);
 	func getLoot(LootIndex index);
+	func getChoice(ChoiceIndex index);
 private:
 	//these vectors contain pointers to every encounter function within the game
 	//quests will index into these and copy the ptrs to use during population
@@ -70,4 +79,7 @@ void choiceReveal();
 void trapReveal();
 
 void goldLoot();
+
+void well();
+void mysticObelisk();
 #endif
