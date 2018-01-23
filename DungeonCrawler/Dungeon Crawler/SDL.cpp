@@ -607,6 +607,10 @@ bool loadMedia()
 			choiceButtons[i].setPosition((SCREEN_WIDTH - CHOICE_MENU_WIDTH) / 2 + 12 + 110 * i, 212);
 		}
 	}
+	if (!no.loadFromFile("textures/no.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
 	return success;
 }
 
@@ -648,6 +652,7 @@ void close() {
 	hp1.free();
 	hp2.free();
 	multiplierSST.free();
+	no.free();
 
 	//Free Textures
 	spriteSheetTexture.free();
@@ -953,8 +958,13 @@ bool charAdj(int x, int y) {
 void drawChoiceMenu() {
 
 	choicemenu.render((SCREEN_WIDTH - CHOICE_MENU_WIDTH) / 2, 200);
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; i++) {
 		choiceButtons[i].render();
+		if(i < 3)
+			charSST.render((SCREEN_WIDTH - CHOICE_MENU_WIDTH) / 2 + 12 + 110 * i, 212, &gParty.getChar(i)->getIcon100());
+	}
+	no.render((SCREEN_WIDTH - CHOICE_MENU_WIDTH) / 2 + 342, 212);
+	
 }
 
 void drawDungeon() {

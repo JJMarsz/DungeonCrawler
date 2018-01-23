@@ -1,26 +1,14 @@
-﻿  dungeon.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(63): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(169): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(195): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(227): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(239): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(257): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(283): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(305): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(327): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(330): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(339): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(424): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(445): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(805): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(1027): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Encounter.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(84): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(116): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(128): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(140): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(152): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(202): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(251): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+﻿  party.cpp
+  LButton.cpp
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(244): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(274): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Generating Code...
+  Skipping... (no relevant changes detected)
+  main.cpp
+  dungeon.cpp
+  SDL.cpp
+  Quest.cpp
+  LTexture.cpp
+  Encounter.cpp
+     Creating library C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.lib and object C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exp
   Dungeon Crawler.vcxproj -> C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe

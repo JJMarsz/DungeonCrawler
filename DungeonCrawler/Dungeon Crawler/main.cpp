@@ -51,30 +51,31 @@ int main(int argc, char* args[])
 				while (SDL_PollEvent(&e) != 0)
 				{
 					//User requests quit
-					switch (e.type) {
-					case SDL_QUIT:
+					if(e.type == SDL_QUIT)
 						quit = true;
-						break;
-					case SDL_MOUSEBUTTONDOWN:
-						MouseDown = true;
-						if (e.button.button == SDL_BUTTON_RIGHT)
-							MouseRight = true;
-						else
-							MouseRight = false;
-						break;
-					case SDL_MOUSEBUTTONUP:
-						MouseUp = true;
-						if (e.button.button == SDL_BUTTON_RIGHT && MouseRight == true)
-							MouseRight = true;
-						else
-							MouseRight = false;
-						break;
-					case SDL_KEYDOWN:
-						if(e.key.keysym.sym == SDLK_ESCAPE)
-							ab = NOPE;
-						break;
-					default:
-						break;
+					if (state == DUNGEON) {
+						switch (e.type) {
+						case SDL_MOUSEBUTTONDOWN:
+							MouseDown = true;
+							if (e.button.button == SDL_BUTTON_RIGHT)
+								MouseRight = true;
+							else
+								MouseRight = false;
+							break;
+						case SDL_MOUSEBUTTONUP:
+							MouseUp = true;
+							if (e.button.button == SDL_BUTTON_RIGHT && MouseRight == true)
+								MouseRight = true;
+							else
+								MouseRight = false;
+							break;
+						case SDL_KEYDOWN:
+							if (e.key.keysym.sym == SDLK_ESCAPE)
+								ab = NOPE;
+							break;
+						default:
+							break;
+						}
 					}
 					//cicking state machine
 					switch (state) {
@@ -255,15 +256,13 @@ int main(int argc, char* args[])
 
 					break;
 				case CHOOSE:
-					if (!display_message) {
-						message = msg_queue.front();
-						messageBox.loadFromRenderedText(message, color, 800);
-						display_message = true;
-					}
+					message = msg_queue.front();
+					messageBox.loadFromRenderedText(message, color, 800);
 					drawDungeon();
 					drawDungeonMenu();
 					drawChoiceMenu();
 					messageBox.render((SCREEN_WIDTH - messageBox.getWidth()) / 2, 614);
+					message = "";
 					break;
 				case DUNGEON:
 					if (current_dungeon.isEnd(gParty.getX(), gParty.getY()))

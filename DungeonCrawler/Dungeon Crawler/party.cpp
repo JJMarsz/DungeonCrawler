@@ -66,6 +66,7 @@ void Character::render(int x, int y) {
 }
 
 void Character::addXP(int xp_) { xp += xp_; }
+void Character::subXP(int xp_) { xp -= xp_; if (xp < 0) xp = 0; }
 /* Party calss definitions */
 Party::Party() {
 	numChar = 0;

@@ -85,6 +85,7 @@ extern LTexture messageBox;
 extern LTexture multiplierSST;
 extern LTexture choicemenu;
 extern LTexture choiceButtonSST;
+extern LTexture no;
 
 extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> tileSpriteClips;

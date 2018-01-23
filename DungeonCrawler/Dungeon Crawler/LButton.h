@@ -85,6 +85,9 @@ void gotoPartyUp(int index);
 void gotoShop(int index);
 void returnToTown(int index);
 
+void wellHandler(int index);
+void obHandler(int index);
+
 void peek(int index);
 void scout(int index);
 void rest(int index);

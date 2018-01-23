@@ -54,6 +54,7 @@ public:
 	void setTextIndex(int index);
 	void render(int x, int y);
 	void addXP(int xp_);
+	void subXP(int xp_);
 	//Hit(int atk_roll, int dmg_roll);
 	void damage(int dmg);
 	void heal(int heal);

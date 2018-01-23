@@ -234,6 +234,67 @@ void questReject(int index) {
 	state = TOWN_QUEST_BOARD;
 }
 
+//handlers for choice tile
+
+void wellHandler(int index) {
+	state = DUNGEON;
+	msg_queue.pop();
+	int DC = 8;
+	std::string name;
+	srand(time(NULL));
+	int roll = (rand() % 20) + 1;
+	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+		roll += 5;
+	switch (index) {
+	case 0:
+	case 1:
+	case 2:
+		name = gParty.getChar(index)->getName();
+		if (roll > DC) {
+			gParty.getChar(index)->heal(gParty.getChar(index)->getMaxHP() / 2);
+			msg_queue.push("The well replenishes the health of the " + name + ".");
+		}
+		else {
+			gParty.getChar(index)->damage(gParty.getChar(index)->getHP() / 2);
+			msg_queue.push("The well turns hostile and harms the " + name + ".");
+		}
+		break;
+	case 3:
+		msg_queue.push("The party rejects the well's calling.");
+		break;
+	}
+}
+
+void obHandler(int index) {
+
+	state = DUNGEON;
+	msg_queue.pop();
+	int DC = 8;
+	std::string name;
+	srand(time(NULL));
+	int roll = (rand() % 20) + 1;
+	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+		roll += 5;
+	switch (index) {
+	case 0:
+	case 1:
+	case 2:
+		name = gParty.getChar(index)->getName();
+		if (roll > DC) {
+			gParty.getChar(index)->addXP(1);
+			msg_queue.push("The obelisk accepts the courage of the " + name + ".");
+		}
+		else {
+			gParty.getChar(index)->subXP(1);
+			msg_queue.push("The obelisk glows red and weakens the " + name + ".");
+		}
+		break;
+	case 3:
+		msg_queue.push("The party denies the power of the obelisk.");
+		break;
+	}
+}
+
 void rest(int index) {
 	if (gParty.checkRest()) {
 		if (gParty.useRest()) {
