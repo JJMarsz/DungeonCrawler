@@ -39,10 +39,18 @@ enum LootIndex {
 	GOLD
 };
 
-#define NUM_CHOICE	2
+#define NUM_CHOICE	10
 enum ChoiceIndex {
 	WELL,
 	OBELISK,
+	CHEST,
+	TOME,
+	STR,
+	DEX,
+	CON,
+	INT,
+	WIS,
+	CHA
 };
 
 class EncounterList {
@@ -82,4 +90,12 @@ void goldLoot();
 
 void well();
 void mysticObelisk();
+void magicChest();
+void ancientTome();
+void testStr();
+void testDex();
+void testCon();
+void testInt();
+void testWis();
+void testCha();
 #endif

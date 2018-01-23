@@ -50,6 +50,13 @@ int Character::getMove() { return move; }
 int Character::getHP() { return health; }
 int Character::getMaxHP() { return max_health; }
 int Character::getAC() { return AC; }
+void Character::setStr(int n) { str = n; }
+void Character::setDex(int n) { dex = n; }
+void Character::setCon(int n) { con = n; }
+void Character::setInt(int n) { intel = n; }
+void Character::setWis(int n) { wis = n; }
+void Character::setCha(int n) { cha = n; }
+void Character::setMaxHP(int n) { max_health = n; if (max_health < health) health = max_health; }
 std::string Character::getName() { return name; }
 
 void Character::setTextIndex(int index) { textIndex = index; }

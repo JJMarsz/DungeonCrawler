@@ -26,6 +26,15 @@ EncounterList::EncounterList() {
 	choiceList.resize(NUM_CHOICE);
 	choiceList[OBELISK] = mysticObelisk;
 	choiceList[WELL] = well;
+	choiceList[CHEST] = magicChest;
+	choiceList[TOME] = ancientTome;
+	choiceList[STR] = testStr;
+	choiceList[DEX] = testDex;
+	choiceList[CON] = testCon;
+	choiceList[INT] = testInt;
+	choiceList[WIS] = testWis;
+	choiceList[CHA] = testCha;
+
 
 }
 
@@ -239,12 +248,68 @@ void mysticObelisk() {
 
 void magicChest() {
 	//gain gold or take dmg
-
+	state = CHOOSE;
+	msg_queue.push("The party comes across a regular chest. It sits there, patiently.");
+	for (int i = 0; i < 4; i++) {
+		choiceButtons[i].setHandler(chestHandler);
+	}
 }
 
 void ancientTome() {
 	//gain +1 in highest stat
+	state = CHOOSE;
+	msg_queue.push("The party comes across an ancient tome. It's contents are limitless.");
+	for (int i = 0; i < 4; i++) {
+		choiceButtons[i].setHandler(tomeHandler);
+	}
+}
 
+void testStr() {
+	state = CHOOSE;
+	msg_queue.push("The party comes across a feat of strength. Completeing it could be rewarding.");
+	for (int i = 0; i < 4; i++) {
+		choiceButtons[i].setHandler(strHandler);
+	}
+}
+
+void testDex() {
+	state = CHOOSE;
+	msg_queue.push("The party comes across a timed trial. Those dexterous enough may be able to complete it.");
+	for (int i = 0; i < 4; i++) {
+		choiceButtons[i].setHandler(dexHandler);
+	}
+}
+
+void testCon() {
+	state = CHOOSE;
+	msg_queue.push("The party comes across a test of fortitude. Resist it's poisen with great constitution to reap the rewards.");
+	for (int i = 0; i < 4; i++) {
+		choiceButtons[i].setHandler(conHandler);
+	}
+}
+
+void testInt() {
+	state = CHOOSE;
+	msg_queue.push("The party comes across a puzzle requiring great intelligence. Solving it could be beneficial.");
+	for (int i = 0; i < 4; i++) {
+		choiceButtons[i].setHandler(intHandler);
+	}
+}
+
+void testWis() {
+	state = CHOOSE;
+	msg_queue.push("The party comes across a test only suitable for the wise. Can solving it render a positive outcome?");
+	for (int i = 0; i < 4; i++) {
+		choiceButtons[i].setHandler(wisHandler);
+	}
+}
+
+void testCha() {
+	state = CHOOSE;
+	msg_queue.push("The party comes across a humonoid statue. Convince it that it is alive with great charisma to receive it's reward.");
+	for (int i = 0; i < 4; i++) {
+		choiceButtons[i].setHandler(chaHandler);
+	}
 }
 
 //loot handlers

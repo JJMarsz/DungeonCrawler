@@ -166,6 +166,14 @@ QuestList::QuestList() {
 
 		list[i].q.loadChoice(WELL);
 		list[i].q.loadChoice(OBELISK);
+		list[i].q.loadChoice(CHEST);
+		list[i].q.loadChoice(TOME);
+		list[i].q.loadChoice(STR);
+		list[i].q.loadChoice(DEX);
+		list[i].q.loadChoice(CON);
+		list[i].q.loadChoice(INT);
+		list[i].q.loadChoice(WIS);
+		list[i].q.loadChoice(CHA);
 	}
 }
 

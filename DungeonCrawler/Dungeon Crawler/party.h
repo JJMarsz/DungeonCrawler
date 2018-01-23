@@ -46,9 +46,16 @@ public:
 	int getInt();
 	int getWis();
 	int getCha();
+	void setStr(int n);
+	void setDex(int n);
+	void setCon(int n);
+	void setInt(int n);
+	void setWis(int n);
+	void setCha(int n);
 	int getMove();
 	int getHP();
 	int getMaxHP();
+	void setMaxHP(int n);
 	int getAC();
 	int getTextIndex();
 	void setTextIndex(int index);

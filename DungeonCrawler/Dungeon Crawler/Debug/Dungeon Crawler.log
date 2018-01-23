@@ -1,14 +1,13 @@
-﻿  party.cpp
-  LButton.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(244): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(274): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Generating Code...
-  Skipping... (no relevant changes detected)
-  main.cpp
-  dungeon.cpp
-  SDL.cpp
-  Quest.cpp
-  LTexture.cpp
+﻿  Quest.cpp
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\quest.cpp(203): warning C4018: '<': signed/unsigned mismatch
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\quest.cpp(211): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   Encounter.cpp
-     Creating library C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.lib and object C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exp
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(93): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(125): warning C4018: '<': signed/unsigned mismatch
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(137): warning C4018: '<': signed/unsigned mismatch
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(149): warning C4018: '<': signed/unsigned mismatch
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(161): warning C4018: '<': signed/unsigned mismatch
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(211): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(321): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Generating Code...
   Dungeon Crawler.vcxproj -> C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe

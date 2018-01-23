@@ -87,6 +87,14 @@ void returnToTown(int index);
 
 void wellHandler(int index);
 void obHandler(int index);
+void chestHandler(int index);
+void tomeHandler(int index);
+void strHandler(int index);
+void dexHandler(int index);
+void conHandler(int index);
+void intHandler(int index);
+void wisHandler(int index);
+void chaHandler(int index);
 
 void peek(int index);
 void scout(int index);

@@ -295,6 +295,237 @@ void obHandler(int index) {
 	}
 }
 
+void chestHandler(int index) {
+	state = DUNGEON;
+	msg_queue.pop();
+	int DC = 8;
+	std::string name;
+	srand(time(NULL));
+	int roll = (rand() % 20) + 1;
+	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+		roll += 5;
+	switch (index) {
+	case 0:
+	case 1:
+	case 2:
+		name = gParty.getChar(index)->getName();
+		if (roll > DC) {
+			gParty.addGold(100 + current_quests[quest_index].getDiff()*50);
+			msg_queue.push("The chest opens revealing its riches to the " + name + ".");
+		}
+		else {
+			gParty.getChar(index)->damage(gParty.getChar(index)->getHP() / 2);
+			msg_queue.push("The chest was a mimic! It damages the " + name + " before the party can fend it off.");
+		}
+		break;
+	case 3:
+		msg_queue.push("The party lets the chest be.");
+		break;
+	}
+}
+void tomeHandler(int index) {
+	state = DUNGEON;
+	msg_queue.pop();
+	int DC = 10;
+	std::string name;
+	srand(time(NULL));
+	int roll = (rand() % 20) + 1;
+	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+		roll += 5;
+	switch (index) {
+	case 0:
+	case 1:
+	case 2:
+		name = gParty.getChar(index)->getName();
+		if (roll > DC) {
+			gParty.getChar(index)->setMaxHP((gParty.getChar(index)->getMaxHP()*115)/100);
+			msg_queue.push("The tome teaches the " + name + " how to be more resiliant.");
+		}
+		else {
+			gParty.getChar(index)->setMaxHP((gParty.getChar(index)->getMaxHP() * 85) / 100);
+			msg_queue.push("The tome upsets the " + name + "as they become a bit more fragile.");
+		}
+		break;
+	case 3:
+		msg_queue.push("The party lets the book rest.");
+		break;
+	}
+}
+void strHandler(int index) {
+	state = DUNGEON;
+	msg_queue.pop();
+	int DC = 15;
+	std::string name;
+	srand(time(NULL));
+	int roll = (rand() % 20) + 1;
+	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+		roll += 4;
+	roll += gParty.getChar(index)->getStr();
+	switch (index) {
+	case 0:
+	case 1:
+	case 2:
+		name = gParty.getChar(index)->getName();
+		if (roll > DC) {
+			gParty.getChar(index)->setStr(gParty.getChar(index)->getStr()+1);
+			msg_queue.push("The feat was completed! The " + name + " grows in strength!");
+		}
+		else {
+			gParty.getChar(index)->setStr(gParty.getChar(index)->getStr() - 1);
+			msg_queue.push("The feat was too difficult for the " + name + ". They grow weaker.");
+		}
+		break;
+	case 3:
+		msg_queue.push("The party leaves the feat of strength uncompleted.");
+		break;
+	}
+}
+void dexHandler(int index) {
+	state = DUNGEON;
+	msg_queue.pop();
+	int DC = 15;
+	std::string name;
+	srand(time(NULL));
+	int roll = (rand() % 20) + 1;
+	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+		roll += 4;
+	roll += gParty.getChar(index)->getDex();
+	switch (index) {
+	case 0:
+	case 1:
+	case 2:
+		name = gParty.getChar(index)->getName();
+		if (roll > DC) {
+			gParty.getChar(index)->setDex(gParty.getChar(index)->getDex() + 1);
+			msg_queue.push("The " + name + " was fast enough to complete the trial. Their agility grows!");
+		}
+		else {
+			gParty.getChar(index)->setDex(gParty.getChar(index)->getDex() - 1);
+			msg_queue.push("The " + name + " wasn't quick enough. They feel demoralized and less dexterous.");
+		}
+		break;
+	case 3:
+		msg_queue.push("The party leaves the trial un tested.");
+		break;
+	}
+}
+void conHandler(int index) {
+	state = DUNGEON;
+	msg_queue.pop();
+	int DC = 15;
+	std::string name;
+	srand(time(NULL));
+	int roll = (rand() % 20) + 1;
+	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+		roll += 4;
+	roll += gParty.getChar(index)->getCon();
+	switch (index) {
+	case 0:
+	case 1:
+	case 2:
+		name = gParty.getChar(index)->getName();
+		if (roll > DC) {
+			gParty.getChar(index)->setCon(gParty.getChar(index)->getCon() + 1);
+			msg_queue.push("The " + name + " resists the poisen of the trial! They feel their fortitude strengthen!");
+		}
+		else {
+			gParty.getChar(index)->setCon(gParty.getChar(index)->getCon() - 1);
+			msg_queue.push("The " + name + " feels quesy and probably should see a doctor. They don't feel as resiliant anymore.");
+		}
+		break;
+	case 3:
+		msg_queue.push("The party leaves the poisen on the table. As one should.");
+		break;
+	}
+}
+void intHandler(int index) {
+	state = DUNGEON;
+	msg_queue.pop();
+	int DC = 15;
+	std::string name;
+	srand(time(NULL));
+	int roll = (rand() % 20) + 1;
+	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+		roll += 4;
+	roll += gParty.getChar(index)->getInt();
+	switch (index) {
+	case 0:
+	case 1:
+	case 2:
+		name = gParty.getChar(index)->getName();
+		if (roll > DC) {
+			gParty.getChar(index)->setInt(gParty.getChar(index)->getInt() + 1);
+			msg_queue.push("After a few attempts, the " + name + " completes the puzzle and feels much smarter!");
+		}
+		else {
+			gParty.getChar(index)->setInt(gParty.getChar(index)->getInt() - 1);
+			msg_queue.push("The " + name + " fails the puzzle to many times and now doesn't feel more smarter.");
+		}
+		break;
+	case 3:
+		msg_queue.push("The party leaves the puzzle unsolved.");
+		break;
+	}
+}
+void wisHandler(int index) {
+	state = DUNGEON;
+	msg_queue.pop();
+	int DC = 15;
+	std::string name;
+	srand(time(NULL));
+	int roll = (rand() % 20) + 1;
+	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+		roll += 4;
+	roll += gParty.getChar(index)->getWis();
+	switch (index) {
+	case 0:
+	case 1:
+	case 2:
+		name = gParty.getChar(index)->getName();
+		if (roll > DC) {
+			gParty.getChar(index)->setWis(gParty.getChar(index)->getWis() + 1);
+			msg_queue.push("Using their vast wisdom gained over the years, the " + name + " out smarts the test and grows wiser!");
+		}
+		else {
+			gParty.getChar(index)->setWis(gParty.getChar(index)->getWis() - 1);
+			msg_queue.push("Clearly the " + name + " was not meant for this. Their wisdom depreciates.");
+		}
+		break;
+	case 3:
+		msg_queue.push("The party leaves the test alone. Speeking of which, why is there a test here anyways?");
+		break;
+	}
+}
+void chaHandler(int index) {
+	state = DUNGEON;
+	msg_queue.pop();
+	int DC = 15;
+	std::string name;
+	srand(time(NULL));
+	int roll = (rand() % 20) + 1;
+	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+		roll += 4;
+	roll += gParty.getChar(index)->getCha();
+	switch (index) {
+	case 0:
+	case 1:
+	case 2:
+		name = gParty.getChar(index)->getName();
+		if (roll > DC) {
+			gParty.getChar(index)->setCha(gParty.getChar(index)->getCha() + 1);
+			msg_queue.push("The " + name + " manages to convince a statue of it's sentience. This boosts their self confidence and their charisma.");
+		}
+		else {
+			gParty.getChar(index)->setCha(gParty.getChar(index)->getCha() - 1);
+			msg_queue.push("The " + name + " talked with a non-living statue for an hour. Their self confidence diminishes along with their charisma.");
+		}
+		break;
+	case 3:
+		msg_queue.push("The party leaves the statue to figure out it's sentience by itself.");
+		break;
+	}
+}
+
 void rest(int index) {
 	if (gParty.checkRest()) {
 		if (gParty.useRest()) {
