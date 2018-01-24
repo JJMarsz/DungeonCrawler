@@ -5,34 +5,6 @@
 #include "LButton.h"
 #include "dungeon.h"
 
-class Enemy {
-public:
-	/* using globals, update threat */
-	void updateThreat();
-
-	/* using the updates threat, choose target */
-	void updateTarget();
-
-	/* move the enemy mob */
-	bool move();
-
-	/* attack the target, returns true on kill */
-	bool attack();
-
-
-private:
-	int target_index;
-	std::vector<int> threat;
-	LTexture sprite;
-	int x;
-	int y;
-	int HP;
-	int AC;
-	int atk_mod;
-	int atk_max;
-	int atk_min;
-};
-
 
 class Quest{
 public:
@@ -47,15 +19,17 @@ public:
 	void loadInfo(InfoIndex i);
 	void loadLoot(LootIndex i);
 	void loadChoice(ChoiceIndex i);
+	void loadMob(MobIndex i);
 	func fetchTrap(TrapIndex index);
 	func fetchInfo(InfoIndex index);
 	func fetchLoot(LootIndex index);
 	func fetchChoice(ChoiceIndex index);
+	func fetchMob(MobIndex index);
 private:
 	/* Boss fight encounter */
 	void(*Boss)();
 	/* Regular mob fight encounter */
-	std::vector<void(*)()> enemyEnc;
+	std::vector<void(*)()> mobEnc;
 	/* Info/Loot on dungeon or special dungeon move */
 	std::vector<void(*)()> infoEnc;
 	/* Choice on one of party members */

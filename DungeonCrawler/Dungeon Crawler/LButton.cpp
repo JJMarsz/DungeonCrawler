@@ -241,7 +241,11 @@ void wellHandler(int index) {
 	msg_queue.pop();
 	int DC = 8;
 	std::string name;
-	srand(time(NULL));
+
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
 	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
 		roll += 5;
@@ -271,7 +275,11 @@ void obHandler(int index) {
 	msg_queue.pop();
 	int DC = 8;
 	std::string name;
-	srand(time(NULL));
+
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
 	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
 		roll += 5;
@@ -300,7 +308,10 @@ void chestHandler(int index) {
 	msg_queue.pop();
 	int DC = 8;
 	std::string name;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
 	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
 		roll += 5;
@@ -328,7 +339,10 @@ void tomeHandler(int index) {
 	msg_queue.pop();
 	int DC = 10;
 	std::string name;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
 	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
 		roll += 5;
@@ -343,7 +357,7 @@ void tomeHandler(int index) {
 		}
 		else {
 			gParty.getChar(index)->setMaxHP((gParty.getChar(index)->getMaxHP() * 85) / 100);
-			msg_queue.push("The tome upsets the " + name + "as they become a bit more fragile.");
+			msg_queue.push("The tome upsets the " + name + " as they become a bit more fragile.");
 		}
 		break;
 	case 3:
@@ -356,15 +370,18 @@ void strHandler(int index) {
 	msg_queue.pop();
 	int DC = 15;
 	std::string name;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
 	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
 		roll += 4;
-	roll += gParty.getChar(index)->getStr();
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
+		roll += gParty.getChar(index)->getStr();
 		name = gParty.getChar(index)->getName();
 		if (roll > DC) {
 			gParty.getChar(index)->setStr(gParty.getChar(index)->getStr()+1);
@@ -385,15 +402,18 @@ void dexHandler(int index) {
 	msg_queue.pop();
 	int DC = 15;
 	std::string name;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
 	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
 		roll += 4;
-	roll += gParty.getChar(index)->getDex();
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
+		roll += gParty.getChar(index)->getDex();
 		name = gParty.getChar(index)->getName();
 		if (roll > DC) {
 			gParty.getChar(index)->setDex(gParty.getChar(index)->getDex() + 1);
@@ -414,15 +434,18 @@ void conHandler(int index) {
 	msg_queue.pop();
 	int DC = 15;
 	std::string name;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
 	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
 		roll += 4;
-	roll += gParty.getChar(index)->getCon();
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
+		roll += gParty.getChar(index)->getCon();
 		name = gParty.getChar(index)->getName();
 		if (roll > DC) {
 			gParty.getChar(index)->setCon(gParty.getChar(index)->getCon() + 1);
@@ -443,15 +466,18 @@ void intHandler(int index) {
 	msg_queue.pop();
 	int DC = 15;
 	std::string name;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
 	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
 		roll += 4;
-	roll += gParty.getChar(index)->getInt();
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
+		roll += gParty.getChar(index)->getInt();
 		name = gParty.getChar(index)->getName();
 		if (roll > DC) {
 			gParty.getChar(index)->setInt(gParty.getChar(index)->getInt() + 1);
@@ -472,15 +498,18 @@ void wisHandler(int index) {
 	msg_queue.pop();
 	int DC = 15;
 	std::string name;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
 	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
 		roll += 4;
-	roll += gParty.getChar(index)->getWis();
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
+		roll += gParty.getChar(index)->getWis();
 		name = gParty.getChar(index)->getName();
 		if (roll > DC) {
 			gParty.getChar(index)->setWis(gParty.getChar(index)->getWis() + 1);
@@ -501,23 +530,26 @@ void chaHandler(int index) {
 	msg_queue.pop();
 	int DC = 15;
 	std::string name;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
 	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
 		roll += 4;
-	roll += gParty.getChar(index)->getCha();
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
+		roll += gParty.getChar(index)->getCha();
 		name = gParty.getChar(index)->getName();
 		if (roll > DC) {
 			gParty.getChar(index)->setCha(gParty.getChar(index)->getCha() + 1);
-			msg_queue.push("The " + name + " manages to convince a statue of it's sentience. This boosts their self confidence and their charisma.");
+			msg_queue.push("The " + name + " manages to convince a statue of it's sentience. This boosts their self confidence.");
 		}
 		else {
 			gParty.getChar(index)->setCha(gParty.getChar(index)->getCha() - 1);
-			msg_queue.push("The " + name + " talked with a non-living statue for an hour. Their self confidence diminishes along with their charisma.");
+			msg_queue.push("The " + name + " talked with a non-living statue. Their self confidence diminishes.");
 		}
 		break;
 	case 3:

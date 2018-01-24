@@ -10,6 +10,8 @@
 #include <time.h>       /* time */
 #include <sstream>
 #include <queue>
+#include <time.h>
+#include <chrono>
 
 typedef void(*func)();
 
@@ -55,6 +57,7 @@ typedef void(*func)();
 #define END_GAME			5
 
 
+#define NUM_TILES				33
 //Dead ends
 #define	TILE_LEFT_X				0
 #define	TILE_LEFT_Y				0
@@ -146,6 +149,42 @@ typedef void(*func)();
 #define TILE_BIG_HOVER_X		100
 #define TILE_BIG_HOVER_Y		250
 
+//ROOM TILES
+#define NUM_ROOM_TILES			9
+
+#define	ROOM_NONE_X				0
+#define	ROOM_NONE_Y				0
+
+#define	ROOM_LEFT_X				50
+#define	ROOM_LEFT_Y				0
+
+#define	ROOM_UP_X				100
+#define	ROOM_UP_Y				0
+
+#define	ROOM_RIGHT_X			150
+#define	ROOM_RIGHT_Y			0
+
+#define	ROOM_DOWN_X				200
+#define	ROOM_DOWN_Y				0
+
+#define	ROOM_DL_X				50
+#define	ROOM_DL_Y				50
+
+#define	ROOM_LU_X				100
+#define	ROOM_LU_Y				50
+
+#define	ROOM_UR_X				150
+#define	ROOM_UR_Y				50
+
+#define	ROOM_RD_X				200
+#define	ROOM_RD_Y				50
+
+
+//Initiative stuff
+
+#define INIT_X					SCREEN_WIDTH - 62
+#define INIT_Y					12
+
 
 
 #define TILE_WIDTH				50
@@ -181,9 +220,8 @@ enum ScreenState
 	PICK_CHAR2,
 	PICK_CHAR3,
 	NEW_GAME,
-	ROOM_MAIN,
-	ROOM_MAP,
 	DUNGEON,
+	DUNGEON_ROOM,
 	CHOOSE,
 	TOWN_QUEST_BOARD,
 	SELECTED_QUEST,
@@ -196,12 +234,6 @@ enum ScreenState
 	TOWN_BUTTON_RIGHT,
 	REWARD,
 	END
-};
-enum RoomSize
-{
-	SMALL,
-	MED,
-	LARGE
 };
 
 /* TILE CONSTANTS */
@@ -235,6 +267,18 @@ enum {
 	TRAP_,
 	MED_HOVER,
 	BIG_HOVER
+};
+
+enum RoomTileIndex {
+	NOWALL,
+	LEFTWALL,
+	UPWALL,
+	RIGHTWALL,
+	DOWNWALL,
+	DLCORNER,
+	LUCORNER,
+	URCORNER,
+	RDCORNER
 };
 
 enum AbilityState {

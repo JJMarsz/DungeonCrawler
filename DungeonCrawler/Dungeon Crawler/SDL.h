@@ -25,7 +25,7 @@ SDL_Texture* loadTexture(std::string path);
 int loadText(int w, std::string text);
 
 //Used to draw background for a room
-bool drawRoom(RoomSize size);
+void drawRoom();
 
 //Used to draw menu
 void drawMenu();
@@ -70,7 +70,6 @@ extern TTF_Font *gFont;
 extern TTF_Font* msg_font;
 //The window we'll be rendering to
 extern SDL_Window* gWindow;
-extern std::unordered_map<RoomSize, int> room_map;
 extern ScreenState state;
 extern AbilityState ab;
 extern int r;

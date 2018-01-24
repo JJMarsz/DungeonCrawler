@@ -184,19 +184,16 @@ int main(int argc, char* args[])
 								message = msg_queue.front();
 								messageBox.loadFromRenderedText(message, color, 800);
 							}
-
-
 						}
-						
 						break;
-					case REWARD:
-						acceptrejectButtons[2].handleEvent(&e, 2);
-						break;
-					case ROOM_MAIN:
+					case DUNGEON_ROOM:
 						for (int i = 0; i < TOTAL_BUTTONS; ++i)
 						{
 							Buttons[i].handleEvent(&e, i);
 						}
+						break;
+					case REWARD:
+						acceptrejectButtons[2].handleEvent(&e, 2);
 						break;
 					default:
 						break;
@@ -331,12 +328,12 @@ int main(int argc, char* args[])
 								}
 								else {
 									//disable scouting
-									
+
 								}
 								hover = false;
 							}
 							break;
-						default: 
+						default:
 							break;
 						}
 
@@ -352,9 +349,20 @@ int main(int argc, char* args[])
 						ab = NOPE;
 					}
 					if (display_message == true) {
-						messageBox.render((SCREEN_WIDTH - messageBox.getWidth())/2, 614);
+						messageBox.render((SCREEN_WIDTH - messageBox.getWidth()) / 2, 614);
 					}
 
+					break;
+				case DUNGEON_ROOM:
+					if (mod_state == MOD_UP)
+						r++;
+					else
+						r--;
+					if (r >= 12750*2)
+						mod_state = MOD_DOWN;
+					if (r <= 18000)
+						mod_state = MOD_UP;
+					drawRoom();
 					break;
 				case REWARD:
 					drawDungeon();
@@ -365,40 +373,14 @@ int main(int argc, char* args[])
 					questGold.render(280, 220);
 					questXP.render(280, 240);
 					break;
-				case ROOM_MAIN:
-					//Draw menu bar
-					drawMenu();
-					//for testing
-					RoomSize size = LARGE;
-					drawRoom(size);
-					switch (size) {
-					case LARGE:
-						//render sprite
-						spriteSheetTexture.render(40, 40, &(spriteClips[2]));
-						spriteSheetTexture.render(80, 80, &(spriteClips[3]));
-
-						break;
-					case MED:
-						//render sprite
-						spriteSheetTexture.render(50, 50, &(spriteClips[0]));
-						spriteSheetTexture.render(100, 100, &(spriteClips[1]));
-						break;
-
-					case SMALL:
-						break;
-					}
-					break;
 				}
-				
 				//Update screen
 				SDL_RenderPresent(gRenderer);
 			}
 		}
 	}
-
 	//Free resources and close SDL
 	close();
-
 	return 0;
 }
 

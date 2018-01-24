@@ -1,12 +1,12 @@
 #include "SDL.h"
 #include "Quest.h"
+#include "Room.h"
 
 SDL_Renderer* gRenderer = NULL;
 TTF_Font *gFont = NULL;
 TTF_Font *msg_font = NULL;
 SDL_Window* gWindow = NULL;
 
-std::unordered_map<RoomSize, int> room_map;
 ScreenState state;
 AbilityState ab = NOPE;
 int r = 1000;
@@ -71,7 +71,7 @@ bool init()
 
 	//set up relevant data structures
 	spriteClips.resize(6);
-	tileSpriteClips.resize(33);
+	tileSpriteClips.resize(NUM_TILES);
 	texts.reserve(20);
 	charClips.resize(NUM_CHAR*4);
 	Buttons.resize(12);
@@ -90,6 +90,7 @@ bool init()
 	dungeonButtons.resize(3);
 	multiplyClips.resize(5);
 	choiceButtons.resize(4);
+	roomTileClips.resize(9);
 	int i;
 	for (i = 0; i<TOTAL_BUTTONS; i++)
 		Buttons[i].setConstraints(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -112,13 +113,6 @@ bool init()
 	dungeonButtons[1].setHandler(scout);
 	dungeonButtons[0].setHandler(rest);
 	
-	//8,6 small
-	//16,12 med
-	//20, 15 large
-	//top 16 bits are width, bottom 16 are height
-	room_map[LARGE] = (20 << 16) + 15;
-	room_map[MED] = (16 << 16) + 12;
-	room_map[SMALL] = (8 << 16) + 6;
 	state = MAIN_MENU;
 	return success;
 }
@@ -611,6 +605,66 @@ bool loadMedia()
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
+	if (!dungeonroom.loadFromFile("textures/dungeonroommenu.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	if (!roomTilesSST.loadFromFile("textures/roomtiles.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+
+		roomTilesSST.setBlendMode(SDL_BLENDMODE_BLEND);
+		roomTileClips[NOWALL].x = ROOM_NONE_X;
+		roomTileClips[NOWALL].y = ROOM_NONE_Y;
+		roomTileClips[NOWALL].w = TILE_WIDTH;
+		roomTileClips[NOWALL].h = TILE_HEIGHT;
+
+		roomTileClips[LEFTWALL].x = ROOM_LEFT_X;
+		roomTileClips[LEFTWALL].y = ROOM_LEFT_Y;
+		roomTileClips[LEFTWALL].w = TILE_WIDTH;
+		roomTileClips[LEFTWALL].h = TILE_HEIGHT;
+
+		roomTileClips[UPWALL].x = ROOM_UP_X;
+		roomTileClips[UPWALL].y = ROOM_UP_Y;
+		roomTileClips[UPWALL].w = TILE_WIDTH;
+		roomTileClips[UPWALL].h = TILE_HEIGHT;
+
+		roomTileClips[RIGHTWALL].x = ROOM_RIGHT_X;
+		roomTileClips[RIGHTWALL].y = ROOM_RIGHT_Y;
+		roomTileClips[RIGHTWALL].w = TILE_WIDTH;
+		roomTileClips[RIGHTWALL].h = TILE_HEIGHT;
+
+		roomTileClips[DOWNWALL].x = ROOM_DOWN_X;
+		roomTileClips[DOWNWALL].y = ROOM_DOWN_Y;
+		roomTileClips[DOWNWALL].w = TILE_WIDTH;
+		roomTileClips[DOWNWALL].h = TILE_HEIGHT;
+
+		roomTileClips[DLCORNER].x = ROOM_DL_X;
+		roomTileClips[DLCORNER].y = ROOM_DL_Y;
+		roomTileClips[DLCORNER].w = TILE_WIDTH;
+		roomTileClips[DLCORNER].h = TILE_HEIGHT;
+
+		roomTileClips[LUCORNER].x = ROOM_LU_X;
+		roomTileClips[LUCORNER].y = ROOM_LU_Y;
+		roomTileClips[LUCORNER].w = TILE_WIDTH;
+		roomTileClips[LUCORNER].h = TILE_HEIGHT;
+
+		roomTileClips[URCORNER].x = ROOM_UR_X;
+		roomTileClips[URCORNER].y = ROOM_UR_Y;
+		roomTileClips[URCORNER].w = TILE_WIDTH;
+		roomTileClips[URCORNER].h = TILE_HEIGHT;
+
+		roomTileClips[RDCORNER].x = ROOM_RD_X;
+		roomTileClips[RDCORNER].y = ROOM_RD_Y;
+		roomTileClips[RDCORNER].w = TILE_WIDTH;
+		roomTileClips[RDCORNER].h = TILE_HEIGHT;
+	}
+	if (!background.loadFromFile("textures/background.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
 	return success;
 }
 
@@ -653,6 +707,9 @@ void close() {
 	hp2.free();
 	multiplierSST.free();
 	no.free();
+	dungeonroom.free();
+	roomTilesSST.free();
+	background.free();
 
 	//Free Textures
 	spriteSheetTexture.free();
@@ -727,64 +784,83 @@ int loadText(int w, std::string text) {
 	return (texts.size() - 1);
 }
 
-/* drawing helper functions */
-bool drawRoom(RoomSize size) {
-	int width, height;
-	if (room_map.find(size) == room_map.end()) {
-		return false;
+ RoomTileIndex getRoomTileIndex(int x, int y) {
+	RoomTile* tile = room->getTile(x, y);
+	//bitwise
+	//	L	U	R	D
+	int index = 0;
+	if (tile->down)
+		index += 1;
+	if (tile->right)
+		index += 2;
+	if (tile->up)
+		index += 4;
+	if (tile->left)
+		index += 8;
+
+	switch (index) {
+	case 1:
+		return DOWNWALL;
+	case 2:
+		return RIGHTWALL;
+	case 3:
+		return RDCORNER;
+	case 4:
+		return UPWALL;
+	case 6:
+		return URCORNER;
+	case 8:
+		return LEFTWALL;
+	case 9:
+		return DLCORNER;
+	case 12:
+		return LUCORNER;
+	case 15:
+	default:
+		return NOWALL;
 	}
-	width = room_map[size] & 0xFFFF0000;
-	width = width >> 16;
-	height = room_map[size] & 0xFFFF;
-	//std::cout << width << std::endl;
-	//std::cout << height << std::endl;
-	//top screen
+}		
+
+/* drawing helper functions */
+void drawRoom() {
+	int x, y;
 	SDL_Rect topViewport;
 	topViewport.x = 0;
 	topViewport.y = 0;
 	topViewport.w = SCREEN_WIDTH;
-	topViewport.h = SCREEN_HEIGHT - 120;
+	topViewport.h = SCREEN_HEIGHT;
 	SDL_RenderSetViewport(gRenderer, &topViewport);
 	//make it gray
 	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_SetRenderDrawColor(gRenderer, 0xA0, 0xA0, 0xA0, 0xFF);
 	SDL_RenderFillRect(gRenderer, &barRect);
-
-	/*
-	//Render red filled quad
-	SDL_Rect fillRect = { SCREEN_WIDTH / 4, SCREEN_HEIGHT / 4, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 };
-	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-	SDL_RenderFillRect(gRenderer, &fillRect);
-
-	//Render green outlined quad
-	SDL_Rect outlineRect = { SCREEN_WIDTH / 6, SCREEN_HEIGHT / 6, SCREEN_WIDTH * 2 / 3, SCREEN_HEIGHT * 2 / 3 };
-	SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0x00, 0xFF);
-	SDL_RenderDrawRect(gRenderer, &outlineRect);
-	*/
-	int hor_off = (SCREEN_HEIGHT - 120) / height;
-	int vert_off = SCREEN_WIDTH / width;
-	//Draw black horizontal line
-	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
-	SDL_RenderDrawLine(gRenderer, 0, 0, SCREEN_WIDTH, 0);
-	for (int i = 1; i< height; i++)
-		SDL_RenderDrawLine(gRenderer, 0, i*hor_off, SCREEN_WIDTH, i*hor_off);
-	SDL_RenderDrawLine(gRenderer, 0, SCREEN_HEIGHT - 121, SCREEN_WIDTH, SCREEN_HEIGHT - 121);
-
-	//draw black vertical line
-	SDL_RenderDrawLine(gRenderer, 0, 0, 0, SCREEN_HEIGHT);
-	for (int i = 1; i< width; i++)
-		SDL_RenderDrawLine(gRenderer, i*vert_off, 0, i*vert_off, SCREEN_HEIGHT);
-	SDL_RenderDrawLine(gRenderer, SCREEN_WIDTH - 1, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT);
-
-	/*
-	//Draw vertical line of yellow dots
-	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0x00, 0xFF);
-	for (int i = 0; i < SCREEN_HEIGHT; i += 4)
-	{
-	SDL_RenderDrawPoint(gRenderer, SCREEN_WIDTH / 2, i);
+	dungeonroom.render(0, 0);
+	background.setColor(r / 100, r / 100, r / 100);
+	background.render(0, 0);
+	background.setColor(255, 255, 255);
+	//find x and y offset to center map
+	int start_x = (650 - 50 * room->getWidth()) / 2;
+	int start_y = (600 - 50 * room->getHeight()) / 2;
+	for (x = 0; x < room->getWidth(); x++) {
+		for (y = 0; y < room->getHeight(); y++) {
+			roomTilesSST.render(x * 50 + start_x, y * 50 + start_y, &roomTileClips[getRoomTileIndex(x, y)]);
+		}
 	}
-	*/
-	return true;
+
+	//draw the initiative order
+	double health_ratio;
+	std::vector<Unit*>* order = room->getInititiveOrder();
+	for (x = 0; x < order->size(); x++) {
+		charSST.render(INIT_X, INIT_Y + 60*x, &order->at(x)->getIcon50()); 
+		/*double slice = (double)(->getMaxHP()) / 11;
+		double diff = (gParty.getChar(i)->getMaxHP() - gParty.getChar(i)->getHP());
+		double ratio = diff / slice;
+		ratio += .5;
+		health_ratio = (int)ratio;*/
+		healthBoxClips[0].w = 20;
+		healthboxSST.render(INIT_X - 30, INIT_Y + 60*x, &healthBoxClips[0]);
+		healthBoxClips[0].w = 50;
+	}
 }
 
 void drawMenu() {
@@ -1002,7 +1078,10 @@ void drawDungeon() {
 				index = encounterExists(x, y, false);
 				if (index != -1 && current_dungeon.getScouted(x + y * current_dungeon.getWidth()) && !current_dungeon.getVisited(x + y * current_dungeon.getWidth())) {
 					tileSST.setAlpha(100);
-					srand(time(NULL));
+					std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+						std::chrono::system_clock::now().time_since_epoch()
+						);
+					srand(ms.count());//random seed
 					int alt_index = encounterExists(x, y, true);
 					if (rand() % 2 == 1) {
 						tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);
@@ -1038,7 +1117,7 @@ void drawDungeonMenu() {
 		charSST.render(10 + i*120, SCREEN_HEIGHT - 60, &gParty.getChar(i)->getIcon50());
 		double slice = (double)(gParty.getChar(i)->getMaxHP()) / 11;
 		double diff = (gParty.getChar(i)->getMaxHP() - gParty.getChar(i)->getHP());
-		int ratio = diff / slice;
+		double ratio = diff / slice;
 		ratio += .5;
 		health_ratio =  (int)ratio;
 		healthboxSST.render(70 + 120*i, SCREEN_HEIGHT - 60, &healthBoxClips[health_ratio]);
@@ -1064,7 +1143,10 @@ void drawDungeonMenu() {
 
 void drawCharScreen() {
 	int i;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	SDL_Rect topViewport;
 	topViewport.x = 0;
 	topViewport.y = 0;

@@ -38,12 +38,16 @@ LTexture multiplierSST;
 LTexture choicemenu;
 LTexture choiceButtonSST;
 LTexture no;
+LTexture dungeonroom;
+LTexture roomTilesSST;
+LTexture background;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> tileSpriteClips;
 std::vector<SDL_Rect> charClips;
 std::vector<SDL_Rect> healthBoxClips;
 std::vector<SDL_Rect> multiplyClips;
+std::vector<SDL_Rect> roomTileClips;
 std::vector<LTexture*> texts;
 
 /* Texture class defenitions */

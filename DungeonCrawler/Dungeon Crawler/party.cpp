@@ -8,6 +8,9 @@ CharList chars;
 
 std::vector<Character> displayList;
 
+//unit
+
+
 /* Char clas definitions */
 Character::Character(std::string name_, int str_, int dex_, int con_, int intel_, 
 						      int wis_, int cha_, int mov_, int health_, int AC_) {
@@ -359,6 +362,10 @@ int CharList::size() { return charList.size(); }
 void CharList::getChars() {
 	//pick 3 characters
 	displayList = std::vector<Character>();
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int index, i;
 	for (i = 0; i < MAX_CHAR; i++) {
 		while (1) {

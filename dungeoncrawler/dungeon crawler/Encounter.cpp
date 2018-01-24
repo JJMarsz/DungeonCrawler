@@ -1,6 +1,7 @@
 #include "Encounter.h"
 #include "dungeon.h"
 #include "Quest.h"
+#include "Room.h"
 
 std::queue<std::string> msg_queue;
 //initialize every encounter
@@ -35,13 +36,16 @@ EncounterList::EncounterList() {
 	choiceList[WIS] = testWis;
 	choiceList[CHA] = testCha;
 
-
+	//mob setup
+	mobList.resize(NUM_MOB);
+	mobList[TEST] = test;
 }
 
 func EncounterList::getTrap(TrapIndex index) { return trapList[index]; }
 func EncounterList::getInfo(InfoIndex index) { return infoList[index]; }
 func EncounterList::getLoot(LootIndex index) { return lootList[index]; }
 func EncounterList::getChoice(ChoiceIndex index) { return choiceList[index]; }
+func EncounterList::getMob(MobIndex index) { return mobList[index]; }
 
 void handleEncounter() {
 	//dispatcher to appropriate encounter handler
@@ -60,6 +64,9 @@ void handleEncounter() {
 	case CHOICE:
 		current_quests[quest_index].fetchChoice((ChoiceIndex)tile->getIndex())();
 		break;
+	case MOB:
+		current_quests[quest_index].fetchMob((MobIndex)tile->getIndex())();
+		break;
 	default:
 		break;
 	}
@@ -74,11 +81,15 @@ void handleEncounter() {
 void basicTrap() {
 	int dmg_roll=0, dice, DC, i, dex_roll;
 	switch (current_quests[quest_index].getDiff()) {
+		std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+			std::chrono::system_clock::now().time_since_epoch()
+			);
+		srand(ms.count());//random seed
 	case EASY:
 		DC = 12;
 		dice = 1;
 		break;
-	case MED:
+	case MEDIUM:
 		DC = 13;
 		dice = 3;
 		break;
@@ -90,7 +101,6 @@ void basicTrap() {
 	for (i = 0; i < dice; i++)
 		dmg_roll += (rand() % 4) + 1;
 	//3 scenarios
-	srand(time(NULL));
 	if (!current_dungeon.perceptionCheck()) {
 		//not scouted,all char rolls dex check
 		for (i = 0; i < 3; i++) {
@@ -318,7 +328,11 @@ void goldLoot() {
 	//base off of loot table
 	int highest_wis = (gParty.getChar(0)->getWis() < gParty.getChar(1)->getWis()) ? gParty.getChar(1)->getWis() : gParty.getChar(0)->getWis();
 	highest_wis = (highest_wis < gParty.getChar(2)->getWis()) ? gParty.getChar(2)->getWis() : highest_wis;
-	srand(time(NULL));
+
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int roll = rand() % 20 + 1;
 	//automatic fail
 	if (roll == 1) {
@@ -351,7 +365,7 @@ void goldLoot() {
 	}
 
 	switch (current_quests[quest_index].getDiff()) {
-	case MED:
+	case MEDIUM:
 		gold += 20;
 		break;
 	case HARD:
@@ -363,4 +377,13 @@ void goldLoot() {
 	gParty.addGold(gold);
 
 
+}
+
+
+//mob handlers
+
+void test() {
+	state = DUNGEON_ROOM;
+	room = new Room;
+	room->rollInit();
 }

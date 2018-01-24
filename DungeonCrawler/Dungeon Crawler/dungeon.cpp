@@ -184,7 +184,7 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	case EASY:
 		total_enc = 2 + rand() % 2;
 		break;
-	case MED:
+	case MEDIUM:
 		total_enc = 3 + rand() % 2;
 		break;
 	case HARD:
@@ -192,7 +192,10 @@ void Dungeon::populateDungeon(Difficulty diff) {
 		break;
 	}
 	enc = total_enc;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int range = path_length/enc;
 	int count = rand() % 3;
 	Tile* trav = &dungMap[end_x + end_y * width];
@@ -224,11 +227,11 @@ void Dungeon::populateDungeon(Difficulty diff) {
 		}
 	}
 
-	srand(time(NULL));
 	//set up mob encounters
 	int range_num = 0;
 	while (enc > 0) {
 		count = rand() % range;
+		range_maps[range_num][count]->setIndex(rand() % NUM_MOB);
 		range_maps[range_num][count]->setType(MOB);
 		//otherstuff
 		mob.push_back(range_maps[range_num][count]);
@@ -236,7 +239,6 @@ void Dungeon::populateDungeon(Difficulty diff) {
 		range_num++;
 	}
 
-	srand(time(NULL));
 	//loot encounters
 	range_num = 0;
 	enc = 1 + rand() % 2;
@@ -254,7 +256,6 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	}
 
 	//info encounters
-	srand(time(NULL));
 	range_num = 0;
 	enc = 2 + rand() % (total_enc - 1);
 	std::vector<bool> chosen;
@@ -280,7 +281,6 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	}
 	int timeout = 0;
 	//choice encounters
-	srand(time(NULL));
 	range_num = 0;
 	enc = 2 + rand() % (total_enc - 1);
 	while (enc > 0) {
@@ -302,7 +302,6 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	}
 	timeout = 0;
 	//trap encounters
-	srand(time(NULL));
 	range_num = 0;
 	enc = 2 + rand() % (total_enc - 1);
 	while (enc > 0) {
@@ -324,7 +323,6 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	}
 
 	//fill out deadends with encounters
-	srand(time(NULL));
 	std::vector<std::vector<Tile*>> dead_range_maps;
 	dead_range_maps.resize(deadends.size());
 	for (i = 0; i < deadends.size(); i++) {
@@ -421,7 +419,10 @@ void Dungeon::deadendProspectGenerate() {
 		if (highest < height)
 			break;
 		//at this point we have a vector of RMO indeces to barrier tiles with the highest prospect
-		srand(time(NULL));
+		std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+			std::chrono::system_clock::now().time_since_epoch()
+			);
+		srand(ms.count());//random seed
 		int selected = possible[rand() % possible.size()];
 		dungMap[selected].setType(DEADEND);
 		//now generate the path for this deadend
@@ -442,7 +443,6 @@ void Dungeon::deadendProspectGenerate() {
 		//grab a fresh disjoint set and only union paths and detours
 		reSet();
 		int path_limit = (height / 3) + rand() % 3;
-		srand(time(NULL));
 		int count = 0;
 		while (1) {
 			while (1) {
@@ -802,7 +802,10 @@ void Dungeon::updateLOS() {
 bool Dungeon::perceptionCheck() {
 	int highest_wis = (gParty.getChar(0)->getWis() < gParty.getChar(1)->getWis()) ? gParty.getChar(1)->getWis() : gParty.getChar(0)->getWis();
 	highest_wis = (highest_wis < gParty.getChar(2)->getWis()) ? gParty.getChar(2)->getWis() : highest_wis;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	int roll = rand() % 20 + 1;
 	//automatic fail
 	if (roll == 1)
@@ -815,7 +818,7 @@ bool Dungeon::perceptionCheck() {
 	case EASY:
 		DC = 0;
 		break;
-	case MED:
+	case MEDIUM:
 		DC = 1;
 		break;
 	case HARD:
@@ -1024,7 +1027,10 @@ void Dungeon::scoutTile(int i, bool ambiguous) {
 	EncounterType no = dungMap[i].getType();
 	if (no == DEADEND || no == PATH)
 		return;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	EncounterType alt = no;
 	if (ambiguous == false) {
 		dungMap[i].setAlt(alt);

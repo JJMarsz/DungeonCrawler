@@ -53,6 +53,13 @@ enum ChoiceIndex {
 	CHA
 };
 
+//even though there will be custom mob encounters per each quest
+//keep them organized in one list and let quest index into them
+#define NUM_MOB		1
+enum MobIndex {
+	TEST
+};
+
 class EncounterList {
 public:
 	EncounterList();
@@ -60,6 +67,7 @@ public:
 	func getInfo(InfoIndex index);
 	func getLoot(LootIndex index);
 	func getChoice(ChoiceIndex index);
+	func getMob(MobIndex index);
 private:
 	//these vectors contain pointers to every encounter function within the game
 	//quests will index into these and copy the ptrs to use during population
@@ -98,4 +106,6 @@ void testCon();
 void testInt();
 void testWis();
 void testCha();
+
+void test();
 #endif

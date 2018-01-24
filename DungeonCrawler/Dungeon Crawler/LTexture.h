@@ -86,12 +86,16 @@ extern LTexture multiplierSST;
 extern LTexture choicemenu;
 extern LTexture choiceButtonSST;
 extern LTexture no;
+extern LTexture dungeonroom;
+extern LTexture roomTilesSST;
+extern LTexture background;
 
 extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> tileSpriteClips;
 extern std::vector<SDL_Rect> charClips;
 extern std::vector<SDL_Rect> healthBoxClips;
 extern std::vector<SDL_Rect> multiplyClips;
+extern std::vector<SDL_Rect> roomTileClips;
 
 extern std::vector<LTexture*> texts;
 

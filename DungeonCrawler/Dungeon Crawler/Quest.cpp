@@ -16,10 +16,12 @@ func Quest::fetchTrap(TrapIndex index) { return trapEnc[index]; }
 func Quest::fetchInfo(InfoIndex index) { return infoEnc[index]; }
 func Quest::fetchLoot(LootIndex index) { return lootEnc[index]; }
 func Quest::fetchChoice(ChoiceIndex index) { return choiceEnc[index]; }
+func Quest::fetchMob(MobIndex index) { return mobEnc[index]; }
 void Quest::loadTrap(TrapIndex i) { trapEnc.push_back(encounters.getTrap(i));}
 void Quest::loadInfo(InfoIndex i) { infoEnc.push_back(encounters.getInfo(i)); }
 void Quest::loadLoot(LootIndex i) { lootEnc.push_back(encounters.getLoot(i)); }
 void Quest::loadChoice(ChoiceIndex i) { choiceEnc.push_back(encounters.getChoice(i)); }
+void Quest::loadMob(MobIndex i) { mobEnc.push_back(encounters.getMob(i)); }
 
 Quest::Quest(std::string name_, std::string info_, int gold, int xp, Difficulty diff_) {
 	name = name_;
@@ -31,7 +33,7 @@ Quest::Quest(std::string name_, std::string info_, int gold, int xp, Difficulty 
 	choiceEnc.resize(0);
 	lootEnc.resize(0);
 	infoEnc.resize(0);
-	enemyEnc.resize(0);
+	mobEnc.resize(0);
 }
 
 void initQuests() {
@@ -174,6 +176,8 @@ QuestList::QuestList() {
 		list[i].q.loadChoice(INT);
 		list[i].q.loadChoice(WIS);
 		list[i].q.loadChoice(CHA);
+
+		list[i].q.loadMob(TEST);
 	}
 }
 
@@ -208,7 +212,10 @@ void QuestList::getQuests() {
 	current_quests = std::vector<Quest>();
 	int index, i;
 	int easyChance, medChance, hardChance, finalChance = 0;
-	srand(time(NULL));
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	switch (gParty.getCompleted()) {
 	case 0:
 		easyChance = 100;
@@ -279,6 +286,10 @@ void QuestList::getQuests() {
 	for (i = 0; i < MAX_QUESTS; i++) {
 		//choose the difficulty of this quest
 		index = (rand() % 100) + 1;
+		std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+			std::chrono::system_clock::now().time_since_epoch()
+			);
+		srand(ms.count());//random seed
 		if (index <= easyChance)
 			getEasyQuest();
 		else if (index <= easyChance + medChance)
@@ -293,6 +304,10 @@ void QuestList::getQuests() {
 void QuestList::getEasyQuest() {
 	//0 to 1 below med quests
 	int index;
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	while (1) {
 		index = rand() % medQuestIndex;
 		if (isAvailable(index))
@@ -304,6 +319,10 @@ void QuestList::getEasyQuest() {
 void QuestList::getMedQuest() {
 	//medQuestindex to 1 below hard quests
 	int index;
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	while (1) {
 		index = (rand() % (hardQuestIndex - medQuestIndex)) + medQuestIndex;
 		if (isAvailable(index))
@@ -315,6 +334,10 @@ void QuestList::getMedQuest() {
 void QuestList::getHardQuest() {
 	//hardQuestindex to end
 	int index;
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	while (1) {
 		index = (rand() % (list.size() - hardQuestIndex)) + hardQuestIndex;
 		if (isAvailable(index))

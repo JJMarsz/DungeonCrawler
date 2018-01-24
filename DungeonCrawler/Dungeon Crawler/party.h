@@ -9,8 +9,14 @@
 #define MAX_CHAR	3
 //all characters will be defined as if they are dnd lvl 2ish
 
+class Unit {
+public:
+	virtual SDL_Rect getIcon50() { return SDL_Rect(); }
 
-class Character {
+};
+
+
+class Character: public Unit{
 public:
 	Character();
 	Character(
