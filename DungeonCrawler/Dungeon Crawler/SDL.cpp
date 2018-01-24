@@ -861,9 +861,9 @@ void drawRoom() {
 		healthboxSST.render(INIT_X - 30, INIT_Y + 60*x, &healthBoxClips[health_ratio]);
 		healthBoxClips[health_ratio].w = 50;
 	}
-	hp0.render(INIT_X - 90, INIT_Y + 0);
-	hp1.render(INIT_X - 90, INIT_Y + 60);
-	hp2.render(INIT_X - 90, INIT_Y + 120);
+	hp0.render(INIT_X - 85, INIT_Y + 10);
+	hp1.render(INIT_X - 85, INIT_Y + 70);
+	hp2.render(INIT_X - 85, INIT_Y + 130);
 
 }
 
