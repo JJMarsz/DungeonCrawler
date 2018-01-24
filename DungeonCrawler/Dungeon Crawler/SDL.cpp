@@ -852,15 +852,19 @@ void drawRoom() {
 	std::vector<Unit*>* order = room->getInititiveOrder();
 	for (x = 0; x < order->size(); x++) {
 		charSST.render(INIT_X, INIT_Y + 60*x, &order->at(x)->getIcon50()); 
-		/*double slice = (double)(->getMaxHP()) / 11;
-		double diff = (gParty.getChar(i)->getMaxHP() - gParty.getChar(i)->getHP());
+		double slice = (double)(order->at(x)->getMaxHP()) / 11;
+		double diff = (order->at(x)->getMaxHP() - order->at(x)->getHP());
 		double ratio = diff / slice;
 		ratio += .5;
-		health_ratio = (int)ratio;*/
-		healthBoxClips[0].w = 20;
-		healthboxSST.render(INIT_X - 30, INIT_Y + 60*x, &healthBoxClips[0]);
-		healthBoxClips[0].w = 50;
+		health_ratio = (int)ratio;
+		healthBoxClips[health_ratio].w = 20;
+		healthboxSST.render(INIT_X - 30, INIT_Y + 60*x, &healthBoxClips[health_ratio]);
+		healthBoxClips[health_ratio].w = 50;
 	}
+	hp0.render(INIT_X - 90, INIT_Y + 0);
+	hp1.render(INIT_X - 90, INIT_Y + 60);
+	hp2.render(INIT_X - 90, INIT_Y + 120);
+
 }
 
 void drawMenu() {

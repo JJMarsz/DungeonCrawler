@@ -12,6 +12,8 @@
 class Unit {
 public:
 	virtual SDL_Rect getIcon50() { return SDL_Rect(); }
+	virtual int getMaxHP() { return 0; }
+	virtual int getHP() { return 0; }
 
 };
 
