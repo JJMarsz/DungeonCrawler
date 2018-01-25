@@ -100,7 +100,8 @@ void peek(int index);
 void scout(int index);
 void rest(int index);
 
-void endTurnHandler(int index);
+void endTurnHandler(int index); 
+void moveButton(int index);
 
 void emptyHandler(int index);
 

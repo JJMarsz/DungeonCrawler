@@ -582,6 +582,7 @@ void scout(int index) {
 }
 
 void endTurnHandler(int index) {
+	room->clearRange();
 	room->passControl();
 }
 
@@ -615,9 +616,27 @@ void returnToTown(int index) {
 
 
 /* ABILITIES */
+void moveRecursive(int x, int y, int length) {
+	if (room->getTile(x, y)->type == NOTHING)
+		room->getTile(x, y)->type = RANGE;
+	if (length <= 0)
+		return;
+	if (x > 0) {
+		moveRecursive(x - 1, y, length - 1);
+	}
+	if (y > 0) {
+		moveRecursive(x, y - 1, length - 1);
+	}
+	if(x < room->getWidth() - 1)
+		moveRecursive(x + 1, y, length - 1);
+	if (y < room->getHeight() - 1)
+		moveRecursive(x, y + 1, length - 1);
+}
 
-void move() {
-
+void moveButton(int index) {
+	Unit* currUnit = room->getCurrUnit();
+	moveRecursive(currUnit->getRMO()%room->getWidth(), currUnit->getRMO()/room->getWidth(), abMap["Move"].getLength());
+	ab = ABILITY;
 }
 
 /* Used primarily for testing */

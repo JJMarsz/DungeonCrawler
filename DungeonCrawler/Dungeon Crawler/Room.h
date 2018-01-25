@@ -24,6 +24,7 @@ public:
 	void rollInit();
 	void placeUnits();
 	void passControl();
+	void clearRange();
 	int getWidth();
 	int getHeight();
 	RoomTile* getTile(int x, int y);

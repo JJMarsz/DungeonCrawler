@@ -191,3 +191,11 @@ void Room::passControl() {
 	init_index %= unitList.size();
 	//update cds for this chars abs
 }
+
+void Room::clearRange() {
+	for (int i = 0; i < roomMap.size(); i++) {
+		if (roomMap[i].type == RANGE)
+			roomMap[i].type = NOTHING;
+	}
+
+}

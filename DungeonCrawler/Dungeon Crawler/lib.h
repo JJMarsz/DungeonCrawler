@@ -291,7 +291,8 @@ enum AbilityState {
 	PEEK,
 	SCOUT,
 	REST,
-	NOPE
+	NOPE,
+	ABILITY
 };
 
 enum MOD{
@@ -310,6 +311,7 @@ enum UnitType {
 	CHAR,
 	ENEMY,
 	BOSS_BOI,
-	NOTHING
+	NOTHING,
+	RANGE
 };
 #endif

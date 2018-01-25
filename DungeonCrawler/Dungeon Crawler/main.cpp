@@ -7,6 +7,7 @@
 #include "SDL.h"
 #include "dungeon.h"
 #include "Encounter.h"
+#include "Room.h"
 
 bool hover;
 //Modulation components
@@ -53,7 +54,7 @@ int main(int argc, char* args[])
 					//User requests quit
 					if(e.type == SDL_QUIT)
 						quit = true;
-					if (state == DUNGEON) {
+					if (state == DUNGEON || state == DUNGEON_ROOM) {
 						switch (e.type) {
 						case SDL_MOUSEBUTTONDOWN:
 							MouseDown = true;
@@ -70,8 +71,11 @@ int main(int argc, char* args[])
 								MouseRight = false;
 							break;
 						case SDL_KEYDOWN:
-							if (e.key.keysym.sym == SDLK_ESCAPE)
+							if (e.key.keysym.sym == SDLK_ESCAPE) {
 								ab = NOPE;
+								if (state == DUNGEON_ROOM)
+									room->clearRange();
+							}
 							break;
 						default:
 							break;

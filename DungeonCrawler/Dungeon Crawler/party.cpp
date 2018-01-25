@@ -53,6 +53,8 @@ void Character::loadAbility(std::string name) {
 		bActionList.push_back(newAb);
 		return;
 	case FREE:
+		if (name == "Move")
+			newAb.setLength(move);
 		freeList.push_back(newAb);
 		return;
 	}
@@ -280,8 +282,9 @@ CharList::CharList() {
 	};
 	//load abilities for each char
 	loadAbilityMap();
-	for (int i = 0; i < charList.size(); i++)
+	for (int i = 0; i < charList.size(); i++) {
 		charList[i].loadAbility("Move");
+	}
 }
 void CharList::loadSprites() {
 	//Go through each character to set sprites and info texts

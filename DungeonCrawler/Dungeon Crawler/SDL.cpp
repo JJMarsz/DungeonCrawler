@@ -871,9 +871,16 @@ void drawRoom() {
 	//find x and y offset to center map
 	int start_x = (650 - 50 * room->getWidth()) / 2;
 	int start_y = (600 - 50 * room->getHeight()) / 2;
+	//draw tiles
 	for (x = 0; x < room->getWidth(); x++) {
 		for (y = 0; y < room->getHeight(); y++) {
-			roomTilesSST.render(x * 50 + start_x, y * 50 + start_y, &roomTileClips[getRoomTileIndex(x, y)]);
+			if (room->getTile(x, y)->type == RANGE) {
+				roomTilesSST.setColor(100, 100, 0);
+				roomTilesSST.render(x * 50 + start_x, y * 50 + start_y, &roomTileClips[getRoomTileIndex(x, y)]);
+				roomTilesSST.setColor(255, 255, 255);
+			}
+			else
+				roomTilesSST.render(x * 50 + start_x, y * 50 + start_y, &roomTileClips[getRoomTileIndex(x, y)]);
 		}
 	}
 
@@ -943,6 +950,7 @@ void drawRoom() {
 	//setup abilities
 	std::vector<Ability*> abList = currUnit->getAbilities();
 	for (x = 0; x < abList.size(); x++) {
+		Buttons[x].setHandler(abList[x]->getButtonHandler());
 		Buttons[x].render();
 	}
 }

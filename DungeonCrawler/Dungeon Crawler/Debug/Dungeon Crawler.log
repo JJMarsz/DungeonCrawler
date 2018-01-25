@@ -1,2 +1,12 @@
-﻿  Ability.cpp
+﻿  LButton.cpp
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(250): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(284): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(316): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(347): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(378): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(410): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(442): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(474): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(506): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(538): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
   Dungeon Crawler.vcxproj -> C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe

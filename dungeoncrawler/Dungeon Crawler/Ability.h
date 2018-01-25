@@ -3,6 +3,7 @@
 
 #include "lib.h"
 
+typedef void(*func2)(int);
 #define NUM_ABILITIES	1
 
 enum AbilityType {
@@ -15,11 +16,13 @@ enum AbilityType {
 class Ability {
 public:
 	Ability();
-	Ability(std::string name_, std::string info_, AbilityType type_, int cd, int l, int dice, int dmg);
+	Ability(std::string name_, std::string info_, AbilityType type_, int cd, int l, int dice, int dmg, void(*button)(int index), void(*click)(int index));
 	std::string getName() { return name; }
 	std::string getInfo() { return info; }
 	AbilityType getType() { return type; }
 	int getLength() { return length; }
+	void setLength(int l) { length = l; }
+	func2 getButtonHandler() { return button_handler; }
 	bool onCooldown() { return (count >= cooldown); }
 	void use() { count = 0; }
 
