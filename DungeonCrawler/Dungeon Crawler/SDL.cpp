@@ -74,7 +74,7 @@ bool init()
 	tileSpriteClips.resize(NUM_TILES);
 	texts.reserve(20);
 	charClips.resize(NUM_CHAR*4);
-	Buttons.resize(12);
+	Buttons.resize(TOTAL_BUTTONS);
 	charButtons.resize(3);
 	menuButtons.resize(4);
 	menuButtons[0].setHandler(newGame);
@@ -95,7 +95,7 @@ bool init()
 	for (i = 0; i<TOTAL_BUTTONS; i++)
 		Buttons[i].setConstraints(BUTTON_WIDTH, BUTTON_HEIGHT);
 	for (i = 0; i < TOTAL_MENU_BUTTONS; i++)
-		menuButtons[i].setConstraints(2*BUTTON_WIDTH, BUTTON_HEIGHT);
+		menuButtons[i].setConstraints(120, 60);
 	for (i = 0; i < 3; i++) 
 		charButtons[i].setConstraints(CHAR_BUTTON_WIDTH, CHAR_BUTTON_HEIGHT);
 	for (i = 0; i < 3; i++)
@@ -114,7 +114,6 @@ bool init()
 	dungeonButtons[2].setHandler(peek);
 	dungeonButtons[1].setHandler(scout);
 	dungeonButtons[0].setHandler(rest);
-	
 	state = MAIN_MENU;
 	return success;
 }
@@ -196,11 +195,11 @@ bool loadMedia()
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; ++i)
 		{
 			clips[i].x = 0;
-			clips[i].y = i * 60;
+			clips[i].y = i * 50;
 			clips[i].w = BUTTON_WIDTH;
 			clips[i].h = BUTTON_HEIGHT;
 		}
-		for (i = 0; i < 12; i++) {
+		for (i = 0; i < TOTAL_BUTTONS; i++) {
 			Buttons[i].setClips(clips);
 			Buttons[i].setSST(&buttonSpriteSheetTexture);
 		}
@@ -208,8 +207,8 @@ bool loadMedia()
 		{
 			clips[i].x = 0;
 			clips[i].y = (i+4) * 60;
-			clips[i].w = 2*BUTTON_WIDTH;
-			clips[i].h = BUTTON_HEIGHT;
+			clips[i].w = 120;
+			clips[i].h = 60;
 		}
 		for (i = 0; i < 4; i++) {
 			menuButtons[i].setClips(clips);
@@ -217,7 +216,7 @@ bool loadMedia()
 		}
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; ++i) 
 		{
-			clips[i].x = 2 * BUTTON_WIDTH + (i)*200;
+			clips[i].x = 120 + (i)*200;
 			clips[i].y = 0;
 			clips[i].w = CHAR_BUTTON_WIDTH;
 			clips[i].h = CHAR_BUTTON_HEIGHT;
@@ -237,8 +236,6 @@ bool loadMedia()
 		Buttons[7].setPosition(BUTTON_EIGHT_X, BUTTON_Y);
 		Buttons[8].setPosition(BUTTON_NINE_X, BUTTON_Y);
 		Buttons[9].setPosition(BUTTON_TEN_X, BUTTON_Y);
-		Buttons[10].setPosition(BUTTON_ELEVEN_X, BUTTON_Y);
-		Buttons[11].setPosition(BUTTON_TWELVE_X, BUTTON_Y);
 
 		menuButtons[0].setPosition(145, 610);
 		menuButtons[1].setPosition(275, 610);
@@ -942,6 +939,12 @@ void drawRoom() {
 			break;
 		}
 	}
+
+	//setup abilities
+	std::vector<Ability*> abList = currUnit->getAbilities();
+	for (x = 0; x < abList.size(); x++) {
+		Buttons[x].render();
+	}
 }
 
 void drawMenu() {
@@ -972,12 +975,7 @@ void drawMenu() {
 	for (int i = 0; i < TOTAL_BUTTONS; ++i) {
 		Buttons[i].render();
 	}
-	/*
-	//Text render
-	buttonOneText.render(BUTTON_ONE_X + BUTTON_WIDTH / 2 - buttonOneText.getWidth() / 2, BUTTON_Y + BUTTON_HEIGHT / 2 - buttonOneText.getHeight() / 2);
-	buttonTwoText.render(BUTTON_TWO_X + BUTTON_WIDTH / 2 - buttonTwoText.getWidth() / 2, BUTTON_Y + BUTTON_HEIGHT / 2 - buttonTwoText.getHeight() / 2);
-	buttonThreeText.render(BUTTON_THREE_X + BUTTON_WIDTH / 2 - buttonThreeText.getWidth() / 2, BUTTON_Y + BUTTON_HEIGHT / 2 - buttonThreeText.getHeight() / 2);
-	*/
+
 }
 
 void drawMainMenu() {

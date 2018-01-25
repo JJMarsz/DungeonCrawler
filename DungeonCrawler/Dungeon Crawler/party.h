@@ -3,6 +3,7 @@
 
 #include "lib.h"
 #include "LButton.h"
+#include "Ability.h"
 
 #define NUM_CHAR	5
 #define MAX_STAT	20
@@ -14,9 +15,12 @@ public:
 	virtual SDL_Rect getIcon50() { return SDL_Rect(); }
 	virtual int getMaxHP() { return 0; }
 	virtual int getHP() { return 0; }
+	virtual std::vector<Ability*> getAbilities() { return std::vector<Ability*>(0); }
 	void setRMO(int i) { RMO = i; }
 	int getRMO() { return RMO; }
 	UnitType getType() { return type; }
+
+
 protected:
 	int RMO;
 	UnitType type;
@@ -53,6 +57,9 @@ public:
 	void setIcon50(SDL_Rect sprite_);
 	SDL_Rect getIcon100();
 	void setIcon100(SDL_Rect sprite_);
+
+	void loadAbility(std::string name);
+	std::vector<Ability*> getAbilities();
 
 	int getStr();
 	int getDex();
@@ -95,6 +102,11 @@ private:
 	int max_health;
 	int AC;
 	int xp;
+	std::vector<Ability> actionList;
+	std::vector<Ability> bActionList;
+	std::vector<Ability> freeList;
+
+
 	SDL_Rect sprite;
 	SDL_Rect icon_100;
 	SDL_Rect icon_50;
@@ -102,6 +114,8 @@ private:
 
 	std::string info; 
 	int textIndex;
+
+
 };
 
 class Party {

@@ -585,6 +585,9 @@ void endTurnHandler(int index) {
 	room->passControl();
 }
 
+
+
+
 void returnToTown(int index) {
 	state = TOWN_QUEST_BOARD;
 	//inc completed dungeons
@@ -608,6 +611,15 @@ void returnToTown(int index) {
 	xp2.loadFromRenderedText(std::to_string(gParty.getXP(2)), textColor, 200);
 
 }
+
+
+
+/* ABILITIES */
+
+void move() {
+
+}
+
 /* Used primarily for testing */
 void emptyHandler(int index) {
 	return;

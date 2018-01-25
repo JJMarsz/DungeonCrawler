@@ -189,4 +189,5 @@ void Room::placeUnits() {
 void Room::passControl() {
 	init_index++;
 	init_index %= unitList.size();
+	//update cds for this chars abs
 }

@@ -1,6 +1,6 @@
 #include "party.h"
 #include "Encounter.h"
-
+#include "Ability.h"
 
 Party gParty;
 
@@ -43,6 +43,32 @@ void Character::setIcon50(SDL_Rect sprite_) { icon_50 = sprite_; }
 SDL_Rect Character::getIcon100() { return icon_100; }
 void Character::setIcon100(SDL_Rect sprite_) { icon_100 = sprite_; }
 
+void Character::loadAbility(std::string name) {
+	Ability newAb = abMap[name];
+	switch (newAb.getType()) {
+	case ACTION:
+		actionList.push_back(newAb);
+		return;
+	case BACTION:
+		bActionList.push_back(newAb);
+		return;
+	case FREE:
+		freeList.push_back(newAb);
+		return;
+	}
+}
+std::vector<Ability*> Character::getAbilities() {
+	std::vector<Ability*> retvec;
+	int i;
+	for (i = 0; i < actionList.size(); i++)
+		retvec.push_back(&actionList[i]);
+	for (i = 0; i < bActionList.size(); i++)
+		retvec.push_back(&bActionList[i]);
+	for (i = 0; i < freeList.size(); i++)
+		retvec.push_back(&freeList[i]);
+	return retvec;
+}
+
 int Character::getXP() { return xp; }
 int Character::getStr() { return str; }
 int Character::getDex() { return dex; }
@@ -76,6 +102,9 @@ void Character::render(int x, int y) {
 
 }
 
+void Character::damage(int dmg) { health -= dmg; }
+void Character::heal(int heal) { health += heal; if (health > max_health) { health = max_health; } }
+
 void Character::addXP(int xp_) { xp += xp_; }
 void Character::subXP(int xp_) { xp -= xp_; if (xp < 0) xp = 0; }
 /* Party calss definitions */
@@ -95,8 +124,6 @@ Party::Party() {
 	rest_max = 1;
 }
 
-void Character::damage(int dmg) { health -= dmg; }
-void Character::heal(int heal) { health += heal; if (health > max_health) { health = max_health; } }
 
 int Party::getCompleted() { return completed; }
 int Party::getX() { return party_x; }
@@ -251,6 +278,10 @@ CharList::CharList() {
 		14	//AC
 	}
 	};
+	//load abilities for each char
+	loadAbilityMap();
+	for (int i = 0; i < charList.size(); i++)
+		charList[i].loadAbility("Move");
 }
 void CharList::loadSprites() {
 	//Go through each character to set sprites and info texts

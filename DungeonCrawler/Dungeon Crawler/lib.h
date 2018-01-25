@@ -32,9 +32,9 @@ typedef void(*func)();
 #define MSG_TEXT_SIZE	18
 
 //button constants
-#define BUTTON_WIDTH	60
-#define BUTTON_HEIGHT	60
-#define TOTAL_BUTTONS	12
+#define BUTTON_WIDTH	50
+#define BUTTON_HEIGHT	50
+#define TOTAL_BUTTONS	10
 #define CHAR_BUTTON_WIDTH	200
 #define CHAR_BUTTON_HEIGHT	520
 
@@ -196,19 +196,17 @@ typedef void(*func)();
 #define TILE_WIDTH				50
 #define TILE_HEIGHT				50
 
-const int BUTTON_Y = SCREEN_HEIGHT - BUTTON_HEIGHT - 5;
-const int BUTTON_ONE_X = SCREEN_WIDTH - BUTTON_WIDTH - 18;
-const int BUTTON_TWO_X = SCREEN_WIDTH - 2 * BUTTON_WIDTH - 22;
-const int BUTTON_THREE_X = SCREEN_WIDTH - 3 * BUTTON_WIDTH - 26;
-const int BUTTON_FOUR_X = SCREEN_WIDTH - 4 * BUTTON_WIDTH - 30;
-const int BUTTON_FIVE_X = SCREEN_WIDTH - 5 * BUTTON_WIDTH - 34;
-const int BUTTON_SIX_X = SCREEN_WIDTH - 6 * BUTTON_WIDTH - 38;
-const int BUTTON_SEVEN_X = SCREEN_WIDTH - 7 * BUTTON_WIDTH - 42;
-const int BUTTON_EIGHT_X = SCREEN_WIDTH - 8 * BUTTON_WIDTH - 46;
-const int BUTTON_NINE_X = SCREEN_WIDTH - 9 * BUTTON_WIDTH - 50;
-const int BUTTON_TEN_X = SCREEN_WIDTH - 10 * BUTTON_WIDTH - 54;
-const int BUTTON_ELEVEN_X = SCREEN_WIDTH - 11 * BUTTON_WIDTH - 58;
-const int BUTTON_TWELVE_X = SCREEN_WIDTH - 12 * BUTTON_WIDTH - 62;
+#define BUTTON_Y				659
+#define BUTTON_ONE_X			11
+#define BUTTON_TWO_X			71
+#define BUTTON_THREE_X			131
+#define BUTTON_FOUR_X			191
+#define BUTTON_FIVE_X			251
+#define BUTTON_SIX_X			311
+#define BUTTON_SEVEN_X			371
+#define BUTTON_EIGHT_X			461
+#define BUTTON_NINE_X			521
+#define BUTTON_TEN_X			581
 
 enum LButtonSprite
 {

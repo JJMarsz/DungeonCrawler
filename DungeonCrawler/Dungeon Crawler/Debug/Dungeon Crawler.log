@@ -1,10 +1,2 @@
-﻿  SDL.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(704): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(885): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(907): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(916): warning C4244: 'argument': conversion from 'double' to 'const unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(917): warning C4244: 'argument': conversion from 'double' to 'const unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(918): warning C4244: 'argument': conversion from 'double' to 'const unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(1165): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(1230): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+﻿  Ability.cpp
   Dungeon Crawler.vcxproj -> C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe
