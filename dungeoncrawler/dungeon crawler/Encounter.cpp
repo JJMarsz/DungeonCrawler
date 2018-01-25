@@ -386,4 +386,5 @@ void test() {
 	state = DUNGEON_ROOM;
 	room = new Room;
 	room->rollInit();
+	room->placeUnits();
 }

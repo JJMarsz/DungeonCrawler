@@ -11,6 +11,7 @@ struct RoomTile {
 	bool left;
 	bool down;
 	bool right;
+	UnitType type;
 	//used during move to determine what is in range
 	//also used for abilities to determine what is in range
 	bool special;
@@ -21,6 +22,7 @@ class Room
 public:
 	Room();
 	void rollInit();
+	void placeUnits();
 	void passControl();
 	int getWidth();
 	int getHeight();
@@ -30,6 +32,7 @@ public:
 private:
 	//maintain for initiative purposes
 	std::vector<Unit*> unitList;
+
 	std::vector<Unit*>::iterator currUnit;
 	std::vector<RoomTile> roomMap;
 	int width, height;

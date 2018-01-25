@@ -28,7 +28,8 @@ Room::Room(){
 	int i, j;
 	for (i = 0; i < width; i++) {
 		for (j = 0; j < height; j++) {
-			roomMap[i].special = true;
+			roomMap[i + j*width].special = true;
+			roomMap[i + j*width].type = NOTHING;
 			if (i > 0)
 				roomMap[i + j*width].left = false;
 			else
@@ -86,6 +87,102 @@ void Room::rollInit() {
 	//set up current top unit
 	currUnit = unitList.begin();
 }
+
+void Room::placeUnits() {
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
+	//find the direction in which the party came from
+	int dung_width = current_dungeon.getWidth();
+	Tile* curr = current_dungeon.getTile(gParty.getX() + gParty.getY()*dung_width);
+	Tile* prev = curr->getPrev();
+	int prev_RMO = prev->getX() + prev->getY()*dung_width;
+	int curr_RMO = curr->getX() + curr->getY()*dung_width;
+	Direction dir;
+	if (curr_RMO - prev_RMO == 1) {
+		dir = LEFT;
+	}
+	else if (curr_RMO - prev_RMO == -1) {
+		dir = RIGHT;
+	}
+	else if (curr_RMO - prev_RMO > 1) {
+		dir = UP;
+	}
+	else if (curr_RMO - prev_RMO < -1) {
+		dir = DOWN;
+	}
+	else {
+		//somethings wrong
+	}
+	int index = height/2;
+	for (int i = 0; i < unitList.size(); i++) {
+		switch (dir) {
+		case UP:
+			//place char at top, mob at bot
+			if (unitList[i]->getType() == CHAR) {
+				while (roomMap[index].type != NOTHING)
+					index = rand() % width;
+				roomMap[index].type = CHAR;
+				unitList[i]->setRMO(index);
+			}
+			else {
+				while (roomMap[index + (height - 1)*width].type != NOTHING)
+					index = rand() % width;
+				roomMap[index + (height - 1)*width].type = ENEMY;
+				unitList[i]->setRMO(index + (height - 1)*width);
+			}
+			break;
+		case LEFT:
+			//place char at left, mob on right
+			if (unitList[i]->getType() == CHAR) {
+				while (roomMap[index*width].type != NOTHING)
+					index = rand() % height;
+				roomMap[index*width].type = CHAR;
+				unitList[i]->setRMO(index*width);
+			}
+			else {
+				while (roomMap[(index + 1)*width - 1].type != NOTHING)
+					index = rand() % height;
+				roomMap[(index + 1)*width - 1].type = ENEMY;
+				unitList[i]->setRMO((index + 1)*width - 1);
+			}
+			break;
+		case DOWN:
+			//place char on bot, mob on top
+			if (unitList[i]->getType() == CHAR) {
+				while (roomMap[index + (height - 1)*width].type != NOTHING)
+					index = rand() % width;
+				roomMap[index + (height - 1)*width].type = CHAR;
+				unitList[i]->setRMO(index + (height - 1)*width);
+			}
+			else {
+				while (roomMap[index].type != NOTHING)
+					index = rand() % width;
+				roomMap[index].type = ENEMY;
+				unitList[i]->setRMO(index);
+			}
+			break;
+		case RIGHT:
+			//place char on right, mob on left
+			if (unitList[i]->getType() == CHAR) {
+				while (roomMap[(index + 1)*width - 1].type != NOTHING)
+					index = rand() % height;
+				roomMap[(index + 1)*width - 1].type = CHAR;
+				unitList[i]->setRMO((index + 1)*width - 1);
+			}
+			else {
+				while (roomMap[index*width].type != NOTHING)
+					index = rand() % height;
+				roomMap[index*width].type = ENEMY;
+				unitList[i]->setRMO(index*width);
+			}
+			break;
+		}
+	}
+	
+}
+
 
 void Room::passControl() {
 

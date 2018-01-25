@@ -300,4 +300,10 @@ enum UpgradeState {
 	FOUR
 };
 
+enum UnitType {
+	CHAR,
+	ENEMY,
+	BOSS_BOI,
+	NOTHING
+};
 #endif

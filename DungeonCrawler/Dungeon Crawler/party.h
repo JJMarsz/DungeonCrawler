@@ -14,6 +14,12 @@ public:
 	virtual SDL_Rect getIcon50() { return SDL_Rect(); }
 	virtual int getMaxHP() { return 0; }
 	virtual int getHP() { return 0; }
+	void setRMO(int i) { RMO = i; }
+	int getRMO() { return RMO; }
+	UnitType getType() { return type; }
+protected:
+	int RMO;
+	UnitType type;
 
 };
 

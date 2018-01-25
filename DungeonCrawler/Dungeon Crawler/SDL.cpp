@@ -847,24 +847,65 @@ void drawRoom() {
 		}
 	}
 
-	//draw the initiative order
-	double health_ratio;
+	//draw units onto field
 	std::vector<Unit*>* order = room->getInititiveOrder();
 	for (x = 0; x < order->size(); x++) {
-		charSST.render(INIT_X, INIT_Y + 60*x, &order->at(x)->getIcon50()); 
-		double slice = (double)(order->at(x)->getMaxHP()) / 11;
-		double diff = (order->at(x)->getMaxHP() - order->at(x)->getHP());
-		double ratio = diff / slice;
-		ratio += .5;
-		health_ratio = (int)ratio;
-		healthBoxClips[health_ratio].w = 20;
-		healthboxSST.render(INIT_X - 30, INIT_Y + 60*x, &healthBoxClips[health_ratio]);
-		healthBoxClips[health_ratio].w = 50;
-	}
-	hp0.render(INIT_X - 85, INIT_Y + 10);
-	hp1.render(INIT_X - 85, INIT_Y + 70);
-	hp2.render(INIT_X - 85, INIT_Y + 130);
+		switch (order->at(x)->getType()) {
+		case CHAR:
+			charSST.render(start_x + 50 * (order->at(x)->getRMO() % room->getWidth()), start_y + 50 * (order->at(x)->getRMO() / room->getWidth()), &order->at(x)->getIcon50());
+			break;
+		case ENEMY:
 
+			break;
+		case BOSS_BOI:
+
+			break;
+		}
+	}
+
+	//draw the initiative order
+	double health_ratio;
+	int char_count = 0;
+	double slice, diff, ratio;
+	SDL_Color textColor = { 255, 255, 255 };
+	for (x = 0; x < order->size(); x++) {
+		switch (order->at(x)->getType()) {
+		case CHAR:
+			charSST.render(INIT_X, INIT_Y + 60 * x, &order->at(x)->getIcon50());
+			slice = (double)(order->at(x)->getMaxHP()) / 11;
+			diff = (order->at(x)->getMaxHP() - order->at(x)->getHP());
+			ratio = diff / slice;
+			ratio += .5;
+			health_ratio = (int)ratio;
+			healthBoxClips[health_ratio].w = 20;
+			healthboxSST.render(INIT_X - 25, INIT_Y + 60 * x, &healthBoxClips[health_ratio]);
+			healthBoxClips[health_ratio].w = 50;
+			switch (char_count) {
+			case 0:
+				hp0.loadFromRenderedText(std::to_string(order->at(x)->getHP()) + "/" + std::to_string(order->at(x)->getMaxHP()), textColor, 200);
+				hp0.render(INIT_X - 82, INIT_Y + 12);
+				char_count++;
+				break;
+			case 1:
+				hp1.loadFromRenderedText(std::to_string(order->at(x)->getHP()) + "/" + std::to_string(order->at(x)->getMaxHP()), textColor, 200);
+				hp1.render(INIT_X - 82, INIT_Y + 72);
+				char_count++;
+				break;
+			case 2:
+				hp2.loadFromRenderedText(std::to_string(order->at(x)->getHP()) + "/" + std::to_string(order->at(x)->getMaxHP()), textColor, 200);
+				hp2.render(INIT_X - 82, INIT_Y + 132);
+				char_count++;
+				break;
+			}
+			break;
+		case ENEMY:
+
+			break;
+		case BOSS_BOI:
+
+			break;
+		}
+	}
 }
 
 void drawMenu() {

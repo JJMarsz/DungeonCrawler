@@ -3,7 +3,7 @@
 
 
 Mob::Mob(){
-
+	type = ENEMY;
 }
 
 SDL_Rect Mob::getIcon50() {
