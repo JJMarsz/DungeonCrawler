@@ -23,6 +23,7 @@ public:
 	int getLength() { return length; }
 	void setLength(int l) { length = l; }
 	func2 getButtonHandler() { return button_handler; }
+	func2 getClickHandler() { return click_handler; }
 	bool onCooldown() { return (count >= cooldown); }
 	void use() { count = 0; }
 
@@ -53,5 +54,9 @@ void loadAbilityMap();
 
 //maintains every ability used in game
 extern std::unordered_map<std::string, Ability> abMap;
+extern void(*click_handler)(int index);
+
+//ability click handlers
+void moveClick(int index);
 
 #endif 

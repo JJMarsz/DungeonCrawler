@@ -387,4 +387,5 @@ void test() {
 	room = new Room;
 	room->rollInit();
 	room->placeUnits();
+	room->getCurrUnit()->resetMove();
 }

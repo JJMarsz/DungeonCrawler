@@ -18,12 +18,18 @@ public:
 	virtual std::vector<Ability*> getAbilities() { return std::vector<Ability*>(0); }
 	void setRMO(int i) { RMO = i; }
 	int getRMO() { return RMO; }
+	virtual int getMove() { return 0; }
+	int getMoveLeft() { return move_left; }
+	void setMoveLeft(int i) { move_left = i; }
+	virtual void moveTo(int index) { return; }
+	virtual void resetMove() { move_left = 0; }
 	UnitType getType() { return type; }
 
 
 protected:
 	int RMO;
 	UnitType type;
+	int move_left;
 
 };
 
@@ -60,6 +66,8 @@ public:
 
 	void loadAbility(std::string name);
 	std::vector<Ability*> getAbilities();
+
+	void resetMove() { move_left = move; }
 
 	int getStr();
 	int getDex();

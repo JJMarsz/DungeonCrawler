@@ -12,6 +12,7 @@
 #include <queue>
 #include <time.h>
 #include <chrono>
+#include <cmath>
 
 typedef void(*func)();
 

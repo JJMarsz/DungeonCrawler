@@ -185,11 +185,11 @@ void Room::placeUnits() {
 	
 }
 
-
 void Room::passControl() {
 	init_index++;
 	init_index %= unitList.size();
 	//update cds for this chars abs
+	getCurrUnit()->resetMove();
 }
 
 void Room::clearRange() {
@@ -198,4 +198,9 @@ void Room::clearRange() {
 			roomMap[i].type = NOTHING;
 	}
 
+}
+
+void Room::move(int index) {
+	roomMap[getCurrUnit()->getRMO()].type = NOTHING;
+	roomMap[index].type = CHAR;
 }

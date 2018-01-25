@@ -875,7 +875,7 @@ void drawRoom() {
 	for (x = 0; x < room->getWidth(); x++) {
 		for (y = 0; y < room->getHeight(); y++) {
 			if (room->getTile(x, y)->type == RANGE) {
-				roomTilesSST.setColor(100, 100, 0);
+				roomTilesSST.setColor(239, 228, 176);
 				roomTilesSST.render(x * 50 + start_x, y * 50 + start_y, &roomTileClips[getRoomTileIndex(x, y)]);
 				roomTilesSST.setColor(255, 255, 255);
 			}

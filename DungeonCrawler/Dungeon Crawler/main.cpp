@@ -18,7 +18,7 @@ SDL_Color color = { 255, 255, 255 };
 
 int main(int argc, char* args[])
 {
-	int i, x=0, y=0, start_x=0;
+	int i, x=0, y=0, start_x=0, start_y=0;
 	int prev_x = -1, prev_y = -1;
 	bool MouseDown = false;
 	bool MouseUp = false;
@@ -73,8 +73,10 @@ int main(int argc, char* args[])
 						case SDL_KEYDOWN:
 							if (e.key.keysym.sym == SDLK_ESCAPE) {
 								ab = NOPE;
-								if (state == DUNGEON_ROOM)
+								if (state == DUNGEON_ROOM) {
 									room->clearRange();
+									click_handler = NULL;
+								}
 							}
 							break;
 						default:
@@ -191,11 +193,34 @@ int main(int argc, char* args[])
 						}
 						break;
 					case DUNGEON_ROOM:
-						for (int i = 0; i < TOTAL_BUTTONS; ++i)
-						{
+						for (int i = 0; i < TOTAL_BUTTONS; ++i){
 							Buttons[i].handleEvent(&e, i);
 						}
 						endTurnButton.handleEvent(&e, 0);
+						start_x = (650 - room->getWidth() * 50) / 2;
+						start_y = (600 - room->getHeight() * 50) / 2;
+						SDL_GetMouseState(&x, &y);
+						hover = false;
+						//within bounds
+						if (start_x + room->getWidth() * 50 > x && start_x < x && start_y < y && start_y + room->getHeight() * 50 > y) {
+							if (y % 50 < 25)
+								y -= (start_y % 50);
+							y = y / 50;
+							y = y * 50;
+							if (x % 50 < 25)
+								x -= (start_x % 50);
+							x = x / 50;
+							x = x * 50;
+							if (room->getTile((x / 50) - (start_x / 50), (y / 50) - (start_y / 50))->type == RANGE)
+								hover = true;
+							if (prev_x != x || prev_y != y) {
+								MouseDown = false;
+								MouseUp = false;
+								MouseRight = false;
+							}
+							prev_x = x;
+							prev_y = y;
+						}
 						break;
 					case REWARD:
 						acceptrejectButtons[2].handleEvent(&e, 2);
@@ -368,6 +393,17 @@ int main(int argc, char* args[])
 					if (r <= 18000)
 						mod_state = MOD_UP;
 					drawRoom();
+					if (hover) {
+						if (MouseDown && MouseUp && !MouseRight && ab != NONE) {
+							//execute click handler
+							if (click_handler != NULL) {
+								click_handler((x / 50) - (start_x / 50) + ((y / 50) - (start_y / 50))*room->getWidth());
+							}
+							MouseDown = false;
+							MouseUp = false;
+						}
+						tileSST.render(x + (start_x % 50), y + (start_y % 50), &tileSpriteClips[HOVER]);
+					}
 					break;
 				case REWARD:
 					drawDungeon();

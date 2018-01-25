@@ -617,8 +617,10 @@ void returnToTown(int index) {
 
 /* ABILITIES */
 void moveRecursive(int x, int y, int length) {
-	if (room->getTile(x, y)->type == NOTHING)
+	if (room->getTile(x, y)->type == NOTHING || room->getTile(x, y)->type == RANGE)
 		room->getTile(x, y)->type = RANGE;
+	else if (!(room->getCurrUnit()->getRMO() == x + y * room->getWidth()))
+		return;
 	if (length <= 0)
 		return;
 	if (x > 0) {
@@ -635,8 +637,9 @@ void moveRecursive(int x, int y, int length) {
 
 void moveButton(int index) {
 	Unit* currUnit = room->getCurrUnit();
-	moveRecursive(currUnit->getRMO()%room->getWidth(), currUnit->getRMO()/room->getWidth(), abMap["Move"].getLength());
+	moveRecursive(currUnit->getRMO()%room->getWidth(), currUnit->getRMO()/room->getWidth(), currUnit->getMoveLeft());
 	ab = ABILITY;
+	click_handler = abMap["Move"].getClickHandler();
 }
 
 /* Used primarily for testing */

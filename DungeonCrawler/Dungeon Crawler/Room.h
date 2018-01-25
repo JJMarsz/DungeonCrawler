@@ -31,6 +31,7 @@ public:
 	Unit* getCurrUnit();
 	int getInitIndex();
 	std::vector<Unit*>* getInititiveOrder();
+	void move(int index);
 private:
 	//maintain for initiative purposes
 	std::vector<Unit*> unitList;
