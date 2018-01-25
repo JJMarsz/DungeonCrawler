@@ -89,6 +89,8 @@ extern LTexture no;
 extern LTexture dungeonroom;
 extern LTexture roomTilesSST;
 extern LTexture background;
+extern LTexture endTurn;
+extern LTexture endTurnText;
 
 extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> tileSpriteClips;

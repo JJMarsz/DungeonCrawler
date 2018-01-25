@@ -41,6 +41,8 @@ LTexture no;
 LTexture dungeonroom;
 LTexture roomTilesSST;
 LTexture background;
+LTexture endTurn;
+LTexture endTurnText;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> tileSpriteClips;

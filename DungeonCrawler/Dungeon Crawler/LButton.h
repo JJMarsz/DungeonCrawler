@@ -100,6 +100,8 @@ void peek(int index);
 void scout(int index);
 void rest(int index);
 
+void endTurnHandler(int index);
+
 void emptyHandler(int index);
 
 extern std::vector<LButton> Buttons;
@@ -110,5 +112,6 @@ extern std::vector<LButton> townButtons;
 extern std::vector<LButton> acceptrejectButtons;
 extern std::vector<LButton> dungeonButtons;
 extern std::vector<LButton> choiceButtons;
+extern LButton endTurnButton;
 
 #endif

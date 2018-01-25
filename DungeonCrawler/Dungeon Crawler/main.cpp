@@ -191,6 +191,7 @@ int main(int argc, char* args[])
 						{
 							Buttons[i].handleEvent(&e, i);
 						}
+						endTurnButton.handleEvent(&e, 0);
 						break;
 					case REWARD:
 						acceptrejectButtons[2].handleEvent(&e, 2);

@@ -28,14 +28,15 @@ public:
 	int getHeight();
 	RoomTile* getTile(int x, int y);
 	Unit* getCurrUnit();
+	int getInitIndex();
 	std::vector<Unit*>* getInititiveOrder();
 private:
 	//maintain for initiative purposes
 	std::vector<Unit*> unitList;
 
-	std::vector<Unit*>::iterator currUnit;
 	std::vector<RoomTile> roomMap;
 	int width, height;
+	int init_index;
 };
 
 

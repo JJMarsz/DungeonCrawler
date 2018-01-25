@@ -1,6 +1,7 @@
 #include "LButton.h"
 #include "party.h"
 #include "Quest.h"
+#include "Room.h"
 
 SDL_Color textColor = { 255, 255, 255 };
 
@@ -14,6 +15,7 @@ std::vector<LButton> acceptrejectButtons;
 std::vector<LButton> townButtons;
 std::vector<LButton> dungeonButtons;
 std::vector<LButton> choiceButtons;
+LButton endTurnButton;
 
 /* Button class defenitions */
 LButton::LButton()
@@ -577,6 +579,10 @@ void scout(int index) {
 	//reveal a 2x2 or 3x3 area of the map
 	if(gParty.checkScout())
 		ab = SCOUT;
+}
+
+void endTurnHandler(int index) {
+	room->passControl();
 }
 
 void returnToTown(int index) {

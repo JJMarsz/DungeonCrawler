@@ -90,7 +90,7 @@ bool init()
 	dungeonButtons.resize(3);
 	multiplyClips.resize(5);
 	choiceButtons.resize(4);
-	roomTileClips.resize(9);
+	roomTileClips.resize(NUM_ROOM_TILES);
 	int i;
 	for (i = 0; i<TOTAL_BUTTONS; i++)
 		Buttons[i].setConstraints(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -108,6 +108,8 @@ bool init()
 		dungeonButtons[i].setConstraints(90, 46);
 	for (i = 0; i < 4; i++)
 		choiceButtons[i].setConstraints(100, 100);
+	endTurnButton.setConstraints(126, 96);
+	endTurnButton.setHandler(endTurnHandler);
 	acceptrejectButtons[2].setHandler(returnToTown);
 	dungeonButtons[2].setHandler(peek);
 	dungeonButtons[1].setHandler(scout);
@@ -134,6 +136,8 @@ bool loadMedia()
 	hp0.setFont(msg_font);
 	hp1.setFont(msg_font);
 	hp2.setFont(msg_font);
+	endTurnText.setFont(msg_font);
+	endTurnText.loadFromRenderedText(" End Turn", textColor, 40);
 	if (gFont == NULL) {
 		printf("Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError());
 		success = false;
@@ -660,10 +664,35 @@ bool loadMedia()
 		roomTileClips[RDCORNER].y = ROOM_RD_Y;
 		roomTileClips[RDCORNER].w = TILE_WIDTH;
 		roomTileClips[RDCORNER].h = TILE_HEIGHT;
+
+		roomTileClips[SELECTED_INIT].x = SELECTED_INIT_X;
+		roomTileClips[SELECTED_INIT].y = SELECTED_INIT_Y;
+		roomTileClips[SELECTED_INIT].w = 146;
+		roomTileClips[SELECTED_INIT].h = 62;
+
+		roomTileClips[SELECTED].x = SELECTED_X;
+		roomTileClips[SELECTED].y = SELECTED_Y;
+		roomTileClips[SELECTED].w = TILE_WIDTH;
+		roomTileClips[SELECTED].h = TILE_HEIGHT;
 	}
 	if (!background.loadFromFile("textures/background.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
+	}
+	if (!endTurn.loadFromFile("textures/endturn.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
+			clips[i].y = i * 96;
+			clips[i].x = 0;
+			clips[i].w = 126;
+			clips[i].h = 96;
+		}
+		endTurnButton.setSST(&endTurn);
+		endTurnButton.setClips(clips);
+		endTurnButton.setPosition(662, 612);
 	}
 	return success;
 }
@@ -710,6 +739,8 @@ void close() {
 	dungeonroom.free();
 	roomTilesSST.free();
 	background.free();
+	endTurn.free();
+	endTurnText.free();
 
 	//Free Textures
 	spriteSheetTexture.free();
@@ -838,6 +869,8 @@ void drawRoom() {
 	background.setColor(r / 100, r / 100, r / 100);
 	background.render(0, 0);
 	background.setColor(255, 255, 255);
+	endTurnButton.render();
+	endTurnText.render(662 + (126 - endTurnText.getWidth())/2, 612 + (96 - endTurnText.getHeight())/2);
 	//find x and y offset to center map
 	int start_x = (650 - 50 * room->getWidth()) / 2;
 	int start_y = (600 - 50 * room->getHeight()) / 2;
@@ -862,7 +895,10 @@ void drawRoom() {
 			break;
 		}
 	}
-
+	//highlight current char
+	Unit* currUnit = room->getCurrUnit();
+	roomTilesSST.render(start_x + (currUnit->getRMO() % room->getWidth())*50, start_y + 50*(currUnit->getRMO() / room->getWidth()), &roomTileClips[SELECTED]);
+	roomTilesSST.render(SCREEN_WIDTH - 148, INIT_Y - 6 + 60*room->getInitIndex(), &roomTileClips[SELECTED_INIT]);
 	//draw the initiative order
 	double health_ratio;
 	int char_count = 0;

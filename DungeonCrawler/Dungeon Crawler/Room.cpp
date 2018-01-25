@@ -3,8 +3,11 @@
 
 Room* room = NULL;
 
+//used to sort in descending order
 bool wayToSort(int i, int j) { return i > j; }
+
 Room::Room(){
+	init_index = 0;
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
 		std::chrono::system_clock::now().time_since_epoch()
 		);
@@ -54,7 +57,8 @@ Room::Room(){
 int Room::getWidth() { return width; }
 int Room::getHeight() { return height; }
 RoomTile* Room::getTile(int x, int y) { return &roomMap[x + y * width]; }
-Unit* Room::getCurrUnit() { return *currUnit; }
+Unit* Room::getCurrUnit() { return unitList[init_index]; }
+int Room::getInitIndex() { return init_index; }
 std::vector<Unit*>* Room::getInititiveOrder() { return &unitList; }
 
 void Room::rollInit() {
@@ -84,8 +88,6 @@ void Room::rollInit() {
 	for (i = 0; i < init.size(); i++) {
 		unitList[i] = map[init[i]];
 	}
-	//set up current top unit
-	currUnit = unitList.begin();
 }
 
 void Room::placeUnits() {
@@ -185,5 +187,6 @@ void Room::placeUnits() {
 
 
 void Room::passControl() {
-
+	init_index++;
+	init_index %= unitList.size();
 }
