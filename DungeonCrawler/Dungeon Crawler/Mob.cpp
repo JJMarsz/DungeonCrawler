@@ -69,16 +69,16 @@ void Mob::updateThreat() {
 		x = party[i]->getRMO() % width;
 		y = party[i]->getRMO() / width;
 		distance = std::abs(x - mobx) + std::abs(y = moby);
-		if (distance > 10)
+		if(distance > 16)
 			threat[i] += 1;
-		else if (distance > 5)
+		else if (distance > 8)
 			threat[i] += 2;
-		else if (distance > 3)
-			threat[i] += 3;
-		else if (distance > 1)
-			threat[i] += 5;
-		else
+		else if (distance > 4)
+			threat[i] += 4;
+		else if (distance > 2)
 			threat[i] += 8;
+		else if (distance == 1)
+			threat[i] += 16;
 		//hp update threat
 		slice = (double)(party[i]->getMaxHP()) / 11;
 		diff = (party[i]->getMaxHP() - party[i]->getHP());
@@ -96,13 +96,13 @@ void Mob::updateThreat() {
 			break;
 		case 6:
 		case 7:
-			threat[i] += 3;
+			threat[i] += 4;
 			break;
 		case 8:
-			threat[i] += 4;
+			threat[i] += 6;
 				break;
 		case 9:
-			threat[i] += 5;
+			threat[i] += 10;
 				break;
 		}
 	}

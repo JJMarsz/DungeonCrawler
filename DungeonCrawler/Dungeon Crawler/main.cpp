@@ -400,13 +400,14 @@ int main(int argc, char* args[])
 					}
 
 					if (hover) {
-						if (MouseDown && MouseUp && !MouseRight && ab != NONE) {
+						if (MouseDown && MouseUp && !MouseRight && ab != NOPE) {
 							//execute click handler
 							if (click_handler != NULL) {
 								click_handler((x / 50) - (start_x / 50) + ((y / 50) - (start_y / 50))*room->getWidth());
 							}
 							MouseDown = false;
 							MouseUp = false;
+							hover = false;
 						}
 						tileSST.render(x + (start_x % 50), y + (start_y % 50), &tileSpriteClips[HOVER]);
 					}

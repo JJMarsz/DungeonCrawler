@@ -12,49 +12,98 @@ void loadAbilityMap(){
 
 	
 }
+bool pathHelper(int x, int y, int end_x, int end_y, int length, std::vector<int>& retvec, std::vector<bool>& visited) {
+	retvec.push_back(x + y * room->getWidth());
+	if ((room->getTile(x, y)->type != RANGE || length < 0 || visited[x + y*room->getWidth()]) && x + y*room->getWidth() != room->getCurrUnit()->getRMO()) {
+		retvec.pop_back();
+		return false;
+	}
+	else if (x + y*room->getWidth() == end_x + end_y * room->getWidth())
+		return true;
+	visited[x + y * room->getWidth()] = true;
+	if (x > 0) {
+
+		if (pathHelper(x - 1, y, end_x, end_y, length - 1, retvec, visited))
+			return true;
+	}
+	if (y > 0) {
+		if (pathHelper(x, y - 1, end_x, end_y, length - 1, retvec, visited))
+			return true;
+	}
+	if (x < room->getWidth() - 1) {
+		if (pathHelper(x + 1, y, end_x, end_y, length - 1, retvec, visited))
+			return true;
+	}
+	if (y < room->getHeight() - 1) {
+		if (pathHelper(x, y + 1, end_x, end_y, length - 1, retvec, visited)) {
+			return true;
+		}
+	}
+	retvec.pop_back();
+	return false;
+	
+}
+
+void bloom(std::vector<int> &prevVec, int start, int end) {
+	int width = room->getWidth();
+	std::queue<int> prevQ;
+	prevQ.push(end);
+	while(!prevQ.empty()) {
+		int x = prevQ.front() % width;
+		int y = prevQ.front() / width;
+		if (x == start%width && y == start/width)
+			return;
+		prevQ.pop();
+		if (room->getTile(x, y)->type != RANGE)
+			continue;
+		//add all adjacent non in prevvec tiles
+		if (x > 0) {
+			if (prevVec[x - 1 + y * width] == -1) {
+				prevVec[x - 1 + y * width] = x + y * width;
+				prevQ.push(x - 1 + y * width);
+			}
+		}
+		if (y > 0) {
+			if (prevVec[x + (y-1) * width] == -1) {
+				prevVec[x + (y-1) * width] = x + y * width;
+				prevQ.push(x + (y-1) * width);
+			}
+		}
+		if (x < room->getWidth() - 1) {
+			if (prevVec[x + 1 + y * width] == -1) {
+				prevVec[x + 1 + y * width] = x + y * width;
+				prevQ.push(x + 1 + y * width);
+			}
+		}
+		if (y < room->getHeight() - 1) {
+			if (prevVec[x + (y + 1) * width] == -1) {
+				prevVec[x + (y + 1) * width] = x + y * width;
+				prevQ.push(x + (y + 1) * width);
+			}
+		}
+	}
+
+
+}
 
 std::vector<int> getPath(int end, int start) {
 	std::vector<int> retvec;
 	int width = room->getWidth();
-	int target_x = end % width;
-	int target_y = end / width;
-	int x = start % width;
-	int y = start / width;
-	bool switcher = false;
-	while (x + y*width != end) {
-		if (room->getTile(x, y)->type == RANGE && x + y * width != start && retvec.size() != 0 && x + y * width != end) {
-			retvec.pop_back();
-			if (retvec.size() > 0) {
-				x = retvec.back() % width;
-				y = retvec.back() / width;
-			}
-			else {
-				x = start % width;
-				y = start / width;
-			}
-		}
-		switch (switcher) {
-		case true:
-			if (x != target_x) {
-				if (x < target_x)
-					x++;
-				else if(x > target_x)
-					x--;
-			}
-			switcher = false;
-			break;
-		case false:
-			if (y != target_y) {
-				if (y < target_y)
-					y++;
-				else if(y > target_y)
-					y--;
-			}
-			switcher = true;
-			break;
-		}
-		retvec.push_back(x + y * width);
+	int curr_x = start % width;
+	int curr_y = start / width;
+	int next_x = end % width;
+	int next_y = end / width;
+	int RMO = start;
+	int distance = std::abs(curr_x - next_x) + std::abs(curr_y - next_y);
+	/*std::vector<bool> visited(width*room->getHeight(), false);
+	pathHelper(curr_x, curr_y, next_x, next_y, distance, retvec, visited);*/
+	std::vector<int> prevvec(width*room->getHeight(), -1);
+	bloom(prevvec, start, end);
+	while (RMO != end) {
+		retvec.push_back(RMO);
+		RMO = prevvec[RMO];
 	}
+	retvec.push_back(RMO);
 	return retvec;
 }
 
@@ -79,14 +128,15 @@ void moveClick(int index) {
 	int i;
 	int width = room->getWidth();
 	Unit* curr = room->getCurrUnit();
-	int curr_x = curr->getRMO() % room->getWidth();
-	int curr_y = curr->getRMO() / room->getHeight();
-	int next_x = index % room->getWidth();
-	int next_y = index / room->getHeight();
+	int curr_x = curr->getRMO() % width;
+	int curr_y = curr->getRMO() / width;
+	int next_x = index % width;
+	int next_y = index / width;
 	int distance = std::abs(curr_x - next_x) + std::abs(curr_y - next_y);
 	curr->setMoveLeft(curr->getMoveLeft() - distance);
 	std::vector<int> RMO_list = getPath(index, curr->getRMO());
 	room->clearRange();
+	room->getTile(curr->getRMO() % width, curr->getRMO() / width)->type = NOTHING;
 	for (i = 0; i < RMO_list.size(); i++) {
 		//SDL_Delay(100);
 		curr->setRMO(RMO_list[i]);
