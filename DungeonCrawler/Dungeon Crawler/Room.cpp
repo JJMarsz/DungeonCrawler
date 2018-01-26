@@ -211,6 +211,7 @@ void Room::passControl() {
 	init_index %= unitList.size();
 	//update cds for this chars abs
 	getCurrUnit()->resetMove();
+
 }
 
 void Room::clearRange() {

@@ -41,6 +41,8 @@ void moveClick(int index) {
 	room->move(index);
 	curr->setRMO(index);
 	room->clearRange();
-	if(curr->getMoveLeft() > 0)
+	if (curr->getMoveLeft() > 0)
 		moveButton(0);
+	else
+		ab = NOPE;
 }

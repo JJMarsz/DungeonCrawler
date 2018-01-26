@@ -24,6 +24,12 @@ public:
 	virtual void moveTo(int index) { return; }
 	virtual void resetMove() { move_left = 0; }
 	UnitType getType() { return type; }
+	virtual void attack(int index) { return; }
+
+	/* mob only functions */
+	virtual void callHandler() { return; }
+	virtual void updateThreat() { return; }
+
 
 
 protected:

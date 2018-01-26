@@ -8,6 +8,7 @@
 #include "dungeon.h"
 #include "Encounter.h"
 #include "Room.h"
+#include "Mob.h"
 
 bool hover;
 //Modulation components
@@ -393,6 +394,11 @@ int main(int argc, char* args[])
 					if (r <= 18000)
 						mod_state = MOD_UP;
 					drawRoom();
+					if (room->getCurrUnit()->getType() == ENEMY) {
+						//differentiate between melee and ranged
+						room->getCurrUnit()->callHandler();
+					}
+
 					if (hover) {
 						if (MouseDown && MouseUp && !MouseRight && ab != NONE) {
 							//execute click handler
