@@ -13,6 +13,40 @@ void loadAbilityMap(){
 	
 }
 
+std::vector<int> getPath(int end, int start) {
+	std::vector<int> retvec;
+	int width = room->getWidth();
+	int target_x = end % width;
+	int target_y = end / width;
+	int x = start % width;
+	int y = start / width;
+	bool switcher = false;
+	while (x + y*width != end) {
+		switch (switcher) {
+		case true:
+			if (x != target_x) {
+				if (x < target_x)
+					x++;
+				else
+					x--;
+			}
+			switcher = false;
+			break;
+		case false:
+			if (y != target_y) {
+				if (y < target_y)
+					y++;
+				else
+					y--;
+			}
+			switcher = true;
+			break;
+		}
+		retvec.push_back(x + y * width);
+	}
+	return retvec;
+}
+
 Ability::Ability() {
 
 }
@@ -31,6 +65,8 @@ Ability::Ability(std::string name_, std::string info_, AbilityType type_, int cd
 //click handlers for abilities
 
 void moveClick(int index) {
+	int i;
+	int width = room->getWidth();
 	Unit* curr = room->getCurrUnit();
 	int curr_x = curr->getRMO() % room->getWidth();
 	int curr_y = curr->getRMO() / room->getHeight();
@@ -38,6 +74,18 @@ void moveClick(int index) {
 	int next_y = index / room->getHeight();
 	int distance = std::abs(curr_x - next_x) + std::abs(curr_y - next_y);
 	curr->setMoveLeft(curr->getMoveLeft() - distance);
+	std::vector<int> RMO_list = getPath(index, curr->getRMO());
+	room->clearRange();
+	for (i = 0; i < RMO_list.size(); i++) {
+		//SDL_Delay(100);
+		curr->setRMO(RMO_list[i]);
+		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = ENEMY;
+		drawRoom();
+		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = NOTHING;
+		SDL_RenderPresent(gRenderer);
+		Sleep(200);
+	}
+	room->getTile(curr->getRMO() % width, curr->getRMO() / width)->type = ENEMY;
 	room->move(index);
 	curr->setRMO(index);
 	room->clearRange();

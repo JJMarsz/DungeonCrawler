@@ -56,7 +56,7 @@ void Mob::updateThreat() {
 	int i;
 	int width = room->getWidth();
 	for (i = 0; i < initlist->size(); i++) {
-		if (initlist->at(i)->getType() == CHAR)
+		if (initlist->at(i)->getType() == CHARACTER)
 			party.push_back(initlist->at(i));
 	}
 	int mobx = getRMO() % width;
@@ -102,7 +102,7 @@ void Mob::attack(int index) {
 	int i;
 	int width = room->getWidth();
 	for (i = 0; i < initlist->size(); i++) {
-		if (initlist->at(i)->getType() == CHAR)
+		if (initlist->at(i)->getType() == CHARACTER)
 			party.push_back(initlist->at(i));
 	}
 	int distance = std::abs((room->getCurrUnit()->getRMO() % width) - party[target_index]->getRMO() % width) + std::abs((room->getCurrUnit()->getRMO() / width) - party[target_index]->getRMO() / width);
@@ -130,7 +130,17 @@ void Mob::attack(int index) {
 			}
 		}
 		room->getTile(getRMO() % width, getRMO() / width)->type = NOTHING;
-		setRMO(RMO);
+		std::vector<int> RMO_list = getPath(RMO, getRMO());
+		room->clearRange();
+		for (i = 0; i < RMO_list.size(); i++) {
+			//SDL_Delay(100);
+			setRMO(RMO_list[i]);
+			room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = ENEMY;
+			drawRoom();
+			room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = NOTHING;
+			SDL_RenderPresent(gRenderer);
+			Sleep(200);
+		}
 		room->getTile(getRMO() % width, getRMO() / width)->type = ENEMY;
 	}
 	if (distance == 1) {

@@ -173,7 +173,7 @@ QuestList::QuestList() {
 		list[i].q.loadChoice(STR);
 		list[i].q.loadChoice(DEX);
 		list[i].q.loadChoice(CON);
-		list[i].q.loadChoice(INT);
+		list[i].q.loadChoice(INTEL);
 		list[i].q.loadChoice(WIS);
 		list[i].q.loadChoice(CHA);
 

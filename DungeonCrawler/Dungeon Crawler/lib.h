@@ -13,6 +13,7 @@
 #include <time.h>
 #include <chrono>
 #include <cmath>
+#include <Windows.h>
 
 typedef void(*func)();
 
@@ -323,7 +324,7 @@ enum UpgradeState {
 };
 
 enum UnitType {
-	CHAR,
+	CHARACTER,
 	ENEMY,
 	BOSS_BOI,
 	NOTHING,

@@ -55,7 +55,7 @@ void loadAbilityMap();
 //maintains every ability used in game
 extern std::unordered_map<std::string, Ability> abMap;
 extern void(*click_handler)(int index);
-
+extern std::vector<int> getPath(int end, int start);
 //ability click handlers
 void moveClick(int index);
 

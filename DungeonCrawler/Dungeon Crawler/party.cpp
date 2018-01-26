@@ -26,7 +26,7 @@ Character::Character(std::string name_, int str_, int dex_, int con_, int intel_
 	max_health = health_;
 	AC = AC_;
 	xp = 0;
-	type = CHAR;
+	type = CHARACTER;
 }
 
 Character::Character(){}

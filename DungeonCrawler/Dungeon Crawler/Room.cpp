@@ -143,10 +143,10 @@ void Room::placeUnits() {
 		switch (dir) {
 		case UP:
 			//place char at top, mob at bot
-			if (unitList[i]->getType() == CHAR) {
+			if (unitList[i]->getType() == CHARACTER) {
 				while (roomMap[index].type != NOTHING)
 					index = rand() % width;
-				roomMap[index].type = CHAR;
+				roomMap[index].type = CHARACTER;
 				unitList[i]->setRMO(index);
 			}
 			else {
@@ -158,10 +158,10 @@ void Room::placeUnits() {
 			break;
 		case LEFT:
 			//place char at left, mob on right
-			if (unitList[i]->getType() == CHAR) {
+			if (unitList[i]->getType() == CHARACTER) {
 				while (roomMap[index*width].type != NOTHING)
 					index = rand() % height;
-				roomMap[index*width].type = CHAR;
+				roomMap[index*width].type = CHARACTER;
 				unitList[i]->setRMO(index*width);
 			}
 			else {
@@ -173,10 +173,10 @@ void Room::placeUnits() {
 			break;
 		case DOWN:
 			//place char on bot, mob on top
-			if (unitList[i]->getType() == CHAR) {
+			if (unitList[i]->getType() == CHARACTER) {
 				while (roomMap[index + (height - 1)*width].type != NOTHING)
 					index = rand() % width;
-				roomMap[index + (height - 1)*width].type = CHAR;
+				roomMap[index + (height - 1)*width].type = CHARACTER;
 				unitList[i]->setRMO(index + (height - 1)*width);
 			}
 			else {
@@ -188,10 +188,10 @@ void Room::placeUnits() {
 			break;
 		case RIGHT:
 			//place char on right, mob on left
-			if (unitList[i]->getType() == CHAR) {
+			if (unitList[i]->getType() == CHARACTER) {
 				while (roomMap[(index + 1)*width - 1].type != NOTHING)
 					index = rand() % height;
-				roomMap[(index + 1)*width - 1].type = CHAR;
+				roomMap[(index + 1)*width - 1].type = CHARACTER;
 				unitList[i]->setRMO((index + 1)*width - 1);
 			}
 			else {
@@ -224,5 +224,5 @@ void Room::clearRange() {
 
 void Room::move(int index) {
 	roomMap[getCurrUnit()->getRMO()].type = NOTHING;
-	roomMap[index].type = CHAR;
+	roomMap[index].type = CHARACTER;
 }

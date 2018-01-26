@@ -32,7 +32,7 @@ EncounterList::EncounterList() {
 	choiceList[STR] = testStr;
 	choiceList[DEX] = testDex;
 	choiceList[CON] = testCon;
-	choiceList[INT] = testInt;
+	choiceList[INTEL] = testInt;
 	choiceList[WIS] = testWis;
 	choiceList[CHA] = testCha;
 

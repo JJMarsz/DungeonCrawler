@@ -935,7 +935,7 @@ void drawRoom() {
 	std::vector<Unit*>* order = room->getInititiveOrder();
 	for (x = 0; x < order->size(); x++) {
 		switch (order->at(x)->getType()) {
-		case CHAR:
+		case CHARACTER:
 			charSST.render(start_x + 50 * (order->at(x)->getRMO() % room->getWidth()), start_y + 50 * (order->at(x)->getRMO() / room->getWidth()), &order->at(x)->getIcon50());
 			break;
 		case ENEMY:
@@ -984,7 +984,7 @@ void drawRoom() {
 		healthboxSST.render(INIT_X - 25, INIT_Y + 60 * x, &healthBoxClips[health_ratio]);
 		healthBoxClips[health_ratio].w = 50;
 		switch (order->at(x)->getType()) {
-		case CHAR:
+		case CHARACTER:
 			charSST.render(INIT_X, INIT_Y + 60 * x, &order->at(x)->getIcon50());
 			switch (char_count) {
 			case 0:

@@ -48,7 +48,7 @@ enum ChoiceIndex {
 	STR,
 	DEX,
 	CON,
-	INT,
+	INTEL,
 	WIS,
 	CHA
 };
