@@ -1,8 +1,9 @@
 #include "Room.h"
 #include "Quest.h"
+#include "Mob.h"
 
 Room* room = NULL;
-
+std::vector<Mob> enemyList;
 //used to sort in descending order
 bool wayToSort(int i, int j) { return i > j; }
 
@@ -61,13 +62,12 @@ Unit* Room::getCurrUnit() { return unitList[init_index]; }
 int Room::getInitIndex() { return init_index; }
 std::vector<Unit*>* Room::getInititiveOrder() { return &unitList; }
 
-void Room::rollInit() {
+void Room::rollInit(std::string mobname) {
 	//only dealing with chars for now
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
 		std::chrono::system_clock::now().time_since_epoch()
 		);
 	srand(ms.count());//random seed
-	unitList.resize(MAX_CHAR);
 	std::unordered_map<int, Unit*> map;
 	std::vector<int> init;
 	int i, mod = 0;
@@ -77,12 +77,33 @@ void Room::rollInit() {
 		int roll = rand() % 20 + mod + gParty.getChar(i)->getDex();
 		while (map.find(roll) != map.end())
 			roll--;
-		Unit* newboi = gParty.getChar(i);
-		map[roll] = newboi;
+		map[roll] = gParty.getChar(i);
 		init.push_back(roll);
 	}
 	//then add mobs
-
+	int count;
+	switch (current_quests[quest_index].getDiff()) {
+	case EASY:
+		count = 3;
+		break;
+	case MEDIUM:
+		count = 4;
+		break;
+	case HARD:
+		count = 5;
+		break;
+	}
+	unitList.resize(MAX_CHAR + count);
+	Mob newb = mobMap[mobname];
+	enemyList.resize(count);
+	for (i = 0; i < count; i++) {
+		int roll = rand() % 20 + 1 + newb.getDex();
+		while (map.find(roll) != map.end())
+			roll--;
+		enemyList[i] = mobMap[mobname];
+		map[roll] = &enemyList[i];
+		init.push_back(roll);
+	}
 	//sort create sorted list
 	std::sort(init.begin(), init.end(), wayToSort);
 	for (i = 0; i < init.size(); i++) {

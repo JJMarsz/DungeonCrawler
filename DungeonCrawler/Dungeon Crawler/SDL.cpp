@@ -1,6 +1,7 @@
 #include "SDL.h"
 #include "Quest.h"
 #include "Room.h"
+#include "Mob.h"
 
 SDL_Renderer* gRenderer = NULL;
 TTF_Font *gFont = NULL;
@@ -90,6 +91,8 @@ bool init()
 	dungeonButtons.resize(3);
 	multiplyClips.resize(5);
 	choiceButtons.resize(4);
+	mobClips.resize(NUM_MOBS);
+	mobNumClips.resize(5);
 	roomTileClips.resize(NUM_ROOM_TILES);
 	int i;
 	for (i = 0; i<TOTAL_BUTTONS; i++)
@@ -691,6 +694,48 @@ bool loadMedia()
 		endTurnButton.setClips(clips);
 		endTurnButton.setPosition(662, 612);
 	}
+	if (!mobSST.loadFromFile("textures/mobicons.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		mobClips[SKELETON].x = SKELETON_X;
+		mobClips[SKELETON].y = SKELETON_Y;
+		mobClips[SKELETON].w = 50;
+		mobClips[SKELETON].h = 50;
+
+	}
+	if (!mobNum.loadFromFile("textures/mobnum.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		mobNumClips[MOBONE].x = MOBONE_X;
+		mobNumClips[MOBONE].y = MOB_Y;
+		mobNumClips[MOBONE].w = 15;
+		mobNumClips[MOBONE].h = 15;
+
+		mobNumClips[MOBTWO].x = MOBTWO_X;
+		mobNumClips[MOBTWO].y = MOB_Y;
+		mobNumClips[MOBTWO].w = 15;
+		mobNumClips[MOBTWO].h = 15;
+
+		mobNumClips[MOBTHREE].x = MOBTHREE_X;
+		mobNumClips[MOBTHREE].y = MOB_Y;
+		mobNumClips[MOBTHREE].w = 15;
+		mobNumClips[MOBTHREE].h = 15;
+
+		mobNumClips[MOBFOUR].x = MOBFOUR_X;
+		mobNumClips[MOBFOUR].y = MOB_Y;
+		mobNumClips[MOBFOUR].w = 15;
+		mobNumClips[MOBFOUR].h = 15;
+
+		mobNumClips[MOBFIVE].x = MOBFIVE_X;
+		mobNumClips[MOBFIVE].y = MOB_Y;
+		mobNumClips[MOBFIVE].w = 15;
+		mobNumClips[MOBFIVE].h = 15;
+	}
+	loadMobs();
 	return success;
 }
 
@@ -738,6 +783,8 @@ void close() {
 	background.free();
 	endTurn.free();
 	endTurnText.free();
+	mobSST.free();
+	mobNum.free();
 
 	//Free Textures
 	spriteSheetTexture.free();
@@ -883,7 +930,7 @@ void drawRoom() {
 				roomTilesSST.render(x * 50 + start_x, y * 50 + start_y, &roomTileClips[getRoomTileIndex(x, y)]);
 		}
 	}
-
+	int mob_count = 0;
 	//draw units onto field
 	std::vector<Unit*>* order = room->getInititiveOrder();
 	for (x = 0; x < order->size(); x++) {
@@ -892,13 +939,32 @@ void drawRoom() {
 			charSST.render(start_x + 50 * (order->at(x)->getRMO() % room->getWidth()), start_y + 50 * (order->at(x)->getRMO() / room->getWidth()), &order->at(x)->getIcon50());
 			break;
 		case ENEMY:
-
+			mobSST.render(start_x + 50 * (order->at(x)->getRMO() % room->getWidth()), start_y + 50 * (order->at(x)->getRMO() / room->getWidth()), &order->at(x)->getIcon50());
+			switch (mob_count) {
+			case 0:
+				mobNum.render(33 + start_x + 50 * (order->at(x)->getRMO() % room->getWidth()), 33 + start_y + 50 * (order->at(x)->getRMO() / room->getWidth()), &mobNumClips[MOBONE]);
+				break;
+			case 1:
+				mobNum.render(33 + start_x + 50 * (order->at(x)->getRMO() % room->getWidth()), 33 + start_y + 50 * (order->at(x)->getRMO() / room->getWidth()), &mobNumClips[MOBTWO]);
+				break;
+			case 2:
+				mobNum.render(33 + start_x + 50 * (order->at(x)->getRMO() % room->getWidth()), 33 + start_y + 50 * (order->at(x)->getRMO() / room->getWidth()), &mobNumClips[MOBTHREE]);
+				break;
+			case 3:
+				mobNum.render(33 + start_x + 50 * (order->at(x)->getRMO() % room->getWidth()), 33 + start_y + 50 * (order->at(x)->getRMO() / room->getWidth()), &mobNumClips[MOBFOUR]);
+				break;
+			case 4:
+				mobNum.render(33 + start_x + 50 * (order->at(x)->getRMO() % room->getWidth()), 33 + start_y + 50 * (order->at(x)->getRMO() / room->getWidth()), &mobNumClips[MOBFIVE]);
+				break;
+			}
+			mob_count++;
 			break;
 		case BOSS_BOI:
 
 			break;
 		}
 	}
+	mob_count = 0;
 	//highlight current char
 	Unit* currUnit = room->getCurrUnit();
 	roomTilesSST.render(start_x + (currUnit->getRMO() % room->getWidth())*50, start_y + 50*(currUnit->getRMO() / room->getWidth()), &roomTileClips[SELECTED]);
@@ -908,38 +974,57 @@ void drawRoom() {
 	int char_count = 0;
 	double slice, diff, ratio;
 	SDL_Color textColor = { 255, 255, 255 };
-	for (x = 0; x < order->size(); x++) {
+	for (x = 0; x < order->size(); x++){
+		slice = (double)(order->at(x)->getMaxHP()) / 11;
+		diff = (order->at(x)->getMaxHP() - order->at(x)->getHP());
+		ratio = diff / slice;
+		ratio += .5;
+		health_ratio = (int)ratio;
+		healthBoxClips[health_ratio].w = 20;
+		healthboxSST.render(INIT_X - 25, INIT_Y + 60 * x, &healthBoxClips[health_ratio]);
+		healthBoxClips[health_ratio].w = 50;
 		switch (order->at(x)->getType()) {
 		case CHAR:
 			charSST.render(INIT_X, INIT_Y + 60 * x, &order->at(x)->getIcon50());
-			slice = (double)(order->at(x)->getMaxHP()) / 11;
-			diff = (order->at(x)->getMaxHP() - order->at(x)->getHP());
-			ratio = diff / slice;
-			ratio += .5;
-			health_ratio = (int)ratio;
-			healthBoxClips[health_ratio].w = 20;
-			healthboxSST.render(INIT_X - 25, INIT_Y + 60 * x, &healthBoxClips[health_ratio]);
-			healthBoxClips[health_ratio].w = 50;
 			switch (char_count) {
 			case 0:
 				hp0.loadFromRenderedText(std::to_string(order->at(x)->getHP()) + "/" + std::to_string(order->at(x)->getMaxHP()), textColor, 200);
-				hp0.render(INIT_X - 82, INIT_Y + 12);
+				hp0.render(INIT_X - 82, INIT_Y + 12 + x*60);
 				char_count++;
 				break;
 			case 1:
 				hp1.loadFromRenderedText(std::to_string(order->at(x)->getHP()) + "/" + std::to_string(order->at(x)->getMaxHP()), textColor, 200);
-				hp1.render(INIT_X - 82, INIT_Y + 72);
+				hp1.render(INIT_X - 82, INIT_Y + 12 + x * 60);
 				char_count++;
 				break;
 			case 2:
 				hp2.loadFromRenderedText(std::to_string(order->at(x)->getHP()) + "/" + std::to_string(order->at(x)->getMaxHP()), textColor, 200);
-				hp2.render(INIT_X - 82, INIT_Y + 132);
+				hp2.render(INIT_X - 82, INIT_Y + 12 + x * 60);
 				char_count++;
 				break;
 			}
 			break;
 		case ENEMY:
 
+			mobSST.render(INIT_X, INIT_Y + 60 * x, &order->at(x)->getIcon50());
+			switch (mob_count) {
+			case 0:
+				mobNum.render(33 + INIT_X, 33 + INIT_Y + 60*x, &mobNumClips[MOBONE]);
+				break;
+			case 1:
+				mobNum.render(33 + INIT_X, 33 + INIT_Y + 60 * x, &mobNumClips[MOBTWO]);
+				break;
+			case 2:
+				mobNum.render(33 + INIT_X, 33 + INIT_Y + 60 * x, &mobNumClips[MOBTHREE]);
+				break;
+			case 3:
+				mobNum.render(33 + INIT_X, 33 + INIT_Y + 60 * x, &mobNumClips[MOBFOUR]);
+				break;
+			case 4:
+				mobNum.render(33 + INIT_X, 33 + INIT_Y + 60 * x, &mobNumClips[MOBFIVE]);
+				break;
+			}
+			mob_count++;
 			break;
 		case BOSS_BOI:
 

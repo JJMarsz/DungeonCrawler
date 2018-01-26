@@ -385,7 +385,8 @@ void goldLoot() {
 void test() {
 	state = DUNGEON_ROOM;
 	room = new Room;
-	room->rollInit();
+
+	room->rollInit("Skeleton");
 	room->placeUnits();
 	room->getCurrUnit()->resetMove();
 }

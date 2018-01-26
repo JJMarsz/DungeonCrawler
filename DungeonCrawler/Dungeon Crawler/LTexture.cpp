@@ -43,6 +43,8 @@ LTexture roomTilesSST;
 LTexture background;
 LTexture endTurn;
 LTexture endTurnText;
+LTexture mobSST;
+LTexture mobNum;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> tileSpriteClips;
@@ -50,6 +52,8 @@ std::vector<SDL_Rect> charClips;
 std::vector<SDL_Rect> healthBoxClips;
 std::vector<SDL_Rect> multiplyClips;
 std::vector<SDL_Rect> roomTileClips;
+std::vector<SDL_Rect> mobClips;
+std::vector<SDL_Rect> mobNumClips;
 std::vector<LTexture*> texts;
 
 /* Texture class defenitions */

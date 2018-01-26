@@ -21,7 +21,7 @@ class Room
 {
 public:
 	Room();
-	void rollInit();
+	void rollInit(std::string mobname);
 	void placeUnits();
 	void passControl();
 	void clearRange();

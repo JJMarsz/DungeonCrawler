@@ -209,6 +209,20 @@ typedef void(*func)();
 #define BUTTON_NINE_X			521
 #define BUTTON_TEN_X			581
 
+/* Mob numbering */
+#define MOB_Y					0
+#define MOBONE_X				0
+#define MOBTWO_X				15
+#define MOBTHREE_X				30
+#define MOBFOUR_X				45
+#define MOBFIVE_X				60
+/* MOB STUFF */
+
+#define NUM_MOBS				1
+
+#define SKELETON_X				0
+#define SKELETON_Y				0
+
 enum LButtonSprite
 {
 	BUTTON_SPRITE_MOUSE_OUT = 0,
@@ -314,5 +328,17 @@ enum UnitType {
 	BOSS_BOI,
 	NOTHING,
 	RANGE
+};
+
+enum MobName {
+	SKELETON
+};
+
+enum MobNum {
+	MOBONE,
+	MOBTWO,
+	MOBTHREE,
+	MOBFOUR,
+	MOBFIVE
 };
 #endif
