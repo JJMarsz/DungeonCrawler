@@ -22,12 +22,23 @@ std::vector<int> getPath(int end, int start) {
 	int y = start / width;
 	bool switcher = false;
 	while (x + y*width != end) {
+		if (room->getTile(x, y)->type == RANGE && x + y * width != start && retvec.size() != 0 && x + y * width != end) {
+			retvec.pop_back();
+			if (retvec.size() > 0) {
+				x = retvec.back() % width;
+				y = retvec.back() / width;
+			}
+			else {
+				x = start % width;
+				y = start / width;
+			}
+		}
 		switch (switcher) {
 		case true:
 			if (x != target_x) {
 				if (x < target_x)
 					x++;
-				else
+				else if(x > target_x)
 					x--;
 			}
 			switcher = false;
@@ -36,7 +47,7 @@ std::vector<int> getPath(int end, int start) {
 			if (y != target_y) {
 				if (y < target_y)
 					y++;
-				else
+				else if(y > target_y)
 					y--;
 			}
 			switcher = true;
@@ -79,15 +90,13 @@ void moveClick(int index) {
 	for (i = 0; i < RMO_list.size(); i++) {
 		//SDL_Delay(100);
 		curr->setRMO(RMO_list[i]);
-		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = ENEMY;
+		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = CHARACTER;
 		drawRoom();
 		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = NOTHING;
 		SDL_RenderPresent(gRenderer);
-		Sleep(200);
+		Sleep(150);
 	}
-	room->getTile(curr->getRMO() % width, curr->getRMO() / width)->type = ENEMY;
-	room->move(index);
-	curr->setRMO(index);
+	room->getTile(curr->getRMO() % width, curr->getRMO() / width)->type = CHARACTER;
 	room->clearRange();
 	if (curr->getMoveLeft() > 0)
 		moveButton(0);

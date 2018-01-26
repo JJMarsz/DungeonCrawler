@@ -14,7 +14,7 @@ public:
 
 	/* attack the target, returns true on kill */
 	void attack(int index);
-
+	void moveMob();
 	SDL_Rect getIcon50();
 	void resetMove() { move_left = move; }
 	int getDex() { return dex; }

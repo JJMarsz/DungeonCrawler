@@ -62,7 +62,10 @@ void Mob::updateThreat() {
 	int mobx = getRMO() % width;
 	int moby = getRMO() / width;
 	int x, y, distance;
+	double slice, diff, ratio;
+	int health_ratio;
 	for (i = 0; i < party.size(); i++) {
+		//distance update threat
 		x = party[i]->getRMO() % width;
 		y = party[i]->getRMO() / width;
 		distance = std::abs(x - mobx) + std::abs(y = moby);
@@ -72,9 +75,38 @@ void Mob::updateThreat() {
 			threat[i] += 2;
 		else if (distance > 3)
 			threat[i] += 3;
+		else if (distance > 1)
+			threat[i] += 5;
 		else
+			threat[i] += 8;
+		//hp update threat
+		slice = (double)(party[i]->getMaxHP()) / 11;
+		diff = (party[i]->getMaxHP() - party[i]->getHP());
+		ratio = diff / slice;
+		ratio += .5;
+		health_ratio = (int)ratio;
+		switch (health_ratio) {
+		case 2:
+		case 3:
+			threat[i] += 1;
+			break;
+		case 4:
+		case 5:
+			threat[i] += 2;
+			break;
+		case 6:
+		case 7:
+			threat[i] += 3;
+			break;
+		case 8:
 			threat[i] += 4;
+				break;
+		case 9:
+			threat[i] += 5;
+				break;
+		}
 	}
+	
 	//find highest threat 
 	std::vector<int> target;
 	int highest_threat = 0;
@@ -94,9 +126,61 @@ void Mob::updateThreat() {
 	target_index = target[rand() % target.size()];
 }
 
+void Mob::moveMob() {
+	std::vector<Unit*>* initlist = room->getInititiveOrder();
+	std::vector<Unit*> party;
+	int i;
+	int width = room->getWidth();
+	for (i = 0; i < initlist->size(); i++) {
+		if (initlist->at(i)->getType() == CHARACTER)
+			party.push_back(initlist->at(i));
+	}
+	int dist;
+	//move towards target
+	moveButton(0);
+	ab = NOPE;
+	std::vector<int> distances(room->getWidth()*room->getHeight(), -1);
+	for (i = 0; i < distances.size(); i++) {
+		if (room->getTile(i % width, i / width)->type == RANGE) {
+			//get distance and store in vector
+			dist = std::abs(party[target_index]->getRMO() % width - i % width) + std::abs(party[target_index]->getRMO() / width - i / width);
+			distances[i] = dist;
+		}
+	}
+	int RMO = 0;
+	//get RMO
+	dist = 15;
+	for (i = 0; i < distances.size(); i++) {
+		if (dist > distances[i] && distances[i] != -1) {
+			dist = distances[i];
+			RMO = i;
+		}
+	}
+	setMoveLeft(dist);
+	room->getTile(getRMO() % width, getRMO() / width)->type = NOTHING;
+	std::vector<int> RMO_list = getPath(RMO, getRMO());
+	room->clearRange();
+	messageBox.loadFromRenderedText("The " + name + " lumbers towards you.", { 255, 255, 255 } , 800);
+	for (i = 0; i < RMO_list.size(); i++) {
+		//SDL_Delay(100);
+		setRMO(RMO_list[i]);
+		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = ENEMY;
+		drawRoom();
+		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = NOTHING;
+		SDL_RenderPresent(gRenderer);
+		Sleep(150);
+	}
+	room->getTile(getRMO() % width, getRMO() / width)->type = ENEMY;
+}
+
 void Mob::attack(int index) {
 	//discard index since mob will attack stored in target index
 	//check if already adjacent
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	std::vector<Unit*>* initlist = room->getInititiveOrder();
 	std::vector<Unit*> party;
 	int i;
@@ -106,45 +190,41 @@ void Mob::attack(int index) {
 			party.push_back(initlist->at(i));
 	}
 	int distance = std::abs((room->getCurrUnit()->getRMO() % width) - party[target_index]->getRMO() % width) + std::abs((room->getCurrUnit()->getRMO() / width) - party[target_index]->getRMO() / width);
-	//already near attack
+	//use move
 	if (distance != 1) {
-		int dist;
-		//move towards target
-		moveButton(0);
-		ab = NOPE;
-		std::vector<int> distances(room->getWidth()*room->getHeight(), -1);
-		for (i = 0; i < distances.size(); i++) {
-			if (room->getTile(i % width, i/width)->type == RANGE) {
-				//get distance and store in vector
-				dist = std::abs(party[target_index]->getRMO() % width - i%width) + std::abs(party[target_index]->getRMO() / width - i/width);
-				distances[i] = dist;
-			}
-		}
-		int RMO = 0;
-		//get RMO
-		dist = 10;
-		for (i = 0; i < distances.size(); i++) {
-			if (dist > distances[i] && distances[i] != -1) {
-				dist = distances[i];
-				RMO = i;
-			}
-		}
-		room->getTile(getRMO() % width, getRMO() / width)->type = NOTHING;
-		std::vector<int> RMO_list = getPath(RMO, getRMO());
-		room->clearRange();
-		for (i = 0; i < RMO_list.size(); i++) {
-			//SDL_Delay(100);
-			setRMO(RMO_list[i]);
-			room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = ENEMY;
-			drawRoom();
-			room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = NOTHING;
-			SDL_RenderPresent(gRenderer);
-			Sleep(200);
-		}
-		room->getTile(getRMO() % width, getRMO() / width)->type = ENEMY;
+		moveMob();
 	}
-	if (distance == 1) {
-		//attack
+	distance = std::abs((room->getCurrUnit()->getRMO() % width) - party[target_index]->getRMO() % width) + std::abs((room->getCurrUnit()->getRMO() / width) - party[target_index]->getRMO() / width);
+	//if still not within range, use action to move
+	if (distance != 1) {
+		//repeat move
+		resetMove();
+		moveMob();
+	}
+	else {
+		//attack target
+		drawRoom();
+		messageBox.loadFromRenderedText("The " + name + " attacks the " + party[target_index]->getName() + "!", { 255, 255, 255 }, 650);
+		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+		SDL_RenderPresent(gRenderer);
+		Sleep(500);
+		drawRoom();
+		int roll = rand() % 20 + 1 + atk_mod;
+		if (roll > party[target_index]->getAC()) {
+			int dmg=dmg_mod;
+			for (i = 0; i < dice; i++) {
+				dmg += (rand() % dmg) + 1;
+			}
+			party[target_index]->damage(dmg);
+			messageBox.loadFromRenderedText("The " + name + " hit the " + party[target_index]->getName() + " for " + std::to_string(dmg) + "!", { 255, 255, 255 }, 650);
+			messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+		}
+		else {
+			messageBox.loadFromRenderedText("The " + name + " missed the " + party[target_index]->getName() + ".", { 255, 255, 255 }, 650);
+			messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+		}
+		SDL_RenderPresent(gRenderer);
+		Sleep(500);
 	}
 	endTurnHandler(0);
 }

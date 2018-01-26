@@ -25,6 +25,9 @@ public:
 	virtual void resetMove() { move_left = 0; }
 	UnitType getType() { return type; }
 	virtual void attack(int index) { return; }
+	virtual std::string getName() { return ""; }
+	virtual int getAC() { return 0; }
+	virtual void damage(int dmg) { return; }
 
 	/* mob only functions */
 	virtual void callHandler() { return; }

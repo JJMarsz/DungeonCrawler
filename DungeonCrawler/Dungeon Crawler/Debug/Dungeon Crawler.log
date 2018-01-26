@@ -1,4 +1,3 @@
 ﻿  Ability.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\ability.cpp(79): warning C4018: '<': signed/unsigned mismatch
-     Creating library C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.lib and object C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exp
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\ability.cpp(90): warning C4018: '<': signed/unsigned mismatch
   Dungeon Crawler.vcxproj -> C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe
