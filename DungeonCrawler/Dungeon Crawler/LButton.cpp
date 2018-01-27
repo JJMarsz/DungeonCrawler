@@ -617,8 +617,8 @@ void returnToTown(int index) {
 
 /* ABILITIES */
 void moveRecursive(int x, int y, int length) {
-	if (room->getTile(x, y)->type == NOTHING || room->getTile(x, y)->type == RANGE)
-		room->getTile(x, y)->type = RANGE;
+	if (room->getTile(x, y)->type == NOTHING)
+		room->getTile(x, y)->color = YELLOW;
 	else if (!(room->getCurrUnit()->getRMO() == x + y * room->getWidth()))
 		return;
 	if (length <= 0)
@@ -636,36 +636,44 @@ void moveRecursive(int x, int y, int length) {
 }
 
 void rangeColor(int x, int y, int length) {
-	if (room->getTile(x, y)->type != CHARACTER)
-		room->getTile(x, y)->type = RANGE;
+	if(!(room->getCurrUnit()->getRMO() == x + y * room->getWidth()))
+		room->getTile(x, y)->color = RED;
 	if (length <= 0)
 		return;
 	if (x > 0) {
-		moveRecursive(x - 1, y, length - 1);
+		rangeColor(x - 1, y, length - 1);
 	}
 	if (y > 0) {
-		moveRecursive(x, y - 1, length - 1);
+		rangeColor(x, y - 1, length - 1);
 	}
 	if (x < room->getWidth() - 1)
-		moveRecursive(x + 1, y, length - 1);
+		rangeColor(x + 1, y, length - 1);
 	if (y < room->getHeight() - 1)
-		moveRecursive(x, y + 1, length - 1);
+		rangeColor(x, y + 1, length - 1);
 }
 
 void moveButton(int index) {
-	room->clearRange();
 	Unit* currUnit = room->getCurrUnit();
+	if (currUnit->getMoveLeft() == 0)
+		return;
+	room->clearRange();
 	moveRecursive(currUnit->getRMO()%room->getWidth(), currUnit->getRMO()/room->getWidth(), currUnit->getMoveLeft());
 	ab = MOVE;
-	click_handler = abMap["Move"].getClickHandler();
+	if (currUnit->getType() == CHARACTER)
+		click_handler = currUnit->getAb("Move", FREE)->getClickHandler();
+	else
+		click_handler = abMap["Move"].getClickHandler();
 }
 
 void greatAxeButton(int index) {
+	Unit* curr = room->getCurrUnit();
+	if (curr->getAction() == false)
+		return;
+	if(curr->getAb("Greataxe", ACTION))
 	room->clearRange();
 	ab = ATTACK;
-	Unit* curr = room->getCurrUnit();
 	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1);
-	click_handler = abMap["Greataxe"].getClickHandler();
+	click_handler = curr->getAb("Greataxe", ACTION)->getClickHandler();
 }
 
 /* Used primarily for testing */

@@ -926,15 +926,13 @@ void drawRoom() {
 	//draw tiles
 	for (x = 0; x < room->getWidth(); x++) {
 		for (y = 0; y < room->getHeight(); y++) {
-			if (room->getTile(x, y)->type == RANGE) {
-				switch (ab) {
-				case ATTACK:
-					roomTilesSST.setColor(255, 100, 100);
-					break;
-				case MOVE:
-					roomTilesSST.setColor(239, 228, 176);
-					break;
-				}
+			switch (room->getTile(x, y)->color) {
+			case RED:
+				roomTilesSST.setColor(255, 100, 100);
+				break;
+			case YELLOW:
+				roomTilesSST.setColor(239, 228, 176);
+				break;
 			}
 			roomTilesSST.render(x * 50 + start_x, y * 50 + start_y, &roomTileClips[getRoomTileIndex(x, y)]);
 			roomTilesSST.setColor(255, 255, 255);
@@ -1048,6 +1046,10 @@ void drawRoom() {
 		Buttons[x].setHandler(abList[x]->getButtonHandler());
 		Buttons[x].render();
 	}
+}
+
+void drawUnits() {
+
 }
 
 void drawMenu() {

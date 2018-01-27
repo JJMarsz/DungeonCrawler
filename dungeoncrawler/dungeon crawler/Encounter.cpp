@@ -388,5 +388,5 @@ void test() {
 
 	room->rollInit("Skeleton");
 	room->placeUnits();
-	room->getCurrUnit()->resetMove();
+	room->getCurrUnit()->resetTurn();
 }

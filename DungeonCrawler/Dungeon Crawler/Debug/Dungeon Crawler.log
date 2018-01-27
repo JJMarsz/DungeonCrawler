@@ -1,3 +1,5 @@
-﻿  main.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\main.cpp(27): warning C4101: 'w': unreferenced local variable
+﻿  Ability.cpp
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\ability.cpp(101): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\ability.cpp(138): warning C4018: '<': signed/unsigned mismatch
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\ability.cpp(158): warning C4018: '<': signed/unsigned mismatch
   Dungeon Crawler.vcxproj -> C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe

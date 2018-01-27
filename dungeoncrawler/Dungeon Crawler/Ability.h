@@ -26,7 +26,7 @@ public:
 	func2 getClickHandler() { return click_handler; }
 	bool onCooldown() { return (count >= cooldown); }
 	void use() { count = 0; }
-	int rollDamage(int dmg_mod);
+	int rollSingleHit(int atk_mod, int dmg_mod, int target_AC);
 
 
 private:

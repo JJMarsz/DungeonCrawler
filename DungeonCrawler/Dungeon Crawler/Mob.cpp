@@ -35,8 +35,8 @@ Mob::Mob(int AC_, int HP_, int dmg_, int dice_, int atk_mod_, int dmg_mod_, SDL_
 	wis = w;
 	cha = ch;
 	move = move_;
-	HP = HP_;
-	max_HP = HP_;
+	health = HP_;
+	max_health = HP_;
 	threat.resize(3);
 	threat[0] = 0;
 	threat[1] = 0;
@@ -141,7 +141,7 @@ void Mob::moveMob() {
 	ab = NOPE;
 	std::vector<int> distances(room->getWidth()*room->getHeight(), -1);
 	for (i = 0; i < distances.size(); i++) {
-		if (room->getTile(i % width, i / width)->type == RANGE) {
+		if (room->getTile(i % width, i / width)->color == YELLOW) {
 			//get distance and store in vector
 			dist = std::abs(party[target_index]->getRMO() % width - i % width) + std::abs(party[target_index]->getRMO() / width - i / width);
 			distances[i] = dist;
@@ -169,7 +169,7 @@ void Mob::moveMob() {
 		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
 		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = NOTHING;
 		SDL_RenderPresent(gRenderer);
-		Sleep(150);
+		Sleep(200);
 	}
 	room->getTile(getRMO() % width, getRMO() / width)->type = ENEMY;
 }
@@ -198,7 +198,7 @@ void Mob::attack(int index) {
 	//if still not within range, use action to move
 	if (distance != 1) {
 		//repeat move
-		resetMove();
+		resetTurn();
 		moveMob();
 	}
 	else {
@@ -207,7 +207,7 @@ void Mob::attack(int index) {
 		messageBox.loadFromRenderedText("The " + name + " attacks the " + party[target_index]->getName() + "!", { 255, 255, 255 }, 650);
 		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
 		SDL_RenderPresent(gRenderer);
-		Sleep(500);
+		Sleep(1000);
 		drawRoom();
 		int roll = rand() % 20 + 1 + atk_mod;
 		if (roll > party[target_index]->getAC()) {
@@ -224,7 +224,7 @@ void Mob::attack(int index) {
 			messageBox.render((650 - messageBox.getWidth()) / 2, 614);
 		}
 		SDL_RenderPresent(gRenderer);
-		Sleep(500);
+		Sleep(1000);
 	}
 	endTurnHandler(0);
 }

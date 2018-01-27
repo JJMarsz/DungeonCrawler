@@ -332,8 +332,13 @@ enum UnitType {
 	CHARACTER,
 	ENEMY,
 	BOSS_BOI,
-	NOTHING,
-	RANGE
+	NOTHING
+};
+
+enum Highlight {
+	NORMAL,
+	YELLOW,
+	RED
 };
 
 enum MobName {

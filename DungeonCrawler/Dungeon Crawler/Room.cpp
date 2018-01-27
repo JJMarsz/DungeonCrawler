@@ -210,14 +210,13 @@ void Room::passControl() {
 	init_index++;
 	init_index %= unitList.size();
 	//update cds for this chars abs
-	getCurrUnit()->resetMove();
+	getCurrUnit()->resetTurn();
 
 }
 
 void Room::clearRange() {
 	for (int i = 0; i < roomMap.size(); i++) {
-		if (roomMap[i].type == RANGE)
-			roomMap[i].type = NOTHING;
+		roomMap[i].color = NORMAL;
 	}
 
 }

@@ -12,6 +12,7 @@ struct RoomTile {
 	bool down;
 	bool right;
 	UnitType type;
+	Highlight color;
 	//used during move to determine what is in range
 	//also used for abilities to determine what is in range
 	bool special;

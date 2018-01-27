@@ -12,34 +12,69 @@
 
 class Unit {
 public:
-	virtual SDL_Rect getIcon50() { return SDL_Rect(); }
-	virtual int getMaxHP() { return 0; }
-	virtual int getHP() { return 0; }
-	virtual std::vector<Ability*> getAbilities() { return std::vector<Ability*>(0); }
+	/* maintain unit data */
 	void setRMO(int i) { RMO = i; }
 	int getRMO() { return RMO; }
-	virtual int getMove() { return 0; }
 	int getMoveLeft() { return move_left; }
 	void setMoveLeft(int i) { move_left = i; }
-	virtual void moveTo(int index) { return; }
-	virtual void resetMove() { move_left = 0; }
 	UnitType getType() { return type; }
-	virtual void attack(int index) { return; }
-	virtual std::string getName() { return ""; }
-	virtual int getAC() { return 0; }
-	virtual void damage(int dmg) { return; }
+	void resetTurn() { move_left = move; bAction = true; action = true; }
+
+	int getStr() { return str; }
+	int getDex() { return dex; }
+	int getCon() { return con; }
+	int getInt() { return intel; }
+	int getWis() { return wis; }
+	int getCha() { return cha; }
+	int getMaxHP() { return max_health; }
+	int getHP() { return health; }
+	int getAC() { return AC; }
+	int getMove() { return move; }
+	std::string getName() { return name; }
+
+	void useAction() { action = false; }
+	bool getAction() { return action; }
+	void useBAction() { bAction = false; }
+	bool getBAction() { return bAction; }
+
+	void heal(int heal){ health += heal; if (health > max_health) { health = max_health; } }
+	void damage(int dmg) { health -= dmg; }
+
+	/* getters */
+	virtual SDL_Rect getIcon50() { return SDL_Rect(); }
+	virtual std::vector<Ability*> getAbilities() { return std::vector<Ability*>(0); }
 	virtual Ability* getAb(std::string name, AbilityType type) { return NULL; }
+
+
+	/* for chars and enemies alike */
+	virtual void moveTo(int index) { return; }
+	virtual void attack(int index) { return; }
 
 	/* mob only functions */
 	virtual void callHandler() { return; }
 	virtual void updateThreat() { return; }
 
-
-
 protected:
 	int RMO;
 	UnitType type;
 	int move_left;
+
+	//universal stats
+	std::string name;
+	int str;
+	int dex;
+	int con;
+	int intel;
+	int wis;
+	int cha;
+	int move;
+	int health;
+	int max_health;
+	int AC;
+
+	//actions
+	bool action;
+	bool bAction;
 
 };
 
@@ -79,46 +114,22 @@ public:
 
 	void resetMove() { move_left = move; }
 
-	int getStr();
-	int getDex();
-	int getCon();
-	int getInt();
-	int getWis();
-	int getCha();
 	void setStr(int n);
 	void setDex(int n);
 	void setCon(int n);
 	void setInt(int n);
 	void setWis(int n);
 	void setCha(int n);
-	int getMove();
-	int getHP();
-	int getMaxHP();
 	void setMaxHP(int n);
-	int getAC();
 	int getTextIndex();
 	void setTextIndex(int index);
 	void render(int x, int y);
 	void addXP(int xp_);
 	void subXP(int xp_);
-	//Hit(int atk_roll, int dmg_roll);
-	void damage(int dmg);
-	void heal(int heal);
 	Ability* getAb(std::string name, AbilityType type);
 
 private:
-	std::string name;
 	//stats and whatnot
-	int str;
-	int dex;
-	int con;
-	int intel;
-	int wis;
-	int cha;
-	int move;
-	int health;
-	int max_health;
-	int AC;
 	int xp;
 	std::vector<Ability> actionList;
 	std::vector<Ability> bActionList;

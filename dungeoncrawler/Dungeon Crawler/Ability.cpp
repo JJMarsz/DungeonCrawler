@@ -9,7 +9,7 @@ void(*click_handler)(int index) = NULL;
 void loadAbilityMap(){
 	//move
 	abMap["Move"] = Ability("Move", "Move the character", FREE, 1, 6, 0, 0, moveButton, moveClick);
-	abMap["Greataxe"] = Ability("Greataxe", "Attack with a greataxe", ACTION, 1, 1, 8, 0, greatAxeButton, greatAxeClick);
+	abMap["Greataxe"] = Ability("Greataxe", "Attack with a greataxe", ACTION, 1, 1, 1, 8, greatAxeButton, greatAxeClick);
 	
 }
 
@@ -24,7 +24,7 @@ void bloom(std::vector<int> &prevVec, int start, int end) {
 		if (x == start%width && y == start/width)
 			return;
 		prevQ.pop();
-		if (room->getTile(x, y)->type != RANGE)
+		if (room->getTile(x, y)->color == NORMAL)
 			continue;
 		//add all adjacent non in prevvec tiles
 		if (x > 0) {
@@ -93,14 +93,31 @@ Ability::Ability(std::string name_, std::string info_, AbilityType type_, int cd
 	click_handler = click;
 }
 
-int Ability::rollDamage(int dmg_mod) {
+int Ability::rollSingleHit(int atk_mod, int dmg_mod, int target_AC) {
+	//returns -1 on miss and dmg on hit
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
 		std::chrono::system_clock::now().time_since_epoch()
 		);
 	srand(ms.count());//random seed
-	int roll = dmg_mod;
-	for (int i = 0; i < num_dice; i++)
+	int i;
+	int roll = 1 + rand() % 20;
+	if (roll + atk_mod <= target_AC)
+		return -1;
+	else if (roll == 20) {
+		messageBox.loadFromRenderedText("A critical hit!", { 255, 255, 255 }, 650);
+		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+		SDL_RenderPresent(gRenderer);
+		Sleep(800);
+		roll = dmg_mod + dmg_dice;
+	}
+	else
+		roll = dmg_mod;
+	for (i = 0; i < num_dice; i++)
 		roll += 1 + rand() % dmg_dice;
+	drawRoom();
+	messageBox.loadFromRenderedText("The " + room->getCurrUnit()->getName() + " landed a hit and dealt " + std::to_string(roll) + " damage!", { 255, 255, 255 }, 650);
+	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+	SDL_RenderPresent(gRenderer);
 	return roll;
 }
 //click handlers for abilities
@@ -119,13 +136,12 @@ void moveClick(int index) {
 	room->clearRange();
 	room->getTile(curr->getRMO() % width, curr->getRMO() / width)->type = NOTHING;
 	for (i = 0; i < RMO_list.size(); i++) {
-		//SDL_Delay(100);
 		curr->setRMO(RMO_list[i]);
 		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = CHARACTER;
 		drawRoom();
 		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = NOTHING;
 		SDL_RenderPresent(gRenderer);
-		Sleep(150);
+		Sleep(200);
 	}
 	room->getTile(curr->getRMO() % width, curr->getRMO() / width)->type = CHARACTER;
 	room->clearRange();
@@ -136,5 +152,24 @@ void moveClick(int index) {
 }
 
 void greatAxeClick(int index) {
-
+	std::vector<Unit*>* init = room->getInititiveOrder();
+	Unit* target = NULL;
+	//get the target
+	for (int i = 0; i < init->size(); i++) {
+		if (index == init->at(i)->getRMO()) {
+			target = init->at(i);
+			break;
+		}
+	}
+	if (target == NULL)
+		return;
+	Unit* curr = room->getCurrUnit();
+	int dmg = curr->getAb("Greataxe", ACTION)->rollSingleHit(curr->getStr(), curr->getStr(), target->getAC());
+	if (-1 != dmg) {
+		target->damage(dmg);
+		Sleep(1000);
+	}
+	room->getCurrUnit()->useAction();
+	room->clearRange();
+	click_handler = NULL;
 }

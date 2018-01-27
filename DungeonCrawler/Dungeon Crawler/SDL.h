@@ -27,6 +27,9 @@ int loadText(int w, std::string text);
 //Used to draw background for a room
 void drawRoom();
 
+//draws units ont the field
+void drawUnits();
+
 //Used to draw menu
 void drawMenu();
 

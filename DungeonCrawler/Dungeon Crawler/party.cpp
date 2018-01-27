@@ -72,16 +72,6 @@ std::vector<Ability*> Character::getAbilities() {
 }
 
 int Character::getXP() { return xp; }
-int Character::getStr() { return str; }
-int Character::getDex() { return dex; }
-int Character::getCon() { return con; }
-int Character::getInt() { return intel; }
-int Character::getWis() { return wis; }
-int Character::getCha() { return cha; }
-int Character::getMove() { return move; }
-int Character::getHP() { return health; }
-int Character::getMaxHP() { return max_health; }
-int Character::getAC() { return AC; }
 void Character::setStr(int n) { str = n; }
 void Character::setDex(int n) { dex = n; }
 void Character::setCon(int n) { con = n; }
@@ -104,8 +94,6 @@ void Character::render(int x, int y) {
 
 }
 
-void Character::damage(int dmg) { health -= dmg; }
-void Character::heal(int heal) { health += heal; if (health > max_health) { health = max_health; } }
 
 void Character::addXP(int xp_) { xp += xp_; }
 void Character::subXP(int xp_) { xp -= xp_; if (xp < 0) xp = 0; }

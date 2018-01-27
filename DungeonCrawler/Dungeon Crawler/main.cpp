@@ -212,7 +212,7 @@ int main(int argc, char* args[])
 								x -= (start_x % 50);
 							x = x / 50;
 							x = x * 50;
-							if (room->getTile((x / 50) - (start_x / 50), (y / 50) - (start_y / 50))->type == RANGE)
+							if (room->getTile((x / 50) - (start_x / 50), (y / 50) - (start_y / 50))->color != NORMAL)
 								hover = true;
 							if (prev_x != x || prev_y != y) {
 								MouseDown = false;
@@ -402,16 +402,16 @@ int main(int argc, char* args[])
 					if (hover) {
 						switch (ab) {
 						case ATTACK:
-							if (room->getTile((x / 50) - (start_x / 50), (y / 50) - (start_y / 50))->type != ENEMY) {
-								tileSST.render(x + (start_x % 50), y + (start_y % 50), &tileSpriteClips[INVALID]);
+							if (room->getTile((x / 50) - (start_x / 50), (y / 50) - (start_y / 50))->type != ENEMY && room->getTile((x / 50) - (start_x / 50), (y / 50) - (start_y / 50))->type != BOSS_BOI) {
+								roomTilesSST.render(x + (start_x % 50), y + (start_y % 50), &roomTileClips[INVALID]);
 								MouseDown = false;
 								MouseUp = false;
 							}
-							roomTilesSST.setColor(255, 100, 100);
+							tileSST.setColor(255, 0, 0);
 							break;
 						}
 						tileSST.render(x + (start_x % 50), y + (start_y % 50), &tileSpriteClips[HOVER]);
-						roomTilesSST.setColor(255, 255, 255);
+						tileSST.setColor(255, 255, 255);
 						if (MouseDown && MouseUp && !MouseRight && ab != NOPE) {
 							//execute click handler
 							if (click_handler != NULL) {

@@ -16,25 +16,15 @@ public:
 	void attack(int index);
 	void moveMob();
 	SDL_Rect getIcon50();
-	void resetMove() { move_left = move; }
-	int getDex() { return dex; }
-	int getMaxHP() { return max_HP; }
-	int getHP() { return HP; }
 	void callHandler() { handler(); }
 private:
 	int target_index;
 	std::vector<int> threat;
-	std::string name;
 	SDL_Rect icon_50;
-	int move;
-	int max_HP;
-	int HP;
-	int AC;
 	int atk_mod;
 	int dmg_mod;
 	int dice;
 	int dmg;
-	int str, dex, con, intel, wis, cha;
 	void(*handler)();
 };
 
