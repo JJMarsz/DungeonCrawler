@@ -635,11 +635,37 @@ void moveRecursive(int x, int y, int length) {
 		moveRecursive(x, y + 1, length - 1);
 }
 
+void rangeColor(int x, int y, int length) {
+	if (room->getTile(x, y)->type != CHARACTER)
+		room->getTile(x, y)->type = RANGE;
+	if (length <= 0)
+		return;
+	if (x > 0) {
+		moveRecursive(x - 1, y, length - 1);
+	}
+	if (y > 0) {
+		moveRecursive(x, y - 1, length - 1);
+	}
+	if (x < room->getWidth() - 1)
+		moveRecursive(x + 1, y, length - 1);
+	if (y < room->getHeight() - 1)
+		moveRecursive(x, y + 1, length - 1);
+}
+
 void moveButton(int index) {
+	room->clearRange();
 	Unit* currUnit = room->getCurrUnit();
 	moveRecursive(currUnit->getRMO()%room->getWidth(), currUnit->getRMO()/room->getWidth(), currUnit->getMoveLeft());
-	ab = ABILITY;
+	ab = MOVE;
 	click_handler = abMap["Move"].getClickHandler();
+}
+
+void greatAxeButton(int index) {
+	room->clearRange();
+	ab = ATTACK;
+	Unit* curr = room->getCurrUnit();
+	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1);
+	click_handler = abMap["Greataxe"].getClickHandler();
 }
 
 /* Used primarily for testing */

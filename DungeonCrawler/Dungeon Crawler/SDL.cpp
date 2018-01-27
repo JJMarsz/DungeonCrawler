@@ -674,6 +674,11 @@ bool loadMedia()
 		roomTileClips[SELECTED].y = SELECTED_Y;
 		roomTileClips[SELECTED].w = TILE_WIDTH;
 		roomTileClips[SELECTED].h = TILE_HEIGHT;
+
+		roomTileClips[INVALID].x = INVALID_X;
+		roomTileClips[INVALID].y = INVALID_Y;
+		roomTileClips[INVALID].w = TILE_WIDTH;
+		roomTileClips[INVALID].h = TILE_HEIGHT;
 	}
 	if (!background.loadFromFile("textures/background.png")) {
 		printf("Failed to load texture image!\n");
@@ -922,12 +927,17 @@ void drawRoom() {
 	for (x = 0; x < room->getWidth(); x++) {
 		for (y = 0; y < room->getHeight(); y++) {
 			if (room->getTile(x, y)->type == RANGE) {
-				roomTilesSST.setColor(239, 228, 176);
-				roomTilesSST.render(x * 50 + start_x, y * 50 + start_y, &roomTileClips[getRoomTileIndex(x, y)]);
-				roomTilesSST.setColor(255, 255, 255);
+				switch (ab) {
+				case ATTACK:
+					roomTilesSST.setColor(255, 100, 100);
+					break;
+				case MOVE:
+					roomTilesSST.setColor(239, 228, 176);
+					break;
+				}
 			}
-			else
-				roomTilesSST.render(x * 50 + start_x, y * 50 + start_y, &roomTileClips[getRoomTileIndex(x, y)]);
+			roomTilesSST.render(x * 50 + start_x, y * 50 + start_y, &roomTileClips[getRoomTileIndex(x, y)]);
+			roomTilesSST.setColor(255, 255, 255);
 		}
 	}
 	int mob_count = 0;

@@ -28,6 +28,7 @@ public:
 	virtual std::string getName() { return ""; }
 	virtual int getAC() { return 0; }
 	virtual void damage(int dmg) { return; }
+	virtual Ability* getAb(std::string name, AbilityType type) { return NULL; }
 
 	/* mob only functions */
 	virtual void callHandler() { return; }
@@ -103,7 +104,7 @@ public:
 	//Hit(int atk_roll, int dmg_roll);
 	void damage(int dmg);
 	void heal(int heal);
-
+	Ability* getAb(std::string name, AbilityType type);
 
 private:
 	std::string name;

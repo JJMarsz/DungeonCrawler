@@ -26,6 +26,7 @@ public:
 	func2 getClickHandler() { return click_handler; }
 	bool onCooldown() { return (count >= cooldown); }
 	void use() { count = 0; }
+	int rollDamage(int dmg_mod);
 
 
 private:
@@ -58,5 +59,6 @@ extern void(*click_handler)(int index);
 extern std::vector<int> getPath(int end, int start);
 //ability click handlers
 void moveClick(int index);
+void greatAxeClick(int index);
 
 #endif 

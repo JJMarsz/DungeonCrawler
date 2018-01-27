@@ -9,41 +9,11 @@ void(*click_handler)(int index) = NULL;
 void loadAbilityMap(){
 	//move
 	abMap["Move"] = Ability("Move", "Move the character", FREE, 1, 6, 0, 0, moveButton, moveClick);
-
-	
-}
-bool pathHelper(int x, int y, int end_x, int end_y, int length, std::vector<int>& retvec, std::vector<bool>& visited) {
-	retvec.push_back(x + y * room->getWidth());
-	if ((room->getTile(x, y)->type != RANGE || length < 0 || visited[x + y*room->getWidth()]) && x + y*room->getWidth() != room->getCurrUnit()->getRMO()) {
-		retvec.pop_back();
-		return false;
-	}
-	else if (x + y*room->getWidth() == end_x + end_y * room->getWidth())
-		return true;
-	visited[x + y * room->getWidth()] = true;
-	if (x > 0) {
-
-		if (pathHelper(x - 1, y, end_x, end_y, length - 1, retvec, visited))
-			return true;
-	}
-	if (y > 0) {
-		if (pathHelper(x, y - 1, end_x, end_y, length - 1, retvec, visited))
-			return true;
-	}
-	if (x < room->getWidth() - 1) {
-		if (pathHelper(x + 1, y, end_x, end_y, length - 1, retvec, visited))
-			return true;
-	}
-	if (y < room->getHeight() - 1) {
-		if (pathHelper(x, y + 1, end_x, end_y, length - 1, retvec, visited)) {
-			return true;
-		}
-	}
-	retvec.pop_back();
-	return false;
+	abMap["Greataxe"] = Ability("Greataxe", "Attack with a greataxe", ACTION, 1, 1, 8, 0, greatAxeButton, greatAxeClick);
 	
 }
 
+//generate paths
 void bloom(std::vector<int> &prevVec, int start, int end) {
 	int width = room->getWidth();
 	std::queue<int> prevQ;
@@ -110,6 +80,7 @@ std::vector<int> getPath(int end, int start) {
 Ability::Ability() {
 
 }
+
 Ability::Ability(std::string name_, std::string info_, AbilityType type_, int cd, int l, int dice, int dmg, void(*button)(int index), void(*click)(int index)) {
 	name = name_;
 	info = info_;
@@ -122,6 +93,16 @@ Ability::Ability(std::string name_, std::string info_, AbilityType type_, int cd
 	click_handler = click;
 }
 
+int Ability::rollDamage(int dmg_mod) {
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
+	int roll = dmg_mod;
+	for (int i = 0; i < num_dice; i++)
+		roll += 1 + rand() % dmg_dice;
+	return roll;
+}
 //click handlers for abilities
 
 void moveClick(int index) {
@@ -152,4 +133,8 @@ void moveClick(int index) {
 		moveButton(0);
 	else
 		ab = NOPE;
+}
+
+void greatAxeClick(int index) {
+
 }

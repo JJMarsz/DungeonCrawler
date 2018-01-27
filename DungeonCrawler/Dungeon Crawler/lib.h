@@ -152,7 +152,7 @@ typedef void(*func)();
 #define TILE_BIG_HOVER_Y		250
 
 //ROOM TILES
-#define NUM_ROOM_TILES			11
+#define NUM_ROOM_TILES			12
 
 #define	ROOM_NONE_X				0
 #define	ROOM_NONE_Y				0
@@ -186,6 +186,9 @@ typedef void(*func)();
 
 #define SELECTED_INIT_X			0
 #define SELECTED_INIT_Y			250
+
+#define INVALID_X				0
+#define INVALID_Y				50
 
 
 //Initiative stuff
@@ -300,7 +303,8 @@ enum RoomTileIndex {
 	URCORNER,
 	RDCORNER,
 	SELECTED,
-	SELECTED_INIT
+	SELECTED_INIT,
+	INVALID
 };
 
 enum AbilityState {
@@ -308,7 +312,8 @@ enum AbilityState {
 	SCOUT,
 	REST,
 	NOPE,
-	ABILITY
+	MOVE,
+	ATTACK
 };
 
 enum MOD{
@@ -341,5 +346,13 @@ enum MobNum {
 	MOBTHREE,
 	MOBFOUR,
 	MOBFIVE
+};
+
+enum CharName {
+	FIGHTER,
+	BARB,
+	PALADIN,
+	ROGUE,
+	RANGER
 };
 #endif

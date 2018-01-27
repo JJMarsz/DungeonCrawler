@@ -109,6 +109,35 @@ void Character::heal(int heal) { health += heal; if (health > max_health) { heal
 
 void Character::addXP(int xp_) { xp += xp_; }
 void Character::subXP(int xp_) { xp -= xp_; if (xp < 0) xp = 0; }
+
+Ability* Character::getAb(std::string name, AbilityType type) {
+	int i;
+	switch (type) {
+	case ACTION:
+		for (i = 0; i < actionList.size(); i++) {
+			if (actionList[i].getName() == name) {
+				return &actionList[i];
+			}
+		}
+		break;
+	case BACTION:
+		for (i = 0; i < bActionList.size(); i++) {
+			if (bActionList[i].getName() == name) {
+				return &bActionList[i];
+			}
+		}
+		break;
+	case FREE:
+		for (i = 0; i < freeList.size(); i++) {
+			if (freeList[i].getName() == name) {
+				return &freeList[i];
+			}
+		}
+		break;
+	}
+	return NULL;
+}
+
 /* Party calss definitions */
 Party::Party() {
 	numChar = 0;
@@ -233,7 +262,7 @@ CharList::CharList() {
 		0,	//cha
 		6,	//movement
 		20,	//Health
-		15	//AC
+		14	//AC
 		},
 	{ "Barbarian",
 		4,	//str	
@@ -244,7 +273,7 @@ CharList::CharList() {
 		-1,	//cha
 		6,	//movement
 		25,	//Health
-		14	//AC
+		13	//AC
 	},
 	{ "Paladin",
 		3,	//str	
@@ -255,7 +284,7 @@ CharList::CharList() {
 		0,	//cha
 		6,	//movement
 		18,	//Health
-		16	//AC
+		15	//AC
 	},
 	{ "Rogue",
 		-1,	//str	
@@ -266,7 +295,7 @@ CharList::CharList() {
 		1,	//cha
 		6,	//movement
 		13,	//Health
-		14	//AC
+		13	//AC
 	},
 	{ "Ranger",
 		-1,	//str	
@@ -277,7 +306,7 @@ CharList::CharList() {
 		0,	//cha
 		7,	//movement
 		18,	//Health
-		14	//AC
+		13	//AC
 	}
 	};
 	//load abilities for each char
@@ -285,6 +314,7 @@ CharList::CharList() {
 	for (int i = 0; i < charList.size(); i++) {
 		charList[i].loadAbility("Move");
 	}
+	charList[BARB].loadAbility("Greataxe");
 }
 void CharList::loadSprites() {
 	//Go through each character to set sprites and info texts
