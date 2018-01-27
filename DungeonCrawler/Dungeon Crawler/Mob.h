@@ -17,6 +17,8 @@ public:
 	void moveMob();
 	SDL_Rect getIcon50();
 	void callHandler() { handler(); }
+	void addAttackThreat(int t);
+	void clearAttackThreat(int i){threat[i] = 0;}
 private:
 	int target_index;
 	std::vector<int> threat;

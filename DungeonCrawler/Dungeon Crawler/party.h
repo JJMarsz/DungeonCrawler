@@ -12,6 +12,7 @@
 
 class Unit {
 public:
+	Unit() { alive = true; }
 	/* maintain unit data */
 	void setRMO(int i) { RMO = i; }
 	int getRMO() { return RMO; }
@@ -38,7 +39,8 @@ public:
 	bool getBAction() { return bAction; }
 
 	void heal(int heal){ health += heal; if (health > max_health) { health = max_health; } }
-	void damage(int dmg) { health -= dmg; }
+	void damage(int dmg);
+	bool isAlive() { return alive; }
 
 	/* getters */
 	virtual SDL_Rect getIcon50() { return SDL_Rect(); }
@@ -53,6 +55,8 @@ public:
 	/* mob only functions */
 	virtual void callHandler() { return; }
 	virtual void updateThreat() { return; }
+	virtual void addAttackThreat(int t) { return; }
+	virtual void clearAttackThreat(int i) { return; }
 
 protected:
 	int RMO;
@@ -71,6 +75,8 @@ protected:
 	int health;
 	int max_health;
 	int AC;
+
+	bool alive;
 
 	//actions
 	bool action;

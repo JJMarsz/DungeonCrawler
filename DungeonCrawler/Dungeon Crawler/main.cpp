@@ -222,6 +222,11 @@ int main(int argc, char* args[])
 							prev_x = x;
 							prev_y = y;
 						}
+						else {
+							MouseDown = false;
+							MouseUp = false;
+							MouseRight = false;
+						}
 						break;
 					case REWARD:
 						acceptrejectButtons[2].handleEvent(&e, 2);

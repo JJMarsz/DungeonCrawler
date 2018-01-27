@@ -68,15 +68,25 @@ void Mob::updateThreat() {
 		//distance update threat
 		x = party[i]->getRMO() % width;
 		y = party[i]->getRMO() / width;
-		distance = std::abs(x - mobx) + std::abs(y = moby);
+		distance = std::abs(x - mobx) + std::abs(y - moby);
 		if(distance > 16)
 			threat[i] += 1;
 		else if (distance > 8)
 			threat[i] += 2;
-		else if (distance > 4)
+		else if (distance > 7)
+			threat[i] += 3;
+		else if (distance > 6)
 			threat[i] += 4;
+		else if (distance > 5)
+			threat[i] += 5;
+		else if (distance > 4)
+			threat[i] += 6;
+		else if (distance > 3)
+			threat[i] += 7;
 		else if (distance > 2)
 			threat[i] += 8;
+		else if (distance > 1)
+			threat[i] += 9;
 		else if (distance == 1)
 			threat[i] += 16;
 		//hp update threat
@@ -85,25 +95,24 @@ void Mob::updateThreat() {
 		ratio = diff / slice;
 		ratio += .5;
 		health_ratio = (int)ratio;
+		if (health_ratio > 10)
+			health_ratio = 10;
 		switch (health_ratio) {
-		case 2:
-		case 3:
-			threat[i] += 1;
-			break;
 		case 4:
 		case 5:
-			threat[i] += 2;
+			threat[i] += 1;
 			break;
 		case 6:
 		case 7:
-			threat[i] += 4;
+			threat[i] += 2;
 			break;
 		case 8:
-			threat[i] += 6;
+			threat[i] += 3;
 				break;
 		case 9:
-			threat[i] += 10;
+			threat[i] += 4;
 				break;
+
 		}
 	}
 	
@@ -124,7 +133,25 @@ void Mob::updateThreat() {
 		);
 	srand(ms.count());//random seed
 	target_index = target[rand() % target.size()];
+	//reset threat vec
+	for (i = 0; i < threat.size(); i++) {
+		threat[i] = 0;
+	}
 }
+
+void Mob::addAttackThreat(int t) {
+	std::vector<Unit*>* init = room->getInititiveOrder();
+	int count=-1;
+	for (int i = 0; i < init->size(); i++) {
+		if (init->at(i)->getType() == CHARACTER)
+			count++;
+		if (init->at(i)->getName() == room->getCurrUnit()->getName()) {
+			threat[count] += t;
+			return;
+		}
+	}
+}
+
 
 void Mob::moveMob() {
 	std::vector<Unit*>* initlist = room->getInititiveOrder();
@@ -156,9 +183,9 @@ void Mob::moveMob() {
 			RMO = i;
 		}
 	}
-	setMoveLeft(dist);
 	room->getTile(getRMO() % width, getRMO() / width)->type = NOTHING;
 	std::vector<int> RMO_list = getPath(RMO, getRMO());
+	setMoveLeft(move_left - (RMO_list.size()-1));
 	room->clearRange();
 	messageBox.loadFromRenderedText("The " + name + " lumbers towards you.", { 255, 255, 255 } , 800);
 	for (i = 0; i < RMO_list.size(); i++) {

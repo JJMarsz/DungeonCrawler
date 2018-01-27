@@ -31,6 +31,7 @@ public:
 	RoomTile* getTile(int x, int y);
 	Unit* getCurrUnit();
 	int getInitIndex();
+	void setInitIndex(int i) { init_index = i; }
 	std::vector<Unit*>* getInititiveOrder();
 	void move(int index);
 private:

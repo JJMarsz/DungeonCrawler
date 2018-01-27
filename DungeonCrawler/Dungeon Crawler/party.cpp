@@ -1,6 +1,6 @@
 #include "party.h"
 #include "Encounter.h"
-#include "Ability.h"
+#include "Room.h"
 
 Party gParty;
 
@@ -8,8 +8,51 @@ CharList chars;
 
 std::vector<Character> displayList;
 
-//unit
+//unit stuff
 
+void Unit::damage(int dmg) {
+	health -= dmg;
+	int count = -1;
+	int i;
+	std::vector<Unit*>* init = room->getInititiveOrder();
+	//add attack threat to mob
+	if (type != CHARACTER) {
+		addAttackThreat(dmg / 3);
+	}
+	//kill the unit
+	if (health <= 0) {
+		health = 0;
+		if (type == CHARACTER) {
+			//clear any residual threat from mobs
+			for (i = 0; i < init->size(); i++) {
+				if (init->at(i)->getType() == CHARACTER)
+					count++;
+				if (init->at(i)->getName() == name)
+					break;
+			}
+			for (i = 0; i < init->size(); i++) {
+				if(init->at(i)->getType() != CHARACTER)
+					init->at(i)->clearAttackThreat(count);
+			}
+		}
+		alive = false;
+		bool state = false;
+		std::vector<Unit*>* order = room->getInititiveOrder();
+		for (i = 0; i < order->size(); i++) {
+			if (0 == order->at(i)->getHP() && state == false) {
+				state = true;
+				room->getTile(order->at(i)->getRMO() % room->getWidth(), order->at(i)->getRMO() / room->getWidth())->type = NOTHING;
+				if (room->getInitIndex() > i)
+					room->setInitIndex(room->getInitIndex() - 1);
+			}
+			else if (state == true) {
+				order->at(i - 1) = order->at(i);
+			}
+		}
+		order->pop_back();
+
+	}
+}
 
 /* Char clas definitions */
 Character::Character(std::string name_, int str_, int dex_, int con_, int intel_, 

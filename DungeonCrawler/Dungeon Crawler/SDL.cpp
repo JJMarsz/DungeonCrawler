@@ -988,6 +988,8 @@ void drawRoom() {
 		ratio = diff / slice;
 		ratio += .5;
 		health_ratio = (int)ratio;
+		if (health_ratio > 10)
+			health_ratio = 10;
 		healthBoxClips[health_ratio].w = 20;
 		healthboxSST.render(INIT_X - 25, INIT_Y + 60 * x, &healthBoxClips[health_ratio]);
 		healthBoxClips[health_ratio].w = 50;
@@ -1304,6 +1306,8 @@ void drawDungeonMenu() {
 		double ratio = diff / slice;
 		ratio += .5;
 		health_ratio =  (int)ratio;
+		if (health_ratio > 10)
+			health_ratio = 10;
 		healthboxSST.render(70 + 120*i, SCREEN_HEIGHT - 60, &healthBoxClips[health_ratio]);
 		dungeonButtons[i].render();
 		

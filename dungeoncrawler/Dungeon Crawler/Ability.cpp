@@ -101,8 +101,10 @@ int Ability::rollSingleHit(int atk_mod, int dmg_mod, int target_AC) {
 	srand(ms.count());//random seed
 	int i;
 	int roll = 1 + rand() % 20;
-	if (roll + atk_mod <= target_AC)
+	if (roll + atk_mod <= target_AC) {
+		messageBox.loadFromRenderedText("The " + room->getCurrUnit()->getName() + " missed the attack!", { 255, 255, 255 }, 650);
 		return -1;
+	}
 	else if (roll == 20) {
 		messageBox.loadFromRenderedText("A critical hit!", { 255, 255, 255 }, 650);
 		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
@@ -116,8 +118,6 @@ int Ability::rollSingleHit(int atk_mod, int dmg_mod, int target_AC) {
 		roll += 1 + rand() % dmg_dice;
 	drawRoom();
 	messageBox.loadFromRenderedText("The " + room->getCurrUnit()->getName() + " landed a hit and dealt " + std::to_string(roll) + " damage!", { 255, 255, 255 }, 650);
-	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
-	SDL_RenderPresent(gRenderer);
 	return roll;
 }
 //click handlers for abilities
@@ -130,9 +130,8 @@ void moveClick(int index) {
 	int curr_y = curr->getRMO() / width;
 	int next_x = index % width;
 	int next_y = index / width;
-	int distance = std::abs(curr_x - next_x) + std::abs(curr_y - next_y);
-	curr->setMoveLeft(curr->getMoveLeft() - distance);
 	std::vector<int> RMO_list = getPath(index, curr->getRMO());
+	curr->setMoveLeft(curr->getMoveLeft() - (RMO_list.size()-1));
 	room->clearRange();
 	room->getTile(curr->getRMO() % width, curr->getRMO() / width)->type = NOTHING;
 	for (i = 0; i < RMO_list.size(); i++) {
@@ -144,7 +143,6 @@ void moveClick(int index) {
 		Sleep(200);
 	}
 	room->getTile(curr->getRMO() % width, curr->getRMO() / width)->type = CHARACTER;
-	room->clearRange();
 	if (curr->getMoveLeft() > 0)
 		moveButton(0);
 	else
@@ -167,9 +165,11 @@ void greatAxeClick(int index) {
 	int dmg = curr->getAb("Greataxe", ACTION)->rollSingleHit(curr->getStr(), curr->getStr(), target->getAC());
 	if (-1 != dmg) {
 		target->damage(dmg);
-		Sleep(1000);
 	}
+	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+	SDL_RenderPresent(gRenderer);
+	Sleep(1000);
 	room->getCurrUnit()->useAction();
 	room->clearRange();
-	click_handler = NULL;
+	//click_handler = NULL;
 }
