@@ -5,9 +5,6 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include "lib.h"
-#include "LButton.h"
-#include "dungeon.h"
-#include "party.h"
 
 //Starts up SDL and creates window
 bool init();

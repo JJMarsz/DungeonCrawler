@@ -1,5 +1,5 @@
 #include "LButton.h"
-
+#include "Ability.h"
 
 LTexture buttonSpriteSheetTexture;
 LTexture mainMenu;
@@ -45,6 +45,7 @@ LTexture endTurn;
 LTexture endTurnText;
 LTexture mobSST;
 LTexture mobNum;
+LTexture abIconSST;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> tileSpriteClips;
@@ -54,6 +55,7 @@ std::vector<SDL_Rect> multiplyClips;
 std::vector<SDL_Rect> roomTileClips;
 std::vector<SDL_Rect> mobClips;
 std::vector<SDL_Rect> mobNumClips;
+std::vector<SDL_Rect> abClips(NUM_ABILITIES);
 std::vector<LTexture*> texts;
 
 /* Texture class defenitions */

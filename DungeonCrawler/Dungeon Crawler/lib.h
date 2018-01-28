@@ -360,4 +360,9 @@ enum CharName {
 	ROGUE,
 	RANGER
 };
+
+enum AbilityIcons {
+	MOVEMENT,
+	GREATAXE
+};
 #endif

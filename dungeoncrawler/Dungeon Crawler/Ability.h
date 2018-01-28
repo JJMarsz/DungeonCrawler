@@ -1,10 +1,10 @@
 #ifndef ABILITY_H
 #define ABILITY_H
 
-#include "lib.h"
+#include "LButton.h"
 
 typedef void(*func2)(int);
-#define NUM_ABILITIES	1
+#define NUM_ABILITIES	2
 
 enum AbilityType {
 	ACTION,
@@ -16,7 +16,7 @@ enum AbilityType {
 class Ability {
 public:
 	Ability();
-	Ability(std::string name_, std::string info_, AbilityType type_, int cd, int l, int dice, int dmg, void(*button)(int index), void(*click)(int index));
+	Ability(std::string name_, std::string info_, AbilityType type_, int cd, int l, int dice, int dmg, void(*button)(int index), void(*click)(int index), SDL_Rect* icon_);
 	std::string getName() { return name; }
 	std::string getInfo() { return info; }
 	AbilityType getType() { return type; }
@@ -27,7 +27,7 @@ public:
 	bool onCooldown() { return (count >= cooldown); }
 	void use() { count = 0; }
 	int rollSingleHit(int atk_mod, int dmg_mod, int target_AC);
-
+	SDL_Rect* getIcon() { return icon; }
 
 private:
 	//handler to put into a button
@@ -35,6 +35,7 @@ private:
 	//handler to be executed after successful mouse click
 	void(*click_handler)(int index);
 
+	SDL_Rect* icon;
 	std::string name;
 	std::string info;
 	//what is needed to use ability

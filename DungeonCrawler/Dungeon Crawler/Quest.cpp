@@ -1,4 +1,5 @@
 #include "Quest.h"
+#include "party.h"
 
 std::vector<Quest> current_quests;
 EncounterList encounters;

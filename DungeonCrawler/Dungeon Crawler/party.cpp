@@ -1,6 +1,7 @@
 #include "party.h"
 #include "Encounter.h"
 #include "Room.h"
+#include "dungeon.h"
 
 Party gParty;
 

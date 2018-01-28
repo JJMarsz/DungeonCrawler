@@ -93,6 +93,7 @@ extern LTexture endTurn;
 extern LTexture endTurnText;
 extern LTexture mobSST;
 extern LTexture mobNum;
+extern LTexture abIconSST;
 
 extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> tileSpriteClips;
@@ -102,6 +103,7 @@ extern std::vector<SDL_Rect> multiplyClips;
 extern std::vector<SDL_Rect> roomTileClips;
 extern std::vector<SDL_Rect> mobNumClips;
 extern std::vector<SDL_Rect> mobClips;
+extern std::vector<SDL_Rect> abClips;
 
 extern std::vector<LTexture*> texts;
 

@@ -2,7 +2,6 @@
 #define LBUTTON_H
 
 #include "LTexture.h"
-#include "lib.h"
 
 
 //The mouse button
@@ -33,10 +32,12 @@ public:
 	//setters
 	void setSST(LTexture *SST_);
 	void setClips(std::vector<SDL_Rect>  vec_);
+	void setInfo(std::string info_) { info = info_; }
 
 	//getters
 	int getWidth();
 	int getHeight();
+
 
 private:
 	//Top left position
@@ -62,6 +63,9 @@ private:
 
 	//SST
 	LTexture *SST;
+
+	//info text
+	std::string info;
 
 };
 
@@ -116,4 +120,6 @@ extern std::vector<LButton> dungeonButtons;
 extern std::vector<LButton> choiceButtons;
 extern LButton endTurnButton;
 
+extern bool hover_info;
+extern bool display_message;
 #endif

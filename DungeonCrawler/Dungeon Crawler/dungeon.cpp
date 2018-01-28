@@ -1,5 +1,6 @@
 #include "dungeon.h"
 #include "SDL.h"
+#include "party.h"
 
 Dungeon current_dungeon;
 

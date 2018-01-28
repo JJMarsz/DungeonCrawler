@@ -14,7 +14,6 @@ bool hover;
 //Modulation components
 MOD mod_state = MOD_DOWN;
 std::string message = "";
-bool display_message;
 SDL_Color color = { 255, 255, 255 };
 
 int main(int argc, char* args[])
@@ -140,6 +139,7 @@ int main(int argc, char* args[])
 						}
 						break;
 					case DUNGEON:
+						hover_info = false;
 						if (msg_queue.empty()) {
 							dungeonButtons[0].handleEvent(&e, 0);
 							dungeonButtons[1].handleEvent(&e, 1);
@@ -194,6 +194,7 @@ int main(int argc, char* args[])
 						}
 						break;
 					case DUNGEON_ROOM:
+						hover_info = false;
 						for (int i = 0; i < TOTAL_BUTTONS; ++i){
 							Buttons[i].handleEvent(&e, i);
 						}
@@ -384,9 +385,11 @@ int main(int argc, char* args[])
 						msg_queue.push("The party rests to regain their strength.");
 						ab = NOPE;
 					}
-					if (display_message == true) {
+					if (display_message == true || hover_info == true) {
 						messageBox.render((SCREEN_WIDTH - messageBox.getWidth()) / 2, 614);
 					}
+					else
+						message = "";
 
 					break;
 				case DUNGEON_ROOM:
@@ -426,6 +429,9 @@ int main(int argc, char* args[])
 							MouseUp = false;
 							hover = false;
 						}
+					}
+					if (hover_info == true) {
+						messageBox.render((650 - messageBox.getWidth()) / 2, 614);
 					}
 					break;
 				case REWARD:

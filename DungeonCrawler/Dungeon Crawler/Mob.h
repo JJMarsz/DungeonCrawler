@@ -3,6 +3,7 @@
 
 #include "lib.h"
 #include "LButton.h"
+#include "party.h"
 
 class Mob: public Unit {
 public:

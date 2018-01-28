@@ -2,6 +2,9 @@
 #include "Quest.h"
 #include "Room.h"
 #include "Mob.h"
+#include "LButton.h"
+#include "dungeon.h"
+#include "party.h"
 
 SDL_Renderer* gRenderer = NULL;
 TTF_Font *gFont = NULL;
@@ -113,10 +116,14 @@ bool init()
 		choiceButtons[i].setConstraints(100, 100);
 	endTurnButton.setConstraints(126, 96);
 	endTurnButton.setHandler(endTurnHandler);
+	endTurnButton.setInfo("End the current character's turn");
 	acceptrejectButtons[2].setHandler(returnToTown);
 	dungeonButtons[2].setHandler(peek);
+	dungeonButtons[2].setInfo("Check an adjacent tile for encounters.");
 	dungeonButtons[1].setHandler(scout);
+	dungeonButtons[1].setInfo("Check a square of tiles for encounters.");
 	dungeonButtons[0].setHandler(rest);
+	dungeonButtons[0].setInfo("Take a rest to let the party heal.");
 	state = MAIN_MENU;
 	return success;
 }
@@ -740,6 +747,21 @@ bool loadMedia()
 		mobNumClips[MOBFIVE].w = 15;
 		mobNumClips[MOBFIVE].h = 15;
 	}
+	if (!abIconSST.loadFromFile("textures/abilityicons.png")) {
+		printf("Failed to load texture image!\n");
+		success = false;
+	}
+	else {
+		abClips[MOVEMENT].x = 0;
+		abClips[MOVEMENT].y = 0;
+		abClips[MOVEMENT].w = 50;
+		abClips[MOVEMENT].h = 50;
+
+		abClips[GREATAXE].x = 50;
+		abClips[GREATAXE].y = 0;
+		abClips[GREATAXE].w = 50;
+		abClips[GREATAXE].h = 50;
+	}
 	loadMobs();
 	return success;
 }
@@ -790,6 +812,7 @@ void close() {
 	endTurnText.free();
 	mobSST.free();
 	mobNum.free();
+	abIconSST.free();
 
 	//Free Textures
 	spriteSheetTexture.free();
@@ -1046,7 +1069,9 @@ void drawRoom() {
 	std::vector<Ability*> abList = currUnit->getAbilities();
 	for (x = 0; x < abList.size(); x++) {
 		Buttons[x].setHandler(abList[x]->getButtonHandler());
+		Buttons[x].setInfo(abList[x]->getInfo());
 		Buttons[x].render();
+		abIconSST.render(BUTTON_ONE_X + 60 * x, BUTTON_Y, abList[x]->getIcon());
 	}
 }
 
@@ -1264,10 +1289,7 @@ void drawDungeon() {
 				index = encounterExists(x, y, false);
 				if (index != -1 && current_dungeon.getScouted(x + y * current_dungeon.getWidth()) && !current_dungeon.getVisited(x + y * current_dungeon.getWidth())) {
 					tileSST.setAlpha(100);
-					std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
-						std::chrono::system_clock::now().time_since_epoch()
-						);
-					srand(ms.count());//random seed
+					srand(time(NULL));//random seed
 					int alt_index = encounterExists(x, y, true);
 					if (rand() % 2 == 1) {
 						tileSST.render(x * 50 + start_x, y * 50, &tileSpriteClips[index]);

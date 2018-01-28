@@ -7,6 +7,9 @@ SDL_Color textColor = { 255, 255, 255 };
 
 int quest_index = 0;
 
+bool hover_info = false;
+bool display_message = false;
+
 std::vector<LButton> Buttons;
 std::vector<LButton> menuButtons;
 std::vector<LButton> charButtons;
@@ -28,6 +31,7 @@ LButton::LButton()
 	mCurrentSprite = BUTTON_SPRITE_MOUSE_OUT;
 	handler = emptyHandler;
 	//buttonText = "";
+	info = "";
 }
 
 void LButton::setPosition(int x, int y)
@@ -57,6 +61,10 @@ void LButton::handleEvent(SDL_Event* e, int index) {
 		}
 		//Mouse is inside button
 		else {
+			if (info != "" && !display_message) {
+				hover_info = true;
+				messageBox.loadFromRenderedText(info, { 255, 255, 255 }, 650);
+			}
 			//Set mouse over sprite
 			switch (e->type) {
 			case SDL_MOUSEMOTION:

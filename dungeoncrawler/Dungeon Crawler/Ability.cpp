@@ -1,5 +1,4 @@
 #include "Ability.h"
-#include "LButton.h"
 #include "Room.h"
 
 std::unordered_map<std::string, Ability> abMap;
@@ -8,8 +7,8 @@ void(*click_handler)(int index) = NULL;
 
 void loadAbilityMap(){
 	//move
-	abMap["Move"] = Ability("Move", "Move the character", FREE, 1, 6, 0, 0, moveButton, moveClick);
-	abMap["Greataxe"] = Ability("Greataxe", "Attack with a greataxe", ACTION, 1, 1, 1, 8, greatAxeButton, greatAxeClick);
+	abMap["Move"] = Ability("Move", "Move the character", FREE, 1, 6, 0, 0, moveButton, moveClick, &abClips[MOVEMENT]);
+	abMap["Greataxe"] = Ability("Greataxe", "Attack with a greataxe", ACTION, 1, 1, 1, 8, greatAxeButton, greatAxeClick, &abClips[GREATAXE]);
 	
 }
 
@@ -81,7 +80,7 @@ Ability::Ability() {
 
 }
 
-Ability::Ability(std::string name_, std::string info_, AbilityType type_, int cd, int l, int dice, int dmg, void(*button)(int index), void(*click)(int index)) {
+Ability::Ability(std::string name_, std::string info_, AbilityType type_, int cd, int l, int dice, int dmg, void(*button)(int index), void(*click)(int index), SDL_Rect* icon_) {
 	name = name_;
 	info = info_;
 	type = type_;
@@ -91,6 +90,7 @@ Ability::Ability(std::string name_, std::string info_, AbilityType type_, int cd
 	dmg_dice = dmg;
 	button_handler = button;
 	click_handler = click;
+	icon = icon_;
 }
 
 int Ability::rollSingleHit(int atk_mod, int dmg_mod, int target_AC) {

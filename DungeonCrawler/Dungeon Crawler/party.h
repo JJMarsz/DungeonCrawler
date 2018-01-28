@@ -2,7 +2,6 @@
 #define PARTY_H
 
 #include "lib.h"
-#include "LButton.h"
 #include "Ability.h"
 
 #define NUM_CHAR	5
