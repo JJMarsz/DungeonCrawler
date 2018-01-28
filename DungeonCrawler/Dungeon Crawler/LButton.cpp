@@ -624,23 +624,46 @@ void returnToTown(int index) {
 
 
 /* ABILITIES */
-void moveRecursive(int x, int y, int length) {
-	if (room->getTile(x, y)->type == NOTHING)
-		room->getTile(x, y)->color = YELLOW;
+void moveRecursive(int x, int y, int length, int extra_l) {
+	if (room->getTile(x, y)->color == YELLOW && length == -1)
+		return;
+	if (room->getTile(x, y)->type == NOTHING) {
+		if (length >= 0)
+			room->getTile(x, y)->color = YELLOW;
+		else
+			room->getTile(x, y)->color = BLUE;
+	}
 	else if (!(room->getCurrUnit()->getRMO() == x + y * room->getWidth()))
 		return;
-	if (length <= 0)
-		return;
+	if (length <= 0) {
+		length = -1;
+		if (extra_l <= 0)
+			return;
+	}
 	if (x > 0) {
-		moveRecursive(x - 1, y, length - 1);
+		if(length < 0)
+			moveRecursive(x - 1, y, length, extra_l - 1);
+		else
+			moveRecursive(x - 1, y, length - 1, extra_l);
 	}
 	if (y > 0) {
-		moveRecursive(x, y - 1, length - 1);
+		if (length < 0)
+			moveRecursive(x, y - 1, length, extra_l - 1);
+		else
+			moveRecursive(x, y - 1, length - 1, extra_l);
 	}
-	if(x < room->getWidth() - 1)
-		moveRecursive(x + 1, y, length - 1);
-	if (y < room->getHeight() - 1)
-		moveRecursive(x, y + 1, length - 1);
+	if (x < room->getWidth() - 1) {
+		if(length < 0)
+			moveRecursive(x + 1, y, length, extra_l - 1);
+		else
+			moveRecursive(x + 1, y, length - 1, extra_l);
+	}
+	if (y < room->getHeight() - 1) {
+		if(length < 0)
+			moveRecursive(x, y + 1, length, extra_l - 1);
+		else
+			moveRecursive(x, y + 1, length - 1, extra_l);
+	}
 }
 
 void rangeColor(int x, int y, int length) {
@@ -662,10 +685,13 @@ void rangeColor(int x, int y, int length) {
 
 void moveButton(int index) {
 	Unit* currUnit = room->getCurrUnit();
-	if (currUnit->getMoveLeft() == 0)
+	if (currUnit->getMoveLeft() == 0 && !currUnit->getAction())
 		return;
 	room->clearRange();
-	moveRecursive(currUnit->getRMO()%room->getWidth(), currUnit->getRMO()/room->getWidth(), currUnit->getMoveLeft());
+	if(currUnit->getAction())
+		moveRecursive(currUnit->getRMO()%room->getWidth(), currUnit->getRMO()/room->getWidth(), currUnit->getMoveLeft(), currUnit->getMove());
+	else
+		moveRecursive(currUnit->getRMO() % room->getWidth(), currUnit->getRMO() / room->getWidth(), currUnit->getMoveLeft(), 0);
 	ab = MOVE;
 	if (currUnit->getType() == CHARACTER)
 		click_handler = currUnit->getAb("Move", FREE)->getClickHandler();

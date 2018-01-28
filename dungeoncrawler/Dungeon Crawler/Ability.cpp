@@ -6,9 +6,9 @@ std::unordered_map<std::string, Ability> abMap;
 void(*click_handler)(int index) = NULL;
 
 void loadAbilityMap(){
-	//move
 	abMap["Move"] = Ability("Move", "Move the character", FREE, 1, 6, 0, 0, moveButton, moveClick, &abClips[MOVEMENT]);
 	abMap["Greataxe"] = Ability("Greataxe", "Attack with a greataxe", ACTION, 1, 1, 1, 8, greatAxeButton, greatAxeClick, &abClips[GREATAXE]);
+
 	
 }
 
@@ -130,6 +130,10 @@ void moveClick(int index) {
 	int curr_y = curr->getRMO() / width;
 	int next_x = index % width;
 	int next_y = index / width;
+	if (room->getTile(next_x, next_y)->color == BLUE) {
+		curr->useAction();
+		curr->setMoveLeft(curr->getMoveLeft() + curr->getMove());
+	}
 	std::vector<int> RMO_list = getPath(index, curr->getRMO());
 	curr->setMoveLeft(curr->getMoveLeft() - (RMO_list.size()-1));
 	room->clearRange();
@@ -143,7 +147,7 @@ void moveClick(int index) {
 		Sleep(200);
 	}
 	room->getTile(curr->getRMO() % width, curr->getRMO() / width)->type = CHARACTER;
-	if (curr->getMoveLeft() > 0)
+	if (curr->getMoveLeft() > 0 || curr->getAction())
 		moveButton(0);
 	else
 		ab = NOPE;

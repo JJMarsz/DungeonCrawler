@@ -338,6 +338,7 @@ enum UnitType {
 enum Highlight {
 	NORMAL,
 	YELLOW,
+	BLUE,
 	RED
 };
 

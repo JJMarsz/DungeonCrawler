@@ -168,7 +168,7 @@ void Mob::moveMob() {
 	ab = NOPE;
 	std::vector<int> distances(room->getWidth()*room->getHeight(), -1);
 	for (i = 0; i < distances.size(); i++) {
-		if (room->getTile(i % width, i / width)->color == YELLOW) {
+		if (room->getTile(i % width, i / width)->color != NORMAL) {
 			//get distance and store in vector
 			dist = std::abs(party[target_index]->getRMO() % width - i % width) + std::abs(party[target_index]->getRMO() / width - i / width);
 			distances[i] = dist;
@@ -182,6 +182,10 @@ void Mob::moveMob() {
 			dist = distances[i];
 			RMO = i;
 		}
+	}
+	//dash if selected tile is in dash zone
+	if (room->getTile(RMO%width, RMO / width)->color == BLUE) {
+		useAction();
 	}
 	room->getTile(getRMO() % width, getRMO() / width)->type = NOTHING;
 	std::vector<int> RMO_list = getPath(RMO, getRMO());
@@ -222,13 +226,7 @@ void Mob::attack(int index) {
 		moveMob();
 	}
 	distance = std::abs((room->getCurrUnit()->getRMO() % width) - party[target_index]->getRMO() % width) + std::abs((room->getCurrUnit()->getRMO() / width) - party[target_index]->getRMO() / width);
-	//if still not within range, use action to move
-	if (distance != 1) {
-		//repeat move
-		resetTurn();
-		moveMob();
-	}
-	else {
+	if(distance == 1 && action) {
 		//attack target
 		drawRoom();
 		messageBox.loadFromRenderedText("The " + name + " attacks the " + party[target_index]->getName() + "!", { 255, 255, 255 }, 650);

@@ -950,6 +950,9 @@ void drawRoom() {
 	for (x = 0; x < room->getWidth(); x++) {
 		for (y = 0; y < room->getHeight(); y++) {
 			switch (room->getTile(x, y)->color) {
+			case BLUE:
+				roomTilesSST.setColor(100, 100, 255);
+				break;
 			case RED:
 				roomTilesSST.setColor(255, 100, 100);
 				break;
