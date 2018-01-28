@@ -232,7 +232,7 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	int range_num = 0;
 	while (enc > 0) {
 		count = rand() % range;
-		range_maps[range_num][count]->setIndex(rand() % NUM_MOB);
+		range_maps[range_num][count]->setIndex(rand() % NUM_MOB_ENC);
 		range_maps[range_num][count]->setType(MOB);
 		//otherstuff
 		mob.push_back(range_maps[range_num][count]);
@@ -337,9 +337,28 @@ void Dungeon::populateDungeon(Difficulty diff) {
 
 	for (i = 0; i < deadends.size(); i++) {
 		count = rand() % deadends[i].length;
-
-		dead_range_maps[i][count]->setType(CHOICE);
-		dead_range_maps[i][count]->setIndex(rand() % NUM_TRAP);
+		switch (rand() % 5) {
+		case 0:
+			dead_range_maps[i][count]->setType(TRAP);
+			dead_range_maps[i][count]->setIndex(rand() % NUM_TRAP);
+			break;
+		case 1:
+			dead_range_maps[i][count]->setType(INFO);
+			dead_range_maps[i][count]->setIndex(rand() % NUM_INFO);
+			break;
+		case 2:
+			dead_range_maps[i][count]->setType(LOOT);
+			dead_range_maps[i][count]->setIndex(rand() % NUM_LOOT);
+			break;
+		case 3:
+			dead_range_maps[i][count]->setType(CHOICE);
+			dead_range_maps[i][count]->setIndex(rand() % NUM_CHOICE);
+			break;
+		case 4:
+			dead_range_maps[i][count]->setType(MOB);
+			dead_range_maps[i][count]->setIndex(rand() % NUM_MOB_ENC);
+			break;
+		}
 	}
 }
 
@@ -744,55 +763,55 @@ bool Dungeon::canTravel(int curr_x, int curr_y, Direction dir) {
 
 void Dungeon::updateLOS() {
 	//current tile as visited
-	switch (gParty.getLOS()) {
+	switch (gParty->getLOS()) {
 	case 2:
 		//extra looking
-		if (gParty.getY() > 1 ) {
-			if(dungMap[gParty.getX() + (gParty.getY()-1)*width].getType() != NONE)
-				sight[gParty.getX() + (gParty.getY() - 2)*width].seen = true;
+		if (gParty->getY() > 1 ) {
+			if(dungMap[gParty->getX() + (gParty->getY()-1)*width].getType() != NONE)
+				sight[gParty->getX() + (gParty->getY() - 2)*width].seen = true;
 		}
-		if (gParty.getX() > 1) {
-			if (dungMap[gParty.getX() - 1 + (gParty.getY())*width].getType() != NONE)
-				sight[gParty.getX() - 2 + gParty.getY()*width].seen = true;
+		if (gParty->getX() > 1) {
+			if (dungMap[gParty->getX() - 1 + (gParty->getY())*width].getType() != NONE)
+				sight[gParty->getX() - 2 + gParty->getY()*width].seen = true;
 		}
-		if (gParty.getY() < height - 2) {
-			if (dungMap[gParty.getX() + (gParty.getY() + 1)*width].getType() != NONE)
-				sight[gParty.getX() + (gParty.getY() + 2)*width].seen = true;
+		if (gParty->getY() < height - 2) {
+			if (dungMap[gParty->getX() + (gParty->getY() + 1)*width].getType() != NONE)
+				sight[gParty->getX() + (gParty->getY() + 2)*width].seen = true;
 		}
-		if (gParty.getX() < width - 2) {
-			if (dungMap[gParty.getX() + 1 + (gParty.getY())*width].getType() != NONE)
-				sight[gParty.getX() + 2 + gParty.getY()*width].seen = true;
+		if (gParty->getX() < width - 2) {
+			if (dungMap[gParty->getX() + 1 + (gParty->getY())*width].getType() != NONE)
+				sight[gParty->getX() + 2 + gParty->getY()*width].seen = true;
 		}
 
-		if (gParty.getY() > 0 && gParty.getX() > 0) {
-			if (dungMap[gParty.getX() + (gParty.getY() - 1)*width].getType() != NONE || dungMap[gParty.getX() - 1 + (gParty.getY())*width].getType() != NONE)
-				sight[gParty.getX() - 1 + (gParty.getY() - 1)*width].seen = true;
+		if (gParty->getY() > 0 && gParty->getX() > 0) {
+			if (dungMap[gParty->getX() + (gParty->getY() - 1)*width].getType() != NONE || dungMap[gParty->getX() - 1 + (gParty->getY())*width].getType() != NONE)
+				sight[gParty->getX() - 1 + (gParty->getY() - 1)*width].seen = true;
 		}
-		if (gParty.getX() > 0 && gParty.getY() < height - 1) {
-			if (dungMap[gParty.getX() + (gParty.getY() + 1)*width].getType() != NONE || dungMap[gParty.getX() - 1 + (gParty.getY())*width].getType() != NONE)
-				sight[gParty.getX() - 1 + (gParty.getY()+1)*width].seen = true;
+		if (gParty->getX() > 0 && gParty->getY() < height - 1) {
+			if (dungMap[gParty->getX() + (gParty->getY() + 1)*width].getType() != NONE || dungMap[gParty->getX() - 1 + (gParty->getY())*width].getType() != NONE)
+				sight[gParty->getX() - 1 + (gParty->getY()+1)*width].seen = true;
 		}
-		if (gParty.getX() < width - 1 && gParty.getY() < height - 1) {
-			if (dungMap[gParty.getX() + (gParty.getY() + 1)*width].getType() != NONE || dungMap[gParty.getX() + 1 + (gParty.getY())*width].getType() != NONE)
-				sight[gParty.getX() + 1 + (gParty.getY() + 1)*width].seen = true;
+		if (gParty->getX() < width - 1 && gParty->getY() < height - 1) {
+			if (dungMap[gParty->getX() + (gParty->getY() + 1)*width].getType() != NONE || dungMap[gParty->getX() + 1 + (gParty->getY())*width].getType() != NONE)
+				sight[gParty->getX() + 1 + (gParty->getY() + 1)*width].seen = true;
 		}
-		if (gParty.getX() < width - 1 && gParty.getY() > 0) {
-			if (dungMap[gParty.getX() + (gParty.getY() - 1)*width].getType() != NONE || dungMap[gParty.getX() + 1 + (gParty.getY())*width].getType() != NONE)
-				sight[gParty.getX() + 1 + (gParty.getY()-1)*width].seen = true;
+		if (gParty->getX() < width - 1 && gParty->getY() > 0) {
+			if (dungMap[gParty->getX() + (gParty->getY() - 1)*width].getType() != NONE || dungMap[gParty->getX() + 1 + (gParty->getY())*width].getType() != NONE)
+				sight[gParty->getX() + 1 + (gParty->getY()-1)*width].seen = true;
 		}
 	case 1:
-		sight[gParty.getX() + gParty.getY()*width].visited = true;
-		if (gParty.getY() > 0) {
-			sight[gParty.getX() + (gParty.getY() - 1)*width].seen = true;
+		sight[gParty->getX() + gParty->getY()*width].visited = true;
+		if (gParty->getY() > 0) {
+			sight[gParty->getX() + (gParty->getY() - 1)*width].seen = true;
 		}
-		if (gParty.getX() > 0) {
-			sight[gParty.getX() - 1 + gParty.getY()*width].seen = true;
+		if (gParty->getX() > 0) {
+			sight[gParty->getX() - 1 + gParty->getY()*width].seen = true;
 		}
-		if (gParty.getY() < height - 1) {
-			sight[gParty.getX() + (gParty.getY() + 1)*width].seen = true;
+		if (gParty->getY() < height - 1) {
+			sight[gParty->getX() + (gParty->getY() + 1)*width].seen = true;
 		}
-		if (gParty.getX() < width - 1) {
-			sight[gParty.getX() + 1 + gParty.getY()*width].seen = true;
+		if (gParty->getX() < width - 1) {
+			sight[gParty->getX() + 1 + gParty->getY()*width].seen = true;
 		}
 		break;
 	}
@@ -801,8 +820,8 @@ void Dungeon::updateLOS() {
 }
 
 bool Dungeon::perceptionCheck() {
-	int highest_wis = (gParty.getChar(0)->getWis() < gParty.getChar(1)->getWis()) ? gParty.getChar(1)->getWis() : gParty.getChar(0)->getWis();
-	highest_wis = (highest_wis < gParty.getChar(2)->getWis()) ? gParty.getChar(2)->getWis() : highest_wis;
+	int highest_wis = (gParty->getChar(0)->getWis() < gParty->getChar(1)->getWis()) ? gParty->getChar(1)->getWis() : gParty->getChar(0)->getWis();
+	highest_wis = (highest_wis < gParty->getChar(2)->getWis()) ? gParty->getChar(2)->getWis() : highest_wis;
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
 		std::chrono::system_clock::now().time_since_epoch()
 		);
@@ -811,8 +830,8 @@ bool Dungeon::perceptionCheck() {
 	//automatic fail
 	if (roll == 1)
 		return false;
-	int x = gParty.getX();
-	int y = gParty.getY();
+	int x = gParty->getX();
+	int y = gParty->getY();
 	//what need to be beat
 	int DC;
 	switch (dif) {
@@ -888,7 +907,7 @@ bool Dungeon::perceptionCheck() {
 		}
 	}
 	DC = stash;
-	if (gParty.getX() > 0) {
+	if (gParty->getX() > 0) {
 		if (dungMap[x - 1 + (y)*width].getType() != PATH && dungMap[x - 1 + (y)*width].getType() != NONE && !getSeen(x - 1 + (y)*width) && dungMap[x - 1 + (y)*width].getType() != DEADEND) {
 			switch (dungMap[x - 1 + (y)*width].getType()) {
 			case MOB:
@@ -925,7 +944,7 @@ bool Dungeon::perceptionCheck() {
 		}
 	}
 	DC = stash;
-	if (gParty.getY() < height - 1) {
+	if (gParty->getY() < height - 1) {
 		if (dungMap[x + (y + 1)*width].getType() != PATH && dungMap[x + (y + 1)*width].getType() != NONE && !getSeen(x + (y + 1)*width) && dungMap[x + (y + 1)*width].getType() != DEADEND) {
 			switch (dungMap[x + (y + 1)*width].getType()) {
 			case MOB:
@@ -962,7 +981,7 @@ bool Dungeon::perceptionCheck() {
 		}
 	}
 	DC = stash;
-	if (gParty.getX() < width - 1) {
+	if (gParty->getX() < width - 1) {
 		if (dungMap[x + 1 + (y)*width].getType() != PATH && dungMap[x + 1 + (y)*width].getType() != NONE && !getSeen(x + 1 + (y)*width) && dungMap[x + 1 + (y)*width].getType() != DEADEND) {
 			switch (dungMap[x + 1 + (y)*width].getType()) {
 			case MOB:

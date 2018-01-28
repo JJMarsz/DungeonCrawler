@@ -3,7 +3,7 @@
 #include "Room.h"
 #include "dungeon.h"
 
-Party gParty;
+Party* gParty;
 
 CharList chars;
 
@@ -23,35 +23,41 @@ void Unit::damage(int dmg) {
 	//kill the unit
 	if (health <= 0) {
 		health = 0;
-		if (type == CHARACTER) {
-			//clear any residual threat from mobs
-			for (i = 0; i < init->size(); i++) {
-				if (init->at(i)->getType() == CHARACTER)
-					count++;
-				if (init->at(i)->getName() == name)
-					break;
-			}
-			for (i = 0; i < init->size(); i++) {
-				if(init->at(i)->getType() != CHARACTER)
-					init->at(i)->clearAttackThreat(count);
-			}
-		}
 		alive = false;
-		bool state = false;
-		std::vector<Unit*>* order = room->getInititiveOrder();
-		for (i = 0; i < order->size(); i++) {
-			if (0 == order->at(i)->getHP() && state == false) {
-				state = true;
-				room->getTile(order->at(i)->getRMO() % room->getWidth(), order->at(i)->getRMO() / room->getWidth())->type = NOTHING;
-				if (room->getInitIndex() > i)
-					room->setInitIndex(room->getInitIndex() - 1);
+		if (state = DUNGEON_ROOM) {
+			if (type == CHARACTER) {
+				room->killCharacter();
+				//clear any residual threat from mobs
+				for (i = 0; i < init->size(); i++) {
+					if (init->at(i)->getType() == CHARACTER)
+						count++;
+					if (init->at(i)->getName() == name)
+						break;
+				}
+				for (i = 0; i < init->size(); i++) {
+					if (init->at(i)->getType() != CHARACTER)
+						init->at(i)->clearAttackThreat(count);
+				}
 			}
-			else if (state == true) {
-				order->at(i - 1) = order->at(i);
+			else {
+				room->killEnemy();
 			}
+			bool state = false;
+			std::vector<Unit*>* order = room->getInititiveOrder();
+			//fix up initiative order
+			for (i = 0; i < order->size(); i++) {
+				if (0 == order->at(i)->getHP() && state == false) {
+					state = true;
+					room->getTile(order->at(i)->getRMO() % room->getWidth(), order->at(i)->getRMO() / room->getWidth())->type = NOTHING;
+					if (room->getInitIndex() > i)
+						room->setInitIndex(room->getInitIndex() - 1);
+				}
+				else if (state == true) {
+					order->at(i - 1) = order->at(i);
+				}
+			}
+			order->pop_back();
 		}
-		order->pop_back();
-
 	}
 }
 void Unit::updateAdj() {

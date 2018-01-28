@@ -224,7 +224,7 @@ private:
 	std::vector<bool> showed;
 };
 
-extern Party gParty;
+extern Party* gParty;
 
 extern CharList chars;
 

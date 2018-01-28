@@ -37,7 +37,7 @@ EncounterList::EncounterList() {
 	choiceList[CHA] = testCha;
 
 	//mob setup
-	mobList.resize(NUM_MOB);
+	mobList.resize(NUM_MOB_ENC);
 	mobList[TEST] = test;
 }
 
@@ -49,7 +49,7 @@ func EncounterList::getMob(MobIndex index) { return mobList[index]; }
 
 void handleEncounter() {
 	//dispatcher to appropriate encounter handler
-	Tile* tile = current_dungeon.getTile(gParty.getX() + gParty.getY()*current_dungeon.getWidth());
+	Tile* tile = current_dungeon.getTile(gParty->getX() + gParty->getY()*current_dungeon.getWidth());
 	//for now, only custom encounters will be boss and mobs, everything else will be generic
 	switch (tile->getType()) {
 	case TRAP:
@@ -104,12 +104,12 @@ void basicTrap() {
 	if (!current_dungeon.perceptionCheck()) {
 		//not scouted,all char rolls dex check
 		for (i = 0; i < 3; i++) {
-			dex_roll = rand() % 20 + 1 + gParty.getChar(i)->getDex();
+			dex_roll = rand() % 20 + 1 + gParty->getChar(i)->getDex();
 			if (dex_roll <= DC) {
-				gParty.getChar(i)->damage(dmg_roll);
+				gParty->getChar(i)->damage(dmg_roll);
 			}
 			else {
-				gParty.getChar(i)->damage(dmg_roll/2);
+				gParty->getChar(i)->damage(dmg_roll/2);
 			}
 
 		}
@@ -326,8 +326,8 @@ void testCha() {
 void goldLoot() {
 	//if scouted, add mod 
 	//base off of loot table
-	int highest_wis = (gParty.getChar(0)->getWis() < gParty.getChar(1)->getWis()) ? gParty.getChar(1)->getWis() : gParty.getChar(0)->getWis();
-	highest_wis = (highest_wis < gParty.getChar(2)->getWis()) ? gParty.getChar(2)->getWis() : highest_wis;
+	int highest_wis = (gParty->getChar(0)->getWis() < gParty->getChar(1)->getWis()) ? gParty->getChar(1)->getWis() : gParty->getChar(0)->getWis();
+	highest_wis = (highest_wis < gParty->getChar(2)->getWis()) ? gParty->getChar(2)->getWis() : highest_wis;
 
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
 		std::chrono::system_clock::now().time_since_epoch()
@@ -339,8 +339,8 @@ void goldLoot() {
 		msg_queue.push("There doesn't seem to be anything here.");
 		return;
 	}
-	int x = gParty.getX();
-	int y = gParty.getY();
+	int x = gParty->getX();
+	int y = gParty->getY();
 	//what need to be beat
 	int lowDC = 12;
 	int medDC = 16;
@@ -374,7 +374,7 @@ void goldLoot() {
 	default:
 		break;
 	}
-	gParty.addGold(gold);
+	gParty->addGold(gold);
 
 
 }

@@ -217,7 +217,7 @@ void QuestList::getQuests() {
 		std::chrono::system_clock::now().time_since_epoch()
 		);
 	srand(ms.count());//random seed
-	switch (gParty.getCompleted()) {
+	switch (gParty->getCompleted()) {
 	case 0:
 		easyChance = 100;
 		medChance = 0;

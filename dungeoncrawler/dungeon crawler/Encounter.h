@@ -55,7 +55,7 @@ enum ChoiceIndex {
 
 //even though there will be custom mob encounters per each quest
 //keep them organized in one list and let quest index into them
-#define NUM_MOB		1
+#define NUM_MOB_ENC		1
 enum MobIndex {
 	TEST
 };

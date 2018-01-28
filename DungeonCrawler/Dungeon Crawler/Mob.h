@@ -8,7 +8,7 @@
 class Mob: public Unit {
 public:
 	Mob();
-	Mob(int AC_,int HP_,int dmg_, int dice_, int atk_mod_, int dmg_mod_, SDL_Rect icon, std::string name_, int s, int d, int c, int i, int w, int ch, int move_);
+	Mob(int AC_,int HP_,int dmg_, int dice_, int atk_mod_, int dmg_mod_, SDL_Rect icon, std::string name_, int s, int d, int c, int i, int w, int ch, int move_, void(*handler_)(), UnitType type_);
 
 	/* using globals, update threat and select target player to attack */
 	void updateThreat();

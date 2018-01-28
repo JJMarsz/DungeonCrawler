@@ -135,7 +135,12 @@ int main(int argc, char* args[])
 						break;
 					case CHOOSE:
 						for (i = 0; i < 4; ++i) {
-							choiceButtons[i].handleEvent(&e, i);
+							if (i < 3) {
+								if(gParty->getChar(i)->isAlive())
+									choiceButtons[i].handleEvent(&e, i);
+							}
+							else
+								choiceButtons[i].handleEvent(&e, i);
 						}
 						break;
 					case DUNGEON:
@@ -160,7 +165,7 @@ int main(int argc, char* args[])
 									x -= (start_x % 50);
 								x = x / 50;
 								x = x * 50;
-								if (gParty.isAdj(x / 50 - (start_x / 50), y / 50) || ab == SCOUT)
+								if (gParty->isAdj(x / 50 - (start_x / 50), y / 50) || ab == SCOUT)
 									hover = true;
 								if (prev_x != x || prev_y != y) {
 									MouseDown = false;
@@ -299,7 +304,7 @@ int main(int argc, char* args[])
 					message = "";
 					break;
 				case DUNGEON:
-					if (current_dungeon.isEnd(gParty.getX(), gParty.getY()))
+					if (current_dungeon.isEnd(gParty->getX(), gParty->getY()))
 						state = REWARD;
 					drawDungeon();
 					drawDungeonMenu();
@@ -314,8 +319,8 @@ int main(int argc, char* args[])
 					SDL_Delay(10);
 					if (hover) {
 						if (MouseDown && MouseUp && !MouseRight && ab == NOPE) {
-							gParty.moveParty(x / 50 - (start_x / 50), y / 50);
-							if (current_dungeon.isEncounter(gParty.getX(), gParty.getY()) && !current_dungeon.getVisited(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+							gParty->moveParty(x / 50 - (start_x / 50), y / 50);
+							if (current_dungeon.isEncounter(gParty->getX(), gParty->getY()) && !current_dungeon.getVisited(gParty->getX() + gParty->getY()*current_dungeon.getWidth()))
 								handleEncounter();
 							//check to see if party sees something new in area
 							//done before LOS is updated to prevent player abuse by constantly rerolling
@@ -339,7 +344,7 @@ int main(int argc, char* args[])
 							tileSST.render(x + (start_x % 50), y, &tileSpriteClips[HOVER]);
 							tileSST.setColor(255, 255, 255);
 							if (MouseDown && MouseUp && !MouseRight) {
-								if (gParty.usePeek()) {
+								if (gParty->usePeek()) {
 									current_dungeon.scoutTile(x / 50 - (start_x / 50) + (y / 50)*current_dungeon.getWidth(), true);
 									msg_queue.push("The party peeks the nearby room.");
 									ab = NOPE;
@@ -355,7 +360,7 @@ int main(int argc, char* args[])
 							tileSST.render(x + (start_x % 50), y, &tileSpriteClips[MED_HOVER]);
 							tileSST.setColor(255, 255, 255);
 							if (MouseDown && MouseUp && !MouseRight) {
-								if (gParty.useScout()) {
+								if (gParty->useScout()) {
 									current_dungeon.scoutTile(x / 50 - (start_x / 50) + (y / 50)*current_dungeon.getWidth(), true);
 									current_dungeon.scoutTile((x + 50) / 50 - (start_x / 50) + (y / 50)*current_dungeon.getWidth(), true);
 									current_dungeon.scoutTile(x / 50 - (start_x / 50) + ((y + 50) / 50)*current_dungeon.getWidth(), true);
@@ -433,6 +438,8 @@ int main(int argc, char* args[])
 					if (hover_info == true) {
 						messageBox.render((650 - messageBox.getWidth()) / 2, 614);
 					}
+					//check victory or gameover state
+					room->checkState();
 					break;
 				case REWARD:
 					drawDungeon();
@@ -442,6 +449,9 @@ int main(int argc, char* args[])
 					questTitle.render(280, 164);
 					questGold.render(280, 220);
 					questXP.render(280, 240);
+					break;
+				case GAMEOVER:
+
 					break;
 				}
 				//Update screen

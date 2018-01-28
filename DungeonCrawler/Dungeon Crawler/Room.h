@@ -33,7 +33,10 @@ public:
 	int getInitIndex();
 	void setInitIndex(int i) { init_index = i; }
 	std::vector<Unit*>* getInititiveOrder();
-	void move(int index);
+	void checkState();
+	void killEnemy() { enemy_count--; }
+	void killCharacter() { char_count--; }
+
 private:
 	//maintain for initiative purposes
 	std::vector<Unit*> unitList;
@@ -41,6 +44,8 @@ private:
 	std::vector<RoomTile> roomMap;
 	int width, height;
 	int init_index;
+	int char_count;
+	int enemy_count;
 };
 
 

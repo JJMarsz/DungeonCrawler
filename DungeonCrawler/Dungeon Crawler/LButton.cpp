@@ -170,9 +170,10 @@ void char2Clicked(int index) {
 void char3Clicked(int index) {
 	chars.pickChar(chars.getIndex(displayList[index].getName()));
 	chars.unshowChar();
+	gParty = new Party();
 	for (int i = 0; i < chars.size(); i++) {
 		if (chars.isAvailable(i)) {
-			gParty.addChar(i);
+			gParty->addChar(i);
 		}
 	}
 	goldmenu.loadFromRenderedText("0", textColor, 200);
@@ -180,6 +181,8 @@ void char3Clicked(int index) {
 	xp1.loadFromRenderedText("0", textColor, 200);
 	xp2.loadFromRenderedText("0", textColor, 200);
 	completed.loadFromRenderedText("0", textColor, 200);
+	initQuests();
+	quests.getQuests();
 	//initTown();
 	state = TOWN_QUEST_BOARD;
 }
@@ -234,7 +237,7 @@ void questAccept(int index) {
 	dungText1.loadFromRenderedText("Rest", Color, 200);
 	dungText2.loadFromRenderedText("Scout", Color, 200);
 	dungText3.loadFromRenderedText("Peek", Color, 200);
-	gParty.moveParty(current_dungeon.getStartX(), current_dungeon.getStartY());
+	gParty->moveParty(current_dungeon.getStartX(), current_dungeon.getStartY());
 	quests.unShowQuest();
 	current_dungeon.updateLOS();
 	state = DUNGEON;
@@ -257,19 +260,19 @@ void wellHandler(int index) {
 		);
 	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
-	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+	if (current_dungeon.getScouted(gParty->getX() + gParty->getY()*current_dungeon.getWidth()))
 		roll += 5;
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
-		name = gParty.getChar(index)->getName();
+		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
-			gParty.getChar(index)->heal(gParty.getChar(index)->getMaxHP() / 2);
+			gParty->getChar(index)->heal(gParty->getChar(index)->getMaxHP() / 2);
 			msg_queue.push("The well replenishes the health of the " + name + ".");
 		}
 		else {
-			gParty.getChar(index)->damage(gParty.getChar(index)->getHP() / 2);
+			gParty->getChar(index)->damage(gParty->getChar(index)->getHP() / 2);
 			msg_queue.push("The well turns hostile and harms the " + name + ".");
 		}
 		break;
@@ -291,19 +294,19 @@ void obHandler(int index) {
 		);
 	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
-	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+	if (current_dungeon.getScouted(gParty->getX() + gParty->getY()*current_dungeon.getWidth()))
 		roll += 5;
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
-		name = gParty.getChar(index)->getName();
+		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
-			gParty.getChar(index)->addXP(1);
+			gParty->getChar(index)->addXP(1);
 			msg_queue.push("The obelisk accepts the courage of the " + name + ".");
 		}
 		else {
-			gParty.getChar(index)->subXP(1);
+			gParty->getChar(index)->subXP(1);
 			msg_queue.push("The obelisk glows red and weakens the " + name + ".");
 		}
 		break;
@@ -323,19 +326,19 @@ void chestHandler(int index) {
 		);
 	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
-	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+	if (current_dungeon.getScouted(gParty->getX() + gParty->getY()*current_dungeon.getWidth()))
 		roll += 5;
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
-		name = gParty.getChar(index)->getName();
+		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
-			gParty.addGold(100 + current_quests[quest_index].getDiff()*50);
+			gParty->addGold(100 + current_quests[quest_index].getDiff()*50);
 			msg_queue.push("The chest opens revealing its riches to the " + name + ".");
 		}
 		else {
-			gParty.getChar(index)->damage(gParty.getChar(index)->getHP() / 2);
+			gParty->getChar(index)->damage(gParty->getChar(index)->getHP() / 2);
 			msg_queue.push("The chest was a mimic! It damages the " + name + " before the party can fend it off.");
 		}
 		break;
@@ -354,19 +357,19 @@ void tomeHandler(int index) {
 		);
 	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
-	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+	if (current_dungeon.getScouted(gParty->getX() + gParty->getY()*current_dungeon.getWidth()))
 		roll += 5;
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
-		name = gParty.getChar(index)->getName();
+		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
-			gParty.getChar(index)->setMaxHP((gParty.getChar(index)->getMaxHP()*115)/100);
+			gParty->getChar(index)->setMaxHP((gParty->getChar(index)->getMaxHP()*115)/100);
 			msg_queue.push("The tome teaches the " + name + " how to be more resiliant.");
 		}
 		else {
-			gParty.getChar(index)->setMaxHP((gParty.getChar(index)->getMaxHP() * 85) / 100);
+			gParty->getChar(index)->setMaxHP((gParty->getChar(index)->getMaxHP() * 85) / 100);
 			msg_queue.push("The tome upsets the " + name + " as they become a bit more fragile.");
 		}
 		break;
@@ -385,20 +388,20 @@ void strHandler(int index) {
 		);
 	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
-	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+	if (current_dungeon.getScouted(gParty->getX() + gParty->getY()*current_dungeon.getWidth()))
 		roll += 4;
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
-		roll += gParty.getChar(index)->getStr();
-		name = gParty.getChar(index)->getName();
+		roll += gParty->getChar(index)->getStr();
+		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
-			gParty.getChar(index)->setStr(gParty.getChar(index)->getStr()+1);
+			gParty->getChar(index)->setStr(gParty->getChar(index)->getStr()+1);
 			msg_queue.push("The feat was completed! The " + name + " grows in strength!");
 		}
 		else {
-			gParty.getChar(index)->setStr(gParty.getChar(index)->getStr() - 1);
+			gParty->getChar(index)->setStr(gParty->getChar(index)->getStr() - 1);
 			msg_queue.push("The feat was too difficult for the " + name + ". They grow weaker.");
 		}
 		break;
@@ -417,20 +420,20 @@ void dexHandler(int index) {
 		);
 	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
-	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+	if (current_dungeon.getScouted(gParty->getX() + gParty->getY()*current_dungeon.getWidth()))
 		roll += 4;
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
-		roll += gParty.getChar(index)->getDex();
-		name = gParty.getChar(index)->getName();
+		roll += gParty->getChar(index)->getDex();
+		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
-			gParty.getChar(index)->setDex(gParty.getChar(index)->getDex() + 1);
+			gParty->getChar(index)->setDex(gParty->getChar(index)->getDex() + 1);
 			msg_queue.push("The " + name + " was fast enough to complete the trial. Their agility grows!");
 		}
 		else {
-			gParty.getChar(index)->setDex(gParty.getChar(index)->getDex() - 1);
+			gParty->getChar(index)->setDex(gParty->getChar(index)->getDex() - 1);
 			msg_queue.push("The " + name + " wasn't quick enough. They feel demoralized and less dexterous.");
 		}
 		break;
@@ -449,20 +452,20 @@ void conHandler(int index) {
 		);
 	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
-	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+	if (current_dungeon.getScouted(gParty->getX() + gParty->getY()*current_dungeon.getWidth()))
 		roll += 4;
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
-		roll += gParty.getChar(index)->getCon();
-		name = gParty.getChar(index)->getName();
+		roll += gParty->getChar(index)->getCon();
+		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
-			gParty.getChar(index)->setCon(gParty.getChar(index)->getCon() + 1);
+			gParty->getChar(index)->setCon(gParty->getChar(index)->getCon() + 1);
 			msg_queue.push("The " + name + " resists the poisen of the trial! They feel their fortitude strengthen!");
 		}
 		else {
-			gParty.getChar(index)->setCon(gParty.getChar(index)->getCon() - 1);
+			gParty->getChar(index)->setCon(gParty->getChar(index)->getCon() - 1);
 			msg_queue.push("The " + name + " feels quesy and probably should see a doctor. They don't feel as resiliant anymore.");
 		}
 		break;
@@ -481,20 +484,20 @@ void intHandler(int index) {
 		);
 	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
-	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+	if (current_dungeon.getScouted(gParty->getX() + gParty->getY()*current_dungeon.getWidth()))
 		roll += 4;
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
-		roll += gParty.getChar(index)->getInt();
-		name = gParty.getChar(index)->getName();
+		roll += gParty->getChar(index)->getInt();
+		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
-			gParty.getChar(index)->setInt(gParty.getChar(index)->getInt() + 1);
+			gParty->getChar(index)->setInt(gParty->getChar(index)->getInt() + 1);
 			msg_queue.push("After a few attempts, the " + name + " completes the puzzle and feels much smarter!");
 		}
 		else {
-			gParty.getChar(index)->setInt(gParty.getChar(index)->getInt() - 1);
+			gParty->getChar(index)->setInt(gParty->getChar(index)->getInt() - 1);
 			msg_queue.push("The " + name + " fails the puzzle to many times and now doesn't feel more smarter.");
 		}
 		break;
@@ -513,20 +516,20 @@ void wisHandler(int index) {
 		);
 	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
-	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+	if (current_dungeon.getScouted(gParty->getX() + gParty->getY()*current_dungeon.getWidth()))
 		roll += 4;
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
-		roll += gParty.getChar(index)->getWis();
-		name = gParty.getChar(index)->getName();
+		roll += gParty->getChar(index)->getWis();
+		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
-			gParty.getChar(index)->setWis(gParty.getChar(index)->getWis() + 1);
+			gParty->getChar(index)->setWis(gParty->getChar(index)->getWis() + 1);
 			msg_queue.push("Using their vast wisdom gained over the years, the " + name + " out smarts the test and grows wiser!");
 		}
 		else {
-			gParty.getChar(index)->setWis(gParty.getChar(index)->getWis() - 1);
+			gParty->getChar(index)->setWis(gParty->getChar(index)->getWis() - 1);
 			msg_queue.push("Clearly the " + name + " was not meant for this. Their wisdom depreciates.");
 		}
 		break;
@@ -545,20 +548,20 @@ void chaHandler(int index) {
 		);
 	srand(ms.count());//random seed
 	int roll = (rand() % 20) + 1;
-	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+	if (current_dungeon.getScouted(gParty->getX() + gParty->getY()*current_dungeon.getWidth()))
 		roll += 4;
 	switch (index) {
 	case 0:
 	case 1:
 	case 2:
-		roll += gParty.getChar(index)->getCha();
-		name = gParty.getChar(index)->getName();
+		roll += gParty->getChar(index)->getCha();
+		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
-			gParty.getChar(index)->setCha(gParty.getChar(index)->getCha() + 1);
+			gParty->getChar(index)->setCha(gParty->getChar(index)->getCha() + 1);
 			msg_queue.push("The " + name + " manages to convince a statue of it's sentience. This boosts their self confidence.");
 		}
 		else {
-			gParty.getChar(index)->setCha(gParty.getChar(index)->getCha() - 1);
+			gParty->getChar(index)->setCha(gParty->getChar(index)->getCha() - 1);
 			msg_queue.push("The " + name + " talked with a non-living statue. Their self confidence diminishes.");
 		}
 		break;
@@ -569,23 +572,23 @@ void chaHandler(int index) {
 }
 
 void rest(int index) {
-	if (gParty.checkRest()) {
-		if (gParty.useRest()) {
+	if (gParty->checkRest()) {
+		if (gParty->useRest()) {
 			for (int i = 0; i < 3; i++)
-				gParty.getChar(i)->heal(gParty.getChar(i)->getMaxHP() / 4);
+				gParty->getChar(i)->heal(gParty->getChar(i)->getMaxHP() / 4);
 			ab = REST;
 		}
 	}
 }
 
 void peek(int index) {
-	if(gParty.checkPeek())
+	if(gParty->checkPeek())
 		ab = PEEK;
 }
 
 void scout(int index) {
 	//reveal a 2x2 or 3x3 area of the map
-	if(gParty.checkScout())
+	if(gParty->checkScout())
 		ab = SCOUT;
 }
 
@@ -600,24 +603,24 @@ void endTurnHandler(int index) {
 void returnToTown(int index) {
 	state = TOWN_QUEST_BOARD;
 	//inc completed dungeons
-	gParty.incCompleted();
-	gParty.addGold(current_quests[quest_index].getGold());
-	gParty.addXP(current_quests[quest_index].getXP());
-	gParty.resetAbilities();
-	gParty.resetHealth();
+	gParty->incCompleted();
+	gParty->addGold(current_quests[quest_index].getGold());
+	gParty->addXP(current_quests[quest_index].getXP());
+	gParty->resetAbilities();
+	gParty->resetHealth();
 	//check if game is done
-	if (gParty.getCompleted() >= END_GAME) {
-		state = END;
+	if (gParty->getCompleted() >= END_GAME) {
+		state = GAMEWON;
 	}
 	quests.completeQuest(current_quests[quest_index].getTitle());
 	quests.getQuests();
 	//create a new quest if neccesary
 	//setup all relevant things
-	completed.loadFromRenderedText(std::to_string(gParty.getCompleted()), textColor, 200);
-	goldmenu.loadFromRenderedText(std::to_string(gParty.getGold()), textColor, 200);
-	xp0.loadFromRenderedText(std::to_string(gParty.getXP(0)), textColor, 200);
-	xp1.loadFromRenderedText(std::to_string(gParty.getXP(1)), textColor, 200);
-	xp2.loadFromRenderedText(std::to_string(gParty.getXP(2)), textColor, 200);
+	completed.loadFromRenderedText(std::to_string(gParty->getCompleted()), textColor, 200);
+	goldmenu.loadFromRenderedText(std::to_string(gParty->getGold()), textColor, 200);
+	xp0.loadFromRenderedText(std::to_string(gParty->getXP(0)), textColor, 200);
+	xp1.loadFromRenderedText(std::to_string(gParty->getXP(1)), textColor, 200);
+	xp2.loadFromRenderedText(std::to_string(gParty->getXP(2)), textColor, 200);
 
 }
 

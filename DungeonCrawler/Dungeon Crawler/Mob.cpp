@@ -6,11 +6,11 @@ std::unordered_map<std::string, Mob> mobMap;
 
 //load all mobs into the map
 void loadMobs() {
-	mobMap["Skeleton"] = Mob(12, 13, 6, 1, 4, 2, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6);
+	mobMap["Skeleton"] = Mob(12, 13, 6, 1, 4, 2, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6, meleeMobHandler, ENEMY);
 
 }
 
-//handles AI response for melee mobs
+//handles AI response for generic non-boss melee mobs
 void meleeMobHandler() {
 	Unit* mob = room->getCurrUnit();
 	mob->updateThreat();
@@ -19,8 +19,8 @@ void meleeMobHandler() {
 
 Mob::Mob(){}
 
-Mob::Mob(int AC_, int HP_, int dmg_, int dice_, int atk_mod_, int dmg_mod_, SDL_Rect icon, std::string name_, int s, int d, int c, int i, int w, int ch, int move_){
-	type = ENEMY;
+Mob::Mob(int AC_, int HP_, int dmg_, int dice_, int atk_mod_, int dmg_mod_, SDL_Rect icon, std::string name_, int s, int d, int c, int i, int w, int ch, int move_, void(*handler_)(), UnitType type_) {
+	type = type_;
 	AC = AC_;
 	dmg = dmg_;
 	dice = dice_;
@@ -41,7 +41,7 @@ Mob::Mob(int AC_, int HP_, int dmg_, int dice_, int atk_mod_, int dmg_mod_, SDL_
 	threat[0] = 0;
 	threat[1] = 0;
 	threat[2] = 0;
-	handler = meleeMobHandler;
+	handler = handler_;;
 }
 
 SDL_Rect Mob::getIcon50() {
@@ -176,7 +176,7 @@ void Mob::moveMob() {
 	}
 	int RMO = 0;
 	//get RMO
-	dist = 15;
+	dist = 20;
 	for (i = 0; i < distances.size(); i++) {
 		if (dist > distances[i] && distances[i] != -1) {
 			dist = distances[i];

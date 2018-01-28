@@ -530,8 +530,6 @@ bool loadMedia()
 		printf("Failed to load texture image!\n");
 		success = false;
 	}
-	initQuests();
-	quests.getQuests();
 	if (!shop.loadFromFile("textures/shop.png")) {
 		printf("Failed to load texture image!\n");
 		success = false;
@@ -1229,7 +1227,7 @@ int getTileIndex(int x, int y) {
 	}
 }
 int encounterExists(int x, int y, bool alt) {
-	if (gParty.getX() == x && gParty.getY() == y)
+	if (gParty->getX() == x && gParty->getY() == y)
 		return -1;
 	EncounterType target;
 	if (!alt) 
@@ -1256,7 +1254,7 @@ int encounterExists(int x, int y, bool alt) {
 }
 
 bool charAdj(int x, int y) {
-	int RMO = gParty.getX() + gParty.getY()*current_dungeon.getWidth();
+	int RMO = gParty->getX() + gParty->getY()*current_dungeon.getWidth();
 	int trap_RMO = x + y * current_dungeon.getWidth();
 	if (RMO + 1 == trap_RMO || RMO - 1 == trap_RMO || RMO - current_dungeon.getWidth() == trap_RMO || RMO + current_dungeon.getWidth() == trap_RMO)
 		return true;
@@ -1267,9 +1265,14 @@ void drawChoiceMenu() {
 
 	choicemenu.render((SCREEN_WIDTH - CHOICE_MENU_WIDTH) / 2, 200);
 	for (int i = 0; i < 4; i++) {
-		choiceButtons[i].render();
-		if(i < 3)
-			charSST.render((SCREEN_WIDTH - CHOICE_MENU_WIDTH) / 2 + 12 + 110 * i, 212, &gParty.getChar(i)->getIcon100());
+		if (i < 3) {
+			if (gParty->getChar(i)->isAlive()) {
+				choiceButtons[i].render();
+				charSST.render((SCREEN_WIDTH - CHOICE_MENU_WIDTH) / 2 + 12 + 110 * i, 212, &gParty->getChar(i)->getIcon100());
+			}
+		}
+		else
+			choiceButtons[i].render();
 	}
 	no.render((SCREEN_WIDTH - CHOICE_MENU_WIDTH) / 2 + 342, 212);
 	
@@ -1331,7 +1334,7 @@ void drawDungeon() {
 		}
 	}
 	//draw any special tiles
-	tileSST.render(gParty.getX() * 50 + start_x, gParty.getY() * 50, &tileSpriteClips[PARTY]);
+	tileSST.render(gParty->getX() * 50 + start_x, gParty->getY() * 50, &tileSpriteClips[PARTY]);
 }
 
 void drawDungeonMenu() {
@@ -1339,13 +1342,13 @@ void drawDungeonMenu() {
 	int health_ratio;
 	SDL_Color textColor = { 255, 255, 255 };
 	dungeonmenu.render(0, SCREEN_HEIGHT - 120);
-	goldmenu.loadFromRenderedText(std::to_string(gParty.getGold()), textColor, 200);
+	goldmenu.loadFromRenderedText(std::to_string(gParty->getGold()), textColor, 200);
 	goldmenu.render(400, SCREEN_HEIGHT - 45);
 	//all char stuff
 	for (int i = 0; i < 3; i++) {
-		charSST.render(10 + i*120, SCREEN_HEIGHT - 60, &gParty.getChar(i)->getIcon50());
-		double slice = (double)(gParty.getChar(i)->getMaxHP()) / 11;
-		double diff = (gParty.getChar(i)->getMaxHP() - gParty.getChar(i)->getHP());
+		charSST.render(10 + i*120, SCREEN_HEIGHT - 60, &gParty->getChar(i)->getIcon50());
+		double slice = (double)(gParty->getChar(i)->getMaxHP()) / 11;
+		double diff = (gParty->getChar(i)->getMaxHP() - gParty->getChar(i)->getHP());
 		double ratio = diff / slice;
 		ratio += .5;
 		health_ratio =  (int)ratio;
@@ -1355,13 +1358,13 @@ void drawDungeonMenu() {
 		dungeonButtons[i].render();
 		
 	}
-	multiplierSST.render(SCREEN_WIDTH - 225, SCREEN_HEIGHT - 65, &multiplyClips[gParty.getRest()]);
-	multiplierSST.render(SCREEN_WIDTH - 125, SCREEN_HEIGHT - 65, &multiplyClips[gParty.getScout()]);
-	multiplierSST.render(SCREEN_WIDTH - 25, SCREEN_HEIGHT - 65, &multiplyClips[gParty.getPeek()]);
+	multiplierSST.render(SCREEN_WIDTH - 225, SCREEN_HEIGHT - 65, &multiplyClips[gParty->getRest()]);
+	multiplierSST.render(SCREEN_WIDTH - 125, SCREEN_HEIGHT - 65, &multiplyClips[gParty->getScout()]);
+	multiplierSST.render(SCREEN_WIDTH - 25, SCREEN_HEIGHT - 65, &multiplyClips[gParty->getPeek()]);
 
-	hp0.loadFromRenderedText(std::to_string(gParty.getChar(0)->getHP()) + "/" + std::to_string(gParty.getChar(0)->getMaxHP()), textColor, 200);
-	hp1.loadFromRenderedText(std::to_string(gParty.getChar(1)->getHP()) + "/" + std::to_string(gParty.getChar(1)->getMaxHP()), textColor, 200);
-	hp2.loadFromRenderedText(std::to_string(gParty.getChar(2)->getHP()) + "/" + std::to_string(gParty.getChar(2)->getMaxHP()), textColor, 200);
+	hp0.loadFromRenderedText(std::to_string(gParty->getChar(0)->getHP()) + "/" + std::to_string(gParty->getChar(0)->getMaxHP()), textColor, 200);
+	hp1.loadFromRenderedText(std::to_string(gParty->getChar(1)->getHP()) + "/" + std::to_string(gParty->getChar(1)->getMaxHP()), textColor, 200);
+	hp2.loadFromRenderedText(std::to_string(gParty->getChar(2)->getHP()) + "/" + std::to_string(gParty->getChar(2)->getMaxHP()), textColor, 200);
 
 	hp0.render(70, SCREEN_HEIGHT - 48);
 	hp1.render(190, SCREEN_HEIGHT - 48);
@@ -1472,9 +1475,9 @@ void drawTownMenu() {
 	completed.render(210, SCREEN_HEIGHT - 44);
 
 	//render character icons for selected characters
-	charSST.render(246, SCREEN_HEIGHT - 47, &gParty.getChar(0)->getIcon25());
-	charSST.render(332, SCREEN_HEIGHT - 47, &gParty.getChar(1)->getIcon25());
-	charSST.render(418, SCREEN_HEIGHT - 47, &gParty.getChar(2)->getIcon25());
+	charSST.render(246, SCREEN_HEIGHT - 47, &gParty->getChar(0)->getIcon25());
+	charSST.render(332, SCREEN_HEIGHT - 47, &gParty->getChar(1)->getIcon25());
+	charSST.render(418, SCREEN_HEIGHT - 47, &gParty->getChar(2)->getIcon25());
 
 }
 

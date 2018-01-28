@@ -9,6 +9,8 @@ bool wayToSort(int i, int j) { return i > j; }
 
 Room::Room(){
 	init_index = 0;
+	char_count = 0;
+	enemy_count = 0;
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
 		std::chrono::system_clock::now().time_since_epoch()
 		);
@@ -64,39 +66,46 @@ std::vector<Unit*>* Room::getInititiveOrder() { return &unitList; }
 
 void Room::rollInit(std::string mobname) {
 	//only dealing with chars for now
-	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(
 		std::chrono::system_clock::now().time_since_epoch()
 		);
 	srand(ms.count());//random seed
 	std::unordered_map<int, Unit*> map;
 	std::vector<int> init;
 	int i, mod = 0;
-	if (current_dungeon.getScouted(gParty.getX() + gParty.getY()*current_dungeon.getWidth()))
+	if (current_dungeon.getScouted(gParty->getX() + gParty->getY()*current_dungeon.getWidth()))
 		mod = 5;
 	for (i = 0; i < 3; i++) {
-		int roll = rand() % 20 + mod + gParty.getChar(i)->getDex();
-		while (map.find(roll) != map.end())
-			roll--;
-		map[roll] = gParty.getChar(i);
-		init.push_back(roll);
+		if (gParty->getChar(i)->isAlive()) {
+			int roll = rand() % 20 + mod + gParty->getChar(i)->getDex();
+			while (map.find(roll) != map.end())
+				roll--;
+			map[roll] = gParty->getChar(i);
+			init.push_back(roll);
+			char_count++;
+		}
 	}
-	//then add mobs
-	int count;
-	switch (current_quests[quest_index].getDiff()) {
-	case EASY:
-		count = 3;
-		break;
-	case MEDIUM:
-		count = 4;
-		break;
-	case HARD:
-		count = 5;
-		break;
+	if (mobMap[mobname].getType() == BOSS_BOI) {
+		enemy_count = 1;
 	}
-	unitList.resize(MAX_CHAR + count);
+	else{
+		switch (current_quests[quest_index].getDiff()) {
+		case EASY:
+			enemy_count = 3;
+			break;
+		case MEDIUM:
+			enemy_count = 4;
+			break;
+		case HARD:
+			enemy_count = 5;
+			break;
+		}
+	}
+	//add mobs
+	unitList.resize(MAX_CHAR + enemy_count);
 	Mob newb = mobMap[mobname];
-	enemyList.resize(count);
-	for (i = 0; i < count; i++) {
+	enemyList.resize(enemy_count);
+	for (i = 0; i < enemy_count; i++) {
 		int roll = rand() % 20 + 1 + newb.getDex();
 		while (map.find(roll) != map.end())
 			roll--;
@@ -118,7 +127,7 @@ void Room::placeUnits() {
 	srand(ms.count());//random seed
 	//find the direction in which the party came from
 	int dung_width = current_dungeon.getWidth();
-	Tile* curr = current_dungeon.getTile(gParty.getX() + gParty.getY()*dung_width);
+	Tile* curr = current_dungeon.getTile(gParty->getX() + gParty->getY()*dung_width);
 	Tile* prev = curr->getPrev();
 	int prev_RMO = prev->getX() + prev->getY()*dung_width;
 	int curr_RMO = curr->getX() + curr->getY()*dung_width;
@@ -222,7 +231,19 @@ void Room::clearRange() {
 
 }
 
-void Room::move(int index) {
-	roomMap[getCurrUnit()->getRMO()].type = NOTHING;
-	roomMap[index].type = CHARACTER;
+void Room::checkState() {
+	if (char_count <= 0) {
+		state = GAMEOVER;
+		delete gParty;
+		gParty = NULL;
+		delete room;
+		room = NULL;
+	}
+	else if (enemy_count <= 0) {
+		state = DUNGEON;
+		delete room;
+		room = NULL;
+		r = 1275;
+		ab = NOPE;
+	}
 }
