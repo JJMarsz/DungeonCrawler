@@ -701,13 +701,32 @@ void moveButton(int index) {
 
 void greatAxeButton(int index) {
 	Unit* curr = room->getCurrUnit();
-	if (curr->getAction() == false)
+	if (!curr->getAction())
 		return;
-	if(curr->getAb("Greataxe", ACTION))
 	room->clearRange();
 	ab = ATTACK;
 	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1);
 	click_handler = curr->getAb("Greataxe", ACTION)->getClickHandler();
+}
+
+void longSwordButton(int index) {
+	Unit* curr = room->getCurrUnit();
+	if (!curr->getAction())
+		return;
+	room->clearRange();
+	ab = ATTACK;
+	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1);
+	click_handler = curr->getAb("Longsword", ACTION)->getClickHandler();
+}
+
+void morningStarButton(int index) {
+	Unit* curr = room->getCurrUnit();
+	if (!curr->getAction())
+		return;
+	room->clearRange();
+	ab = ATTACK;
+	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1);
+	click_handler = curr->getAb("Morningstar", ACTION)->getClickHandler();
 }
 
 /* Used primarily for testing */

@@ -107,6 +107,8 @@ void rest(int index);
 void endTurnHandler(int index); 
 void moveButton(int index);
 void greatAxeButton(int index);
+void longSwordButton(int index);
+void morningStarButton(int index);
 
 void emptyHandler(int index);
 

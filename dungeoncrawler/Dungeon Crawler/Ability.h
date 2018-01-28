@@ -4,12 +4,19 @@
 #include "LButton.h"
 
 typedef void(*func2)(int);
-#define NUM_ABILITIES	2
+#define NUM_ABILITIES	4
 
 enum AbilityType {
 	ACTION,
 	BACTION,
 	FREE
+};
+
+enum AbilityIcons {
+	MOVEMENT,
+	GREATAXE,
+	LONGSWORD,
+	MORNINGSTAR
 };
 
 //each individual ability
@@ -61,5 +68,7 @@ extern std::vector<int> getPath(int end, int start);
 //ability click handlers
 void moveClick(int index);
 void greatAxeClick(int index);
+void longSwordClick(int index);
+void morningStarClick(int index);
 
 #endif 

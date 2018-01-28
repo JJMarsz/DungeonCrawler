@@ -761,6 +761,16 @@ bool loadMedia()
 		abClips[GREATAXE].y = 0;
 		abClips[GREATAXE].w = 50;
 		abClips[GREATAXE].h = 50;
+
+		abClips[LONGSWORD].x = 100;
+		abClips[LONGSWORD].y = 0;
+		abClips[LONGSWORD].w = 50;
+		abClips[LONGSWORD].h = 50;
+
+		abClips[MORNINGSTAR].x = 150;
+		abClips[MORNINGSTAR].y = 0;
+		abClips[MORNINGSTAR].w = 50;
+		abClips[MORNINGSTAR].h = 50;
 	}
 	loadMobs();
 	return success;

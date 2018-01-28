@@ -8,6 +8,8 @@ void(*click_handler)(int index) = NULL;
 void loadAbilityMap(){
 	abMap["Move"] = Ability("Move", "Move the character", FREE, 1, 6, 0, 0, moveButton, moveClick, &abClips[MOVEMENT]);
 	abMap["Greataxe"] = Ability("Greataxe", "Attack with a greataxe", ACTION, 1, 1, 1, 8, greatAxeButton, greatAxeClick, &abClips[GREATAXE]);
+	abMap["Longsword"] = Ability("Longsword", "Attack with a longsword", ACTION, 1, 1, 1, 8, longSwordButton, longSwordClick, &abClips[LONGSWORD]);
+	abMap["Morningstar"] = Ability("Morningstar", "Attack with a morningstar", ACTION, 1, 1, 1, 6, morningStarButton, morningStarClick, &abClips[MORNINGSTAR]);
 
 	
 }
@@ -167,6 +169,56 @@ void greatAxeClick(int index) {
 		return;
 	Unit* curr = room->getCurrUnit();
 	int dmg = curr->getAb("Greataxe", ACTION)->rollSingleHit(curr->getStr(), curr->getStr(), target->getAC());
+	if (-1 != dmg) {
+		target->damage(dmg);
+	}
+	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+	SDL_RenderPresent(gRenderer);
+	Sleep(1000);
+	room->getCurrUnit()->useAction();
+	room->clearRange();
+	//click_handler = NULL;
+}
+
+void longSwordClick(int index) {
+	std::vector<Unit*>* init = room->getInititiveOrder();
+	Unit* target = NULL;
+	//get the target
+	for (int i = 0; i < init->size(); i++) {
+		if (index == init->at(i)->getRMO()) {
+			target = init->at(i);
+			break;
+		}
+	}
+	if (target == NULL)
+		return;
+	Unit* curr = room->getCurrUnit();
+	int dmg = curr->getAb("Longsword", ACTION)->rollSingleHit(curr->getStr(), curr->getStr(), target->getAC());
+	if (-1 != dmg) {
+		target->damage(dmg);
+	}
+	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+	SDL_RenderPresent(gRenderer);
+	Sleep(1000);
+	room->getCurrUnit()->useAction();
+	room->clearRange();
+	//click_handler = NULL;
+}
+
+void morningStarClick(int index) {
+	std::vector<Unit*>* init = room->getInititiveOrder();
+	Unit* target = NULL;
+	//get the target
+	for (int i = 0; i < init->size(); i++) {
+		if (index == init->at(i)->getRMO()) {
+			target = init->at(i);
+			break;
+		}
+	}
+	if (target == NULL)
+		return;
+	Unit* curr = room->getCurrUnit();
+	int dmg = curr->getAb("Morningstar", ACTION)->rollSingleHit(curr->getStr(), curr->getStr(), target->getAC());
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}
