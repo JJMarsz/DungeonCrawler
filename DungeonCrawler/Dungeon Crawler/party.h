@@ -19,6 +19,8 @@ public:
 	void setMoveLeft(int i) { move_left = i; }
 	UnitType getType() { return type; }
 	void resetTurn() { move_left = move; bAction = true; action = true; }
+	void updateAdj();
+	bool getAdj(int i) { return adj[i]; }
 
 	int getStr() { return str; }
 	int getDex() { return dex; }
@@ -58,6 +60,7 @@ public:
 	virtual void clearAttackThreat(int i) { return; }
 
 protected:
+	std::vector<bool> adj;
 	int RMO;
 	UnitType type;
 	int move_left;

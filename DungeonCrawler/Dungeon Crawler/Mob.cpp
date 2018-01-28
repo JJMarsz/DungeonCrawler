@@ -6,7 +6,7 @@ std::unordered_map<std::string, Mob> mobMap;
 
 //load all mobs into the map
 void loadMobs() {
-	mobMap["Skeleton"] = Mob(13, 13, 6, 1, 4, 2, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6);
+	mobMap["Skeleton"] = Mob(12, 13, 6, 1, 4, 2, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6);
 
 }
 

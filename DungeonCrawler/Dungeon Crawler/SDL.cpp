@@ -771,6 +771,11 @@ bool loadMedia()
 		abClips[MORNINGSTAR].y = 0;
 		abClips[MORNINGSTAR].w = 50;
 		abClips[MORNINGSTAR].h = 50;
+
+		abClips[DAGGER].x = 200;
+		abClips[DAGGER].y = 0;
+		abClips[DAGGER].w = 50;
+		abClips[DAGGER].h = 50;
 	}
 	loadMobs();
 	return success;
@@ -961,13 +966,16 @@ void drawRoom() {
 		for (y = 0; y < room->getHeight(); y++) {
 			switch (room->getTile(x, y)->color) {
 			case BLUE:
-				roomTilesSST.setColor(100, 100, 255);
+				roomTilesSST.setColor(0, 160, 230);
 				break;
 			case RED:
 				roomTilesSST.setColor(255, 100, 100);
 				break;
 			case YELLOW:
 				roomTilesSST.setColor(239, 228, 176);
+				break;
+			case ORANGE:
+				roomTilesSST.setColor(100, 0, 0);
 				break;
 			}
 			roomTilesSST.render(x * 50 + start_x, y * 50 + start_y, &roomTileClips[getRoomTileIndex(x, y)]);

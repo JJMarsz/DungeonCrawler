@@ -10,6 +10,7 @@ void loadAbilityMap(){
 	abMap["Greataxe"] = Ability("Greataxe", "Attack with a greataxe", ACTION, 1, 1, 1, 8, greatAxeButton, greatAxeClick, &abClips[GREATAXE]);
 	abMap["Longsword"] = Ability("Longsword", "Attack with a longsword", ACTION, 1, 1, 1, 8, longSwordButton, longSwordClick, &abClips[LONGSWORD]);
 	abMap["Morningstar"] = Ability("Morningstar", "Attack with a morningstar", ACTION, 1, 1, 1, 6, morningStarButton, morningStarClick, &abClips[MORNINGSTAR]);
+	abMap["Dagger"] = Ability("Dagger", "Attack with a dagger, with sneak attack", ACTION, 1, 1, 1, 4, daggerButton, daggerClick, &abClips[DAGGER]);
 
 	
 }
@@ -93,6 +94,7 @@ Ability::Ability(std::string name_, std::string info_, AbilityType type_, int cd
 	button_handler = button;
 	click_handler = click;
 	icon = icon_;
+	sneak_dice = 1;
 }
 
 int Ability::rollSingleHit(int atk_mod, int dmg_mod, int target_AC) {
@@ -112,7 +114,7 @@ int Ability::rollSingleHit(int atk_mod, int dmg_mod, int target_AC) {
 		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
 		SDL_RenderPresent(gRenderer);
 		Sleep(800);
-		roll = dmg_mod + dmg_dice;
+		roll = dmg_mod + num_dice*dmg_dice;
 	}
 	else
 		roll = dmg_mod;
@@ -122,7 +124,48 @@ int Ability::rollSingleHit(int atk_mod, int dmg_mod, int target_AC) {
 	messageBox.loadFromRenderedText("The " + room->getCurrUnit()->getName() + " landed a hit and dealt " + std::to_string(roll) + " damage!", { 255, 255, 255 }, 650);
 	return roll;
 }
+
 //click handlers for abilities
+int Ability::rollSneakAttack(int atk_mod, int dmg_mod, int target_AC) {
+	//returns -1 on miss and dmg on hit
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
+	int i;
+	int roll = 1 + rand() % 20;
+	if (roll + atk_mod <= target_AC) {
+		messageBox.loadFromRenderedText("The " + room->getCurrUnit()->getName() + " missed the sneak attack!", { 255, 255, 255 }, 650);
+		return -1;
+	}
+	else if (roll == 20) {
+		messageBox.loadFromRenderedText("A critical hit!", { 255, 255, 255 }, 650);
+		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+		SDL_RenderPresent(gRenderer);
+		Sleep(800);
+		roll = dmg_mod + num_dice*dmg_dice + 6*sneak_dice;
+	}
+	else
+		roll = dmg_mod;
+	for (i = 0; i < num_dice; i++)
+		roll += 1 + rand() % dmg_dice;
+	for (i = 0; i < sneak_dice; i++)
+		roll += 1 + rand() % 6;
+	drawRoom();
+	messageBox.loadFromRenderedText("The " + room->getCurrUnit()->getName() + " landed a sneak attack and dealt " + std::to_string(roll) + " damage!", { 255, 255, 255 }, 650);
+	return roll;
+}
+
+Unit* getTarget(int index) {
+	std::vector<Unit*>* init = room->getInititiveOrder();
+	//get the target
+	for (int i = 0; i < init->size(); i++) {
+		if (index == init->at(i)->getRMO()) {
+			return init->at(i);
+		}
+	}
+	return NULL;
+}
 
 void moveClick(int index) {
 	int i;
@@ -156,15 +199,7 @@ void moveClick(int index) {
 }
 
 void greatAxeClick(int index) {
-	std::vector<Unit*>* init = room->getInititiveOrder();
-	Unit* target = NULL;
-	//get the target
-	for (int i = 0; i < init->size(); i++) {
-		if (index == init->at(i)->getRMO()) {
-			target = init->at(i);
-			break;
-		}
-	}
+	Unit* target = getTarget(index);
 	if (target == NULL)
 		return;
 	Unit* curr = room->getCurrUnit();
@@ -181,15 +216,7 @@ void greatAxeClick(int index) {
 }
 
 void longSwordClick(int index) {
-	std::vector<Unit*>* init = room->getInititiveOrder();
-	Unit* target = NULL;
-	//get the target
-	for (int i = 0; i < init->size(); i++) {
-		if (index == init->at(i)->getRMO()) {
-			target = init->at(i);
-			break;
-		}
-	}
+	Unit* target = getTarget(index);
 	if (target == NULL)
 		return;
 	Unit* curr = room->getCurrUnit();
@@ -206,19 +233,32 @@ void longSwordClick(int index) {
 }
 
 void morningStarClick(int index) {
-	std::vector<Unit*>* init = room->getInititiveOrder();
-	Unit* target = NULL;
-	//get the target
-	for (int i = 0; i < init->size(); i++) {
-		if (index == init->at(i)->getRMO()) {
-			target = init->at(i);
-			break;
-		}
-	}
+	Unit* target = getTarget(index);
 	if (target == NULL)
 		return;
 	Unit* curr = room->getCurrUnit();
 	int dmg = curr->getAb("Morningstar", ACTION)->rollSingleHit(curr->getStr(), curr->getStr(), target->getAC());
+	if (-1 != dmg) {
+		target->damage(dmg);
+	}
+	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+	SDL_RenderPresent(gRenderer);
+	Sleep(1000);
+	room->getCurrUnit()->useAction();
+	room->clearRange();
+	//click_handler = NULL;
+}
+void daggerClick(int index) {
+	Unit* target = getTarget(index);
+	if (target == NULL)
+		return;
+	Unit* curr = room->getCurrUnit();
+	int dmg;
+	if (room->getTile(target->getRMO() % room->getWidth(), target->getRMO() / room->getWidth())->color == ORANGE) {
+		dmg = curr->getAb("Dagger", ACTION)->rollSneakAttack(curr->getDex(), curr->getDex(), target->getAC());
+	}
+	else
+		dmg = curr->getAb("Dagger", ACTION)->rollSingleHit(curr->getDex(), curr->getDex(), target->getAC());
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}

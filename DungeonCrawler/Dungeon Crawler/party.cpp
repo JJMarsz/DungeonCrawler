@@ -54,7 +54,37 @@ void Unit::damage(int dmg) {
 
 	}
 }
-
+void Unit::updateAdj() {
+	int width = room->getWidth();
+	std::vector<Unit*>* order = room->getInititiveOrder();
+	adj = std::vector<bool>(order->size(), false);
+	for (int i = 0; i < order->size(); i++) {
+		int x = order->at(i)->getRMO() % width;
+		int y = order->at(i)->getRMO() / width;
+		if(order->at(i)->getType() != CHARACTER){
+			if (x > 0) {
+				if (RMO == x - 1 + y * width) {
+					adj[i] = true;
+				}
+			}
+			if (y > 0) {
+				if (RMO == x + (y-1 )* width) {
+					adj[i] = true;
+				}
+			}
+			if (x < room->getWidth() - 1) {
+				if (RMO == x + 1 + y * width) {
+					adj[i] = true;
+				}
+			}
+			if (y < room->getHeight() - 1) {
+				if (RMO == x + (y + 1)* width) {
+					adj[i] = true;
+				}
+			}
+		}
+	}
+ }
 /* Char clas definitions */
 Character::Character(std::string name_, int str_, int dex_, int con_, int intel_, 
 						      int wis_, int cha_, int mov_, int health_, int AC_) {
@@ -349,6 +379,7 @@ CharList::CharList() {
 	charList[BARB].loadAbility("Greataxe");
 	charList[FIGHTER].loadAbility("Longsword");
 	charList[PALADIN].loadAbility("Morningstar");
+	charList[ROGUE].loadAbility("Dagger");
 }
 void CharList::loadSprites() {
 	//Go through each character to set sprites and info texts

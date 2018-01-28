@@ -389,4 +389,5 @@ void test() {
 	room->rollInit("Skeleton");
 	room->placeUnits();
 	room->getCurrUnit()->resetTurn();
+	room->getCurrUnit()->updateAdj();
 }

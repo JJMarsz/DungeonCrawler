@@ -4,7 +4,7 @@
 #include "LButton.h"
 
 typedef void(*func2)(int);
-#define NUM_ABILITIES	4
+#define NUM_ABILITIES	5
 
 enum AbilityType {
 	ACTION,
@@ -16,7 +16,8 @@ enum AbilityIcons {
 	MOVEMENT,
 	GREATAXE,
 	LONGSWORD,
-	MORNINGSTAR
+	MORNINGSTAR,
+	DAGGER
 };
 
 //each individual ability
@@ -34,6 +35,7 @@ public:
 	bool onCooldown() { return (count >= cooldown); }
 	void use() { count = 0; }
 	int rollSingleHit(int atk_mod, int dmg_mod, int target_AC);
+	int rollSneakAttack(int atk_mod, int dmg_mod, int target_AC);
 	SDL_Rect* getIcon() { return icon; }
 
 private:
@@ -57,6 +59,9 @@ private:
 	//used if ability does damage
 	int dmg_dice;
 	int num_dice;
+
+	//for rogue sneak
+	int sneak_dice;
 };
 
 void loadAbilityMap();
@@ -70,5 +75,6 @@ void moveClick(int index);
 void greatAxeClick(int index);
 void longSwordClick(int index);
 void morningStarClick(int index);
+void daggerClick(int index);
 
 #endif 

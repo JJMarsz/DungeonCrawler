@@ -339,7 +339,8 @@ enum Highlight {
 	NORMAL,
 	YELLOW,
 	BLUE,
-	RED
+	RED,
+	ORANGE
 };
 
 enum MobName {

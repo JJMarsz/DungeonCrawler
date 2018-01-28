@@ -683,6 +683,59 @@ void rangeColor(int x, int y, int length) {
 		rangeColor(x, y + 1, length - 1);
 }
 
+void sneakAttackColor(int RMO) {
+	std::vector<Unit*>* order = room->getInititiveOrder();
+	Unit* curr = room->getCurrUnit();
+	int width = room->getWidth();
+	std::vector<bool> sneak(order->size(),false);
+	for (int i = 0; i < order->size(); i++) {
+		int x = order->at(i)->getRMO() % width;
+		int y = order->at(i)->getRMO() / width;
+		bool rogue_bool = false;
+		bool char_bool = false;
+		if (order->at(i)->getType() != CHARACTER) {
+			if (x > 0) {
+				if (RMO == x - 1 + y * width) {
+					rogue_bool = true;
+				}
+				else if (room->getTile(x - 1, y)->type == CHARACTER) {
+					char_bool = true;
+				}
+			}
+			if (y > 0) {
+				if (RMO == x + (y - 1)* width) {
+					rogue_bool = true;
+				}
+				else if (room->getTile(x, y - 1)->type == CHARACTER) {
+					char_bool = true;
+				}
+			}
+			if (x < room->getWidth() - 1) {
+				if (RMO == x + 1 + y * width) {
+					rogue_bool = true;
+				}
+				else if (room->getTile(x + 1, y)->type == CHARACTER) {
+					char_bool = true;
+				}
+			}
+			if (y < room->getHeight() - 1) {
+				if (RMO == x + (y + 1)* width) {
+					rogue_bool = true;
+				}
+				else if (room->getTile(x, y + 1)->type == CHARACTER) {
+					char_bool = true;
+				}
+			}
+			//2 sneak cases
+			//either adjacent to enemy with party member or wasnt adjacent at start of turn
+			if (rogue_bool && (char_bool || !curr->getAdj(i))) {
+				room->getTile(x, y)->color = ORANGE;
+			}
+		}
+	}
+
+}
+
 void moveButton(int index) {
 	Unit* currUnit = room->getCurrUnit();
 	if (currUnit->getMoveLeft() == 0 && !currUnit->getAction())
@@ -727,6 +780,18 @@ void morningStarButton(int index) {
 	ab = ATTACK;
 	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1);
 	click_handler = curr->getAb("Morningstar", ACTION)->getClickHandler();
+}
+
+void daggerButton(int index) {
+	Unit* curr = room->getCurrUnit();
+	if (!curr->getAction())
+		return;
+	room->clearRange();
+	ab = ATTACK;
+	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1);
+	sneakAttackColor(curr->getRMO());
+
+	click_handler = curr->getAb("Dagger", ACTION)->getClickHandler();
 }
 
 /* Used primarily for testing */
