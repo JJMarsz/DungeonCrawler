@@ -279,7 +279,7 @@ void bowClick(int index) {
 	if (target == NULL)
 		return;
 	Unit* curr = room->getCurrUnit();
-	int dmg = curr->getAb("Bow", ACTION)->rollSingleHit(curr->getStr(), curr->getStr(), target->getAC());
+	int dmg = curr->getAb("Bow", ACTION)->rollSingleHit(curr->getDex(), curr->getDex(), target->getAC());
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}

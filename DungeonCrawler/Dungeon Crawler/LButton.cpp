@@ -625,47 +625,71 @@ void returnToTown(int index) {
 }
 
 
-
+struct moveCell {
+	int x, y;
+	int length, extra_l;
+};
 /* ABILITIES */
-void moveRecursive(int x, int y, int length, int extra_l) {
-	if (room->getTile(x, y)->color == YELLOW && length == -1)
-		return;
-	if (room->getTile(x, y)->type == NOTHING) {
-		if (length >= 0)
-			room->getTile(x, y)->color = YELLOW;
-		else
-			room->getTile(x, y)->color = BLUE;
-	}
-	else if (!(room->getCurrUnit()->getRMO() == x + y * room->getWidth()))
-		return;
-	if (length <= 0) {
-		length = -1;
-		if (extra_l <= 0)
-			return;
-	}
-	if (x > 0) {
-		if(length < 0)
-			moveRecursive(x - 1, y, length, extra_l - 1);
-		else
-			moveRecursive(x - 1, y, length - 1, extra_l);
-	}
-	if (y > 0) {
-		if (length < 0)
-			moveRecursive(x, y - 1, length, extra_l - 1);
-		else
-			moveRecursive(x, y - 1, length - 1, extra_l);
-	}
-	if (x < room->getWidth() - 1) {
-		if(length < 0)
-			moveRecursive(x + 1, y, length, extra_l - 1);
-		else
-			moveRecursive(x + 1, y, length - 1, extra_l);
-	}
-	if (y < room->getHeight() - 1) {
-		if(length < 0)
-			moveRecursive(x, y + 1, length, extra_l - 1);
-		else
-			moveRecursive(x, y + 1, length - 1, extra_l);
+void moveBFS(int x, int y, int length, int extra_l) {
+	std::queue<moveCell> q;
+	q.push({ x, y, length, extra_l });
+	while (!q.empty()) {
+		moveCell curr = q.front();
+		q.pop();
+		x = curr.x;
+		y = curr.y;
+		length = curr.length;
+		extra_l = curr.extra_l;
+		if (length > 0 || extra_l > 0) {
+			if (x > 0) {
+				if (room->getTile(x - 1, y)->color == NORMAL && room->getTile(x - 1, y)->type == NOTHING) {
+					if (length <= 0) {
+						room->getTile(x - 1, y)->color = BLUE;
+						q.push({ x - 1, y, length, extra_l - 1 });
+					}
+					else {
+						room->getTile(x - 1, y)->color = YELLOW;
+						q.push({ x - 1, y, length - 1, extra_l });
+					}
+				}
+			}
+			if (y > 0) {
+				if (room->getTile(x, y - 1)->color == NORMAL && room->getTile(x, y - 1)->type == NOTHING) {
+					if (length <= 0) {
+						room->getTile(x, y - 1)->color = BLUE;
+						q.push({ x, y - 1, length, extra_l - 1 });
+					}
+					else {
+						room->getTile(x, y - 1)->color = YELLOW;
+						q.push({ x, y - 1, length - 1, extra_l });
+					}
+				}
+			}
+			if (x < room->getWidth() - 1) {
+				if (room->getTile(x + 1, y)->color == NORMAL && room->getTile(x + 1, y)->type == NOTHING) {
+					if (length <= 0) {
+						room->getTile(x + 1, y)->color = BLUE;
+						q.push({ x + 1, y, length, extra_l - 1});
+					}
+					else {
+						room->getTile(x + 1, y)->color = YELLOW;
+						q.push({ x + 1, y, length - 1, extra_l });
+					}
+				}
+			}
+			if (y < room->getHeight() - 1) {
+				if (room->getTile(x, y + 1)->color == NORMAL && room->getTile(x, y + 1)->type == NOTHING) {
+					if (length <= 0) {
+						room->getTile(x, y + 1)->color = BLUE;
+						q.push({ x, y + 1, length, extra_l - 1 });
+					}
+					else {
+						room->getTile(x, y + 1)->color = YELLOW;
+						q.push({ x, y + 1, length - 1, extra_l });
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -774,9 +798,9 @@ void moveButton(int index) {
 		return;
 	room->clearRange();
 	if(currUnit->getAction())
-		moveRecursive(currUnit->getRMO()%room->getWidth(), currUnit->getRMO()/room->getWidth(), currUnit->getMoveLeft(), currUnit->getMove());
+		moveBFS(currUnit->getRMO()%room->getWidth(), currUnit->getRMO()/room->getWidth(), currUnit->getMoveLeft(), currUnit->getMove());
 	else
-		moveRecursive(currUnit->getRMO() % room->getWidth(), currUnit->getRMO() / room->getWidth(), currUnit->getMoveLeft(), 0);
+		moveBFS(currUnit->getRMO() % room->getWidth(), currUnit->getRMO() / room->getWidth(), currUnit->getMoveLeft(), 0);
 	ab = MOVE;
 	if (currUnit->getType() == CHARACTER)
 		click_handler = currUnit->getAb("Move", FREE)->getClickHandler();
