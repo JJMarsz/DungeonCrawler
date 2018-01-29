@@ -739,6 +739,35 @@ void sneakAttackColor(int RMO) {
 
 }
 
+double lerp(double start, double end, double t) { return start + t * (end - start); }
+int diagonal_distance(int x, int y, int x_1, int y_1) { return (std::abs(x - x_1) > std::abs(y - y_1)) ? std::abs(x - x_1) : std::abs(y - y_1); }
+
+void LOSColor(int x, int y) {
+	//attempt to draw a line from player to every tile within range
+	//any tile blocked will be uncolored
+	int width = room->getWidth();
+	Unit* curr = room->getCurrUnit();
+	for (int RMO = 0; RMO < width*room->getHeight(); RMO++) {
+		//only check for tiles within range
+		if (room->getTile(RMO%width, RMO / width)->color == RED) {
+			//apply linear interpolation
+			//obtain the diagonal distance
+			int diag = diagonal_distance(x, y, RMO%width, RMO/width);
+			//run through every point except for starting point of index 0
+			//and end point of index diag
+			//if anything in between these points is a unit, unhighlight this tile and continue
+			for (double i = 1; i < diag; i++) {
+				double t = (diag == 0) ? 0.0 : i/diag;
+				double lerp_x = lerp(x*50, 50*(RMO%width), t);
+				double lerp_y = lerp(y * 50, 50*(RMO/width), t);
+				if (room->getTile((int)(lerp_x / 50), (int)(lerp_y / 50))->type != NOTHING) {
+					room->getTile(RMO%width, RMO / width)->color = NORMAL;
+				}
+			}
+		}
+	}
+}
+
 void moveButton(int index) {
 	Unit* currUnit = room->getCurrUnit();
 	if (currUnit->getMoveLeft() == 0 && !currUnit->getAction())
@@ -795,6 +824,17 @@ void daggerButton(int index) {
 	sneakAttackColor(curr->getRMO());
 
 	click_handler = curr->getAb("Dagger", ACTION)->getClickHandler();
+}
+
+void bowButton(int index) {
+	Unit* curr = room->getCurrUnit();
+	if (!curr->getAction())
+		return;
+	room->clearRange();
+	ab = ATTACK;
+	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), curr->getAb("Bow", ACTION)->getLength());
+	LOSColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth());
+	click_handler = curr->getAb("Bow", ACTION)->getClickHandler();
 }
 
 /* Used primarily for testing */

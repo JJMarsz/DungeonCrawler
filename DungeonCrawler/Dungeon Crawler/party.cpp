@@ -386,6 +386,7 @@ CharList::CharList() {
 	charList[FIGHTER].loadAbility("Longsword");
 	charList[PALADIN].loadAbility("Morningstar");
 	charList[ROGUE].loadAbility("Dagger");
+	charList[RANGER].loadAbility("Bow");
 }
 void CharList::loadSprites() {
 	//Go through each character to set sprites and info texts

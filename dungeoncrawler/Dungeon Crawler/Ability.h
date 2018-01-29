@@ -4,7 +4,7 @@
 #include "LButton.h"
 
 typedef void(*func2)(int);
-#define NUM_ABILITIES	5
+#define NUM_ABILITIES	6
 
 enum AbilityType {
 	ACTION,
@@ -17,7 +17,8 @@ enum AbilityIcons {
 	GREATAXE,
 	LONGSWORD,
 	MORNINGSTAR,
-	DAGGER
+	DAGGER,
+	BOW
 };
 
 //each individual ability
@@ -76,5 +77,6 @@ void greatAxeClick(int index);
 void longSwordClick(int index);
 void morningStarClick(int index);
 void daggerClick(int index);
+void bowClick(int index);
 
 #endif 

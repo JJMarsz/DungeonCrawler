@@ -110,6 +110,7 @@ void greatAxeButton(int index);
 void longSwordButton(int index);
 void morningStarButton(int index);
 void daggerButton(int index);
+void bowButton(int index);
 
 void emptyHandler(int index);
 

@@ -774,6 +774,11 @@ bool loadMedia()
 		abClips[DAGGER].y = 0;
 		abClips[DAGGER].w = 50;
 		abClips[DAGGER].h = 50;
+
+		abClips[BOW].x = 250;
+		abClips[BOW].y = 0;
+		abClips[BOW].w = 50;
+		abClips[BOW].h = 50;
 	}
 	loadMobs();
 	return success;

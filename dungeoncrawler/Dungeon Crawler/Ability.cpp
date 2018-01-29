@@ -6,11 +6,15 @@ std::unordered_map<std::string, Ability> abMap;
 void(*click_handler)(int index) = NULL;
 
 void loadAbilityMap(){
+	//universal abilities
 	abMap["Move"] = Ability("Move", "Move the character", FREE, 1, 6, 0, 0, moveButton, moveClick, &abClips[MOVEMENT]);
-	abMap["Greataxe"] = Ability("Greataxe", "Attack with a greataxe", ACTION, 1, 1, 1, 8, greatAxeButton, greatAxeClick, &abClips[GREATAXE]);
-	abMap["Longsword"] = Ability("Longsword", "Attack with a longsword", ACTION, 1, 1, 1, 8, longSwordButton, longSwordClick, &abClips[LONGSWORD]);
-	abMap["Morningstar"] = Ability("Morningstar", "Attack with a morningstar", ACTION, 1, 1, 1, 6, morningStarButton, morningStarClick, &abClips[MORNINGSTAR]);
-	abMap["Dagger"] = Ability("Dagger", "Attack with a dagger, with sneak attack", ACTION, 1, 1, 1, 4, daggerButton, daggerClick, &abClips[DAGGER]);
+
+	//character abilities
+	abMap["Greataxe"] = Ability("Greataxe", "Use and action to attack with a greataxe", ACTION, 1, 1, 1, 8, greatAxeButton, greatAxeClick, &abClips[GREATAXE]);
+	abMap["Longsword"] = Ability("Longsword", "Use and action to attack with a longsword", ACTION, 1, 1, 1, 8, longSwordButton, longSwordClick, &abClips[LONGSWORD]);
+	abMap["Morningstar"] = Ability("Morningstar", "Use and action to attack with a morningstar", ACTION, 1, 1, 1, 6, morningStarButton, morningStarClick, &abClips[MORNINGSTAR]);
+	abMap["Dagger"] = Ability("Dagger", "Use and action to attack with a dagger, with sneak attack", ACTION, 1, 1, 1, 4, daggerButton, daggerClick, &abClips[DAGGER]);
+	abMap["Bow"] = Ability("Bow", "Use and action to shoot an arrow", ACTION, 1, 6, 1, 8, bowButton, bowClick, &abClips[BOW]);
 
 	
 }
@@ -259,6 +263,23 @@ void daggerClick(int index) {
 	}
 	else
 		dmg = curr->getAb("Dagger", ACTION)->rollSingleHit(curr->getDex(), curr->getDex(), target->getAC());
+	if (-1 != dmg) {
+		target->damage(dmg);
+	}
+	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+	SDL_RenderPresent(gRenderer);
+	Sleep(1000);
+	room->getCurrUnit()->useAction();
+	room->clearRange();
+	//click_handler = NULL;
+}
+
+void bowClick(int index) {
+	Unit* target = getTarget(index);
+	if (target == NULL)
+		return;
+	Unit* curr = room->getCurrUnit();
+	int dmg = curr->getAb("Bow", ACTION)->rollSingleHit(curr->getStr(), curr->getStr(), target->getAC());
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}
