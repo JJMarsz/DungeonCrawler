@@ -13,17 +13,21 @@ void loadMobs() {
 	mobEncMap["Spooky, Scary, Skeletons"] = { 
 		  Mob(12, 13, 6, 1, 4, 2, 1, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
 		, Mob(11, 9, 8, 1, 4, 1, 6, mobClips[RANGED_SKELETON], "Ranged Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
-		//, Mob(15, 40, 8, 1, 5, 3, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, meleeMobHandler, BOSS_BOI) 
+		, Mob(15, 40, 8, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, BOSS_BOI) 
 	};
 
 
 }
 
-//handles AI response for generic non-boss melee mobs
-void mobHandler() {
-	Unit* mob = room->getCurrUnit();
-	mob->updateThreat();
-	mob->attack(0);
+/* helpers */
+void fillPartyVec(std::vector<Unit*>& party) {
+	std::vector<Unit*>* initlist = room->getInititiveOrder();
+	int i;
+	int width = room->getWidth();
+	for (i = 0; i < initlist->size(); i++) {
+		if (initlist->at(i)->getType() == CHARACTER)
+			party.push_back(initlist->at(i));
+	}
 }
 
 Mob::Mob(){}
@@ -61,14 +65,10 @@ SDL_Rect Mob::getIcon50() {
 
 void Mob::updateThreat() {
 	//get distance to all 3 party members
-	std::vector<Unit*>* initlist = room->getInititiveOrder();
 	std::vector<Unit*> party;
 	int i;
 	int width = room->getWidth();
-	for (i = 0; i < initlist->size(); i++) {
-		if (initlist->at(i)->getType() == CHARACTER)
-			party.push_back(initlist->at(i));
-	}
+	fillPartyVec(party);
 	int mobx = getRMO() % width;
 	int moby = getRMO() / width;
 	int x, y, distance;
@@ -185,14 +185,9 @@ void Mob::moveMob(int RMO_target) {
 }
 
 void Mob::roll_attack() {
-	std::vector<Unit*>* initlist = room->getInititiveOrder();
 	std::vector<Unit*> party;
 	int i;
-	int width = room->getWidth();
-	for (i = 0; i < initlist->size(); i++) {
-		if (initlist->at(i)->getType() == CHARACTER)
-			party.push_back(initlist->at(i));
-	}
+	fillPartyVec(party);
 	drawRoom();
 	messageBox.loadFromRenderedText("The " + name + " attacks the " + party[target_index]->getName() + "!", { 255, 255, 255 }, 650);
 	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
@@ -224,14 +219,12 @@ void Mob::attack(int index) {
 		std::chrono::system_clock::now().time_since_epoch()
 		);
 	srand(ms.count());//random seed
-	std::vector<Unit*>* initlist = room->getInititiveOrder();
-	std::vector<Unit*> party;
+
 	int i;
 	int width = room->getWidth();
-	for (i = 0; i < initlist->size(); i++) {
-		if (initlist->at(i)->getType() == CHARACTER)
-			party.push_back(initlist->at(i));
-	}
+	std::vector<Unit*> party;
+	fillPartyVec(party);
+
 	int distance = std::abs((room->getCurrUnit()->getRMO() % width) - party[target_index]->getRMO() % width) + std::abs((room->getCurrUnit()->getRMO() / width) - party[target_index]->getRMO() / width);
 	//for melee mobs
 	if (range == 1) {
@@ -279,9 +272,6 @@ void Mob::attack(int index) {
 		rangeColor(party[target_index]->getRMO()%width, party[target_index]->getRMO() / width, range, true);
 		LOSColor(party[target_index]->getRMO() % width, party[target_index]->getRMO() / width);
 		//place unit type back into the tiles
-		room->getTile(RMO%width, RMO / width)->type = type_stash;
-		drawRoom();
-		SDL_RenderPresent(gRenderer);
 
 		//fails if already in range
 		if(room->getTile(RMO%width, RMO / width)->color != RED) {
@@ -334,5 +324,56 @@ void Mob::attack(int index) {
 		}
 
 	}
+}
+
+/* normal mob handlers */
+
+//handles AI response for generic non-boss melee mobs
+void mobHandler() {
+	Unit* mob = room->getCurrUnit();
+	mob->updateThreat();
+	mob->attack(0);
 	endTurnHandler(0);
+}
+
+/* Boss mob handlers */
+
+void boneNagaHandler() {
+	//has ranged ray of frost
+	//has melee bite
+
+	Unit* mob = room->getCurrUnit();
+	int target_index = mob->getTarget();
+	mob->updateThreat();
+	int width = room->getWidth();
+	std::vector<Unit*> party;
+	fillPartyVec(party);
+	//staged fight
+
+	//stage 1, far away from characters
+	//use range, stay away
+
+	//stage 2, characters are close
+	//use melee to attack
+
+	//stage 3, hp gets low (1/3)?
+	//run away and use range
+	//if no movement options, use melee
+
+	//check stages in decreasing order
+	if (mob->getHP() < mob->getMaxHP() / 3) {
+		//stage 3
+
+	}
+	else if (std::abs(mob->getRMO() % width - party[target_index]->getRMO() % width) + std::abs(mob->getRMO() / width - party[target_index]->getRMO() / width) < mob->getMove() - 2) {
+		//stage 2
+
+	}
+	else {
+		//stage 1
+
+	}
+
+	endTurnHandler(0);
+	
 }

@@ -89,6 +89,12 @@ void Room::rollInit(std::string quest_name) {
 	if (gParty->getX() + gParty->getY()*current_dungeon.getWidth() == current_dungeon.getBoss()->getX() + current_dungeon.getBoss()->getY()*current_dungeon.getWidth()) {
 		enemy_count = 1;
 		//generate boss
+		Mob newb = mobEncMap[quest_name][mobEncMap[quest_name].size() - 1];
+		int roll = rand() % 20 + 1 + newb.getDex();
+		while (map.find(roll) != map.end())
+			roll++;
+		map[roll] = &newb;
+		init.push_back(roll);
 	}
 	else{
 		switch (current_quests[quest_index].getDiff()) {
@@ -104,10 +110,9 @@ void Room::rollInit(std::string quest_name) {
 		}
 		enemyList.resize(enemy_count);
 		for (i = 0; i < enemy_count; i++) {
-			//WHEN U ADD BOSS REMEMBER TO - 1 TO INDEX RAND
-			int index = rand() % (mobEncMap[quest_name].size());
-			Mob newb = mobEncMap[quest_name][index];
-			int roll = rand() % 20 + 1 + newb.getDex();
+			int index = rand() % (mobEncMap[quest_name].size() - 1);
+			Mob newbie = mobEncMap[quest_name][index];
+			int roll = rand() % 20 + 1 + newbie.getDex();
 			while (map.find(roll) != map.end())
 				roll--;
 			enemyList[i] = mobEncMap[quest_name][index];

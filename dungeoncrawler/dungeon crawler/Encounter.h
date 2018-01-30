@@ -57,7 +57,7 @@ enum ChoiceIndex {
 //keep them organized in one list and let quest index into them
 #define NUM_MOB_ENC		1
 enum MobIndex {
-	TEST
+	SKELETONS
 };
 
 class EncounterList {
@@ -107,5 +107,5 @@ void testInt();
 void testWis();
 void testCha();
 
-void test();
+void skeleton();
 #endif

@@ -17,12 +17,12 @@ func Quest::fetchTrap(TrapIndex index) { return trapEnc[index]; }
 func Quest::fetchInfo(InfoIndex index) { return infoEnc[index]; }
 func Quest::fetchLoot(LootIndex index) { return lootEnc[index]; }
 func Quest::fetchChoice(ChoiceIndex index) { return choiceEnc[index]; }
-func Quest::fetchMob(MobIndex index) { return mobEnc[index]; }
+func Quest::fetchMob() { return Mob; }
 void Quest::loadTrap(TrapIndex i) { trapEnc.push_back(encounters.getTrap(i));}
 void Quest::loadInfo(InfoIndex i) { infoEnc.push_back(encounters.getInfo(i)); }
 void Quest::loadLoot(LootIndex i) { lootEnc.push_back(encounters.getLoot(i)); }
 void Quest::loadChoice(ChoiceIndex i) { choiceEnc.push_back(encounters.getChoice(i)); }
-void Quest::loadMob(MobIndex i) { mobEnc.push_back(encounters.getMob(i)); }
+void Quest::loadMob(MobIndex i) { Mob = encounters.getMob(i); mob_index = i; }
 
 Quest::Quest(std::string name_, std::string info_, int gold, int xp, Difficulty diff_) {
 	name = name_;
@@ -34,7 +34,6 @@ Quest::Quest(std::string name_, std::string info_, int gold, int xp, Difficulty 
 	choiceEnc.resize(0);
 	lootEnc.resize(0);
 	infoEnc.resize(0);
-	mobEnc.resize(0);
 }
 
 void initQuests() {
@@ -178,7 +177,7 @@ QuestList::QuestList() {
 		list[i].q.loadChoice(WIS);
 		list[i].q.loadChoice(CHA);
 
-		list[i].q.loadMob(TEST);
+		list[i].q.loadMob(SKELETONS);
 	}
 }
 

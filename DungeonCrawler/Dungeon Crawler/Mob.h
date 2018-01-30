@@ -21,6 +21,7 @@ public:
 	void callHandler() { handler(); }
 	void addAttackThreat(int t);
 	void clearAttackThreat(int i){threat[i] = 0;}
+	int getTarget() { return target_index; }
 private:
 	int target_index;
 	std::vector<int> threat;
@@ -38,6 +39,6 @@ extern std::unordered_map<std::string, std::vector<Mob>> mobEncMap;
 void loadMobs();
 
 void mobHandler();
-
+void boneNagaHandler();
 #endif
 

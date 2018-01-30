@@ -58,6 +58,7 @@ public:
 	virtual void updateThreat() { return; }
 	virtual void addAttackThreat(int t) { return; }
 	virtual void clearAttackThreat(int i) { return; }
+	virtual int getTarget() { return -1; }
 
 protected:
 	std::vector<bool> adj;

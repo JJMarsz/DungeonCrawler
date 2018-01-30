@@ -1,6 +1,7 @@
 #include "dungeon.h"
 #include "SDL.h"
 #include "party.h"
+#include"Quest.h"
 
 Dungeon current_dungeon;
 
@@ -207,7 +208,7 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	trav->setType(BOSS);
 	boss = trav;
 	//do other stuff to store boss info and such
-	boss = trav;
+	boss->setIndex(current_quests[quest_index].getMobIndex());
 
 	for (i = 0; i < 3-count; i++) {
 		trav = trav->getPrev();
@@ -232,7 +233,7 @@ void Dungeon::populateDungeon(Difficulty diff) {
 	int range_num = 0;
 	while (enc > 0) {
 		count = rand() % range;
-		range_maps[range_num][count]->setIndex(rand() % NUM_MOB_ENC);
+		range_maps[range_num][count]->setIndex(current_quests[quest_index].getMobIndex());
 		range_maps[range_num][count]->setType(MOB);
 		//otherstuff
 		mob.push_back(range_maps[range_num][count]);

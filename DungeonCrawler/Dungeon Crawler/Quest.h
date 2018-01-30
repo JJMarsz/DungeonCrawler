@@ -24,12 +24,13 @@ public:
 	func fetchInfo(InfoIndex index);
 	func fetchLoot(LootIndex index);
 	func fetchChoice(ChoiceIndex index);
-	func fetchMob(MobIndex index);
+	func fetchMob();
+	int getMobIndex() { return mob_index; }
 private:
 	/* Boss fight encounter */
 	void(*Boss)();
 	/* Regular mob fight encounter */
-	std::vector<void(*)()> mobEnc;
+	void(*Mob)();
 	/* Info/Loot on dungeon or special dungeon move */
 	std::vector<void(*)()> infoEnc;
 	/* Choice on one of party members */
@@ -46,6 +47,7 @@ private:
 	int gold_reward;
 	int xp_reward;
 	Difficulty diff;
+	MobIndex mob_index;
 };
 
 /* generates quests and fills quest array */

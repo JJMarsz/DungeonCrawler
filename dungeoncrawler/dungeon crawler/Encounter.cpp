@@ -38,7 +38,7 @@ EncounterList::EncounterList() {
 
 	//mob setup
 	mobList.resize(NUM_MOB_ENC);
-	mobList[TEST] = test;
+	mobList[SKELETON] = skeleton;
 }
 
 func EncounterList::getTrap(TrapIndex index) { return trapList[index]; }
@@ -64,8 +64,9 @@ void handleEncounter() {
 	case CHOICE:
 		current_quests[quest_index].fetchChoice((ChoiceIndex)tile->getIndex())();
 		break;
+	case BOSS:
 	case MOB:
-		current_quests[quest_index].fetchMob((MobIndex)tile->getIndex())();
+		current_quests[quest_index].fetchMob()();
 		break;
 	default:
 		break;
@@ -382,7 +383,7 @@ void goldLoot() {
 
 //mob handlers
 
-void test() {
+void skeleton() {
 	state = DUNGEON_ROOM;
 	room = new Room;
 
