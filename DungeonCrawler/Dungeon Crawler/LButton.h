@@ -112,6 +112,8 @@ void morningStarButton(int index);
 void daggerButton(int index);
 void bowButton(int index);
 
+void rangeColor(int x, int y, int length, bool self);
+void LOSColor(int x, int y);
 void emptyHandler(int index);
 
 extern std::vector<LButton> Buttons;

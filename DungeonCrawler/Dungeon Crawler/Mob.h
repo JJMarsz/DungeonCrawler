@@ -8,14 +8,15 @@
 class Mob: public Unit {
 public:
 	Mob();
-	Mob(int AC_,int HP_,int dmg_, int dice_, int atk_mod_, int dmg_mod_, SDL_Rect icon, std::string name_, int s, int d, int c, int i, int w, int ch, int move_, void(*handler_)(), UnitType type_);
+	Mob(int AC_,int HP_,int dmg_, int dice_, int atk_mod_, int dmg_mod_, int range_, SDL_Rect icon, std::string name_, int s, int d, int c, int i, int w, int ch, int move_, void(*handler_)(), UnitType type_);
 
 	/* using globals, update threat and select target player to attack */
 	void updateThreat();
 
 	/* attack the target, returns true on kill */
 	void attack(int index);
-	void moveMob();
+	void roll_attack();
+	void moveMob(int RMO_target);
 	SDL_Rect getIcon50();
 	void callHandler() { handler(); }
 	void addAttackThreat(int t);
@@ -28,14 +29,15 @@ private:
 	int dmg_mod;
 	int dice;
 	int dmg;
+	int range;
 	void(*handler)();
 };
 
-extern std::unordered_map<std::string, Mob> mobMap;
+extern std::unordered_map<std::string, std::vector<Mob>> mobEncMap;
 
 void loadMobs();
 
-void meleeMobHandler();
+void mobHandler();
 
 #endif
 

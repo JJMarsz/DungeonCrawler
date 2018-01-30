@@ -222,10 +222,13 @@ typedef void(*func)();
 #define MOBFIVE_X				60
 /* MOB STUFF */
 
-#define NUM_MOBS				1
+#define NUM_MOBS				3
 
-#define SKELETON_X				0
+/* Skeleton dungeon */
 #define SKELETON_Y				0
+#define SKELETON_X				0
+#define RANGED_SKELETON_X		50
+#define BONENAGA_X				100
 
 enum LButtonSprite
 {
@@ -345,7 +348,9 @@ enum Highlight {
 };
 
 enum MobName {
-	SKELETON
+	SKELETON,
+	RANGED_SKELETON,
+	BONENAGA
 };
 
 enum MobNum {

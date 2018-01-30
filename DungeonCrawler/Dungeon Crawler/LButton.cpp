@@ -693,21 +693,21 @@ void moveBFS(int x, int y, int length, int extra_l) {
 	}
 }
 
-void rangeColor(int x, int y, int length) {
-	if(!(room->getCurrUnit()->getRMO() == x + y * room->getWidth()))
+void rangeColor(int x, int y, int length, bool self) {
+	if(!(room->getCurrUnit()->getRMO() == x + y * room->getWidth()) || self)
 		room->getTile(x, y)->color = RED;
 	if (length <= 0)
 		return;
 	if (x > 0) {
-		rangeColor(x - 1, y, length - 1);
+		rangeColor(x - 1, y, length - 1, self);
 	}
 	if (y > 0) {
-		rangeColor(x, y - 1, length - 1);
+		rangeColor(x, y - 1, length - 1, self);
 	}
 	if (x < room->getWidth() - 1)
-		rangeColor(x + 1, y, length - 1);
+		rangeColor(x + 1, y, length - 1, self);
 	if (y < room->getHeight() - 1)
-		rangeColor(x, y + 1, length - 1);
+		rangeColor(x, y + 1, length - 1, self);
 }
 
 void sneakAttackColor(int RMO) {
@@ -770,7 +770,6 @@ void LOSColor(int x, int y) {
 	//attempt to draw a line from player to every tile within range
 	//any tile blocked will be uncolored
 	int width = room->getWidth();
-	Unit* curr = room->getCurrUnit();
 	for (int RMO = 0; RMO < width*room->getHeight(); RMO++) {
 		//only check for tiles within range
 		if (room->getTile(RMO%width, RMO / width)->color == RED) {
@@ -814,7 +813,7 @@ void greatAxeButton(int index) {
 		return;
 	room->clearRange();
 	ab = ATTACK;
-	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1);
+	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1, false);
 	click_handler = curr->getAb("Greataxe", ACTION)->getClickHandler();
 }
 
@@ -824,7 +823,7 @@ void longSwordButton(int index) {
 		return;
 	room->clearRange();
 	ab = ATTACK;
-	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1);
+	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1, false);
 	click_handler = curr->getAb("Longsword", ACTION)->getClickHandler();
 }
 
@@ -834,7 +833,7 @@ void morningStarButton(int index) {
 		return;
 	room->clearRange();
 	ab = ATTACK;
-	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1);
+	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1, false);
 	click_handler = curr->getAb("Morningstar", ACTION)->getClickHandler();
 }
 
@@ -844,7 +843,7 @@ void daggerButton(int index) {
 		return;
 	room->clearRange();
 	ab = ATTACK;
-	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1);
+	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1, false);
 	sneakAttackColor(curr->getRMO());
 
 	click_handler = curr->getAb("Dagger", ACTION)->getClickHandler();
@@ -856,7 +855,7 @@ void bowButton(int index) {
 		return;
 	room->clearRange();
 	ab = ATTACK;
-	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), curr->getAb("Bow", ACTION)->getLength());
+	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), curr->getAb("Bow", ACTION)->getLength(), false);
 	LOSColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth());
 	click_handler = curr->getAb("Bow", ACTION)->getClickHandler();
 }

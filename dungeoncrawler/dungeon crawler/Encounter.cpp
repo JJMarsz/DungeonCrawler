@@ -386,7 +386,7 @@ void test() {
 	state = DUNGEON_ROOM;
 	room = new Room;
 
-	room->rollInit("Skeleton");
+	room->rollInit("Spooky, Scary, Skeletons");
 	room->placeUnits();
 	room->getCurrUnit()->resetTurn();
 	room->getCurrUnit()->updateAdj();

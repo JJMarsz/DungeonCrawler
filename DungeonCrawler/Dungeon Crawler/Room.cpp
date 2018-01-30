@@ -64,7 +64,7 @@ Unit* Room::getCurrUnit() { return unitList[init_index]; }
 int Room::getInitIndex() { return init_index; }
 std::vector<Unit*>* Room::getInititiveOrder() { return &unitList; }
 
-void Room::rollInit(std::string mobname) {
+void Room::rollInit(std::string quest_name) {
 	//only dealing with chars for now
 	std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(
 		std::chrono::system_clock::now().time_since_epoch()
@@ -85,8 +85,10 @@ void Room::rollInit(std::string mobname) {
 			char_count++;
 		}
 	}
-	if (mobMap[mobname].getType() == BOSS_BOI) {
+	//add mobs
+	if (gParty->getX() + gParty->getY()*current_dungeon.getWidth() == current_dungeon.getBoss()->getX() + current_dungeon.getBoss()->getY()*current_dungeon.getWidth()) {
 		enemy_count = 1;
+		//generate boss
 	}
 	else{
 		switch (current_quests[quest_index].getDiff()) {
@@ -100,19 +102,21 @@ void Room::rollInit(std::string mobname) {
 			enemy_count = 5;
 			break;
 		}
+		enemyList.resize(enemy_count);
+		for (i = 0; i < enemy_count; i++) {
+			//WHEN U ADD BOSS REMEMBER TO - 1 TO INDEX RAND
+			int index = rand() % (mobEncMap[quest_name].size());
+			Mob newb = mobEncMap[quest_name][index];
+			int roll = rand() % 20 + 1 + newb.getDex();
+			while (map.find(roll) != map.end())
+				roll--;
+			enemyList[i] = mobEncMap[quest_name][index];
+			map[roll] = &enemyList[i];
+			init.push_back(roll);
+		}
 	}
-	//add mobs
 	unitList.resize(MAX_CHAR + enemy_count);
-	Mob newb = mobMap[mobname];
-	enemyList.resize(enemy_count);
-	for (i = 0; i < enemy_count; i++) {
-		int roll = rand() % 20 + 1 + newb.getDex();
-		while (map.find(roll) != map.end())
-			roll--;
-		enemyList[i] = mobMap[mobname];
-		map[roll] = &enemyList[i];
-		init.push_back(roll);
-	}
+
 	//sort create sorted list
 	std::sort(init.begin(), init.end(), wayToSort);
 	for (i = 0; i < init.size(); i++) {

@@ -714,6 +714,16 @@ bool loadMedia()
 		mobClips[SKELETON].w = 50;
 		mobClips[SKELETON].h = 50;
 
+		mobClips[RANGED_SKELETON].x = RANGED_SKELETON_X;
+		mobClips[RANGED_SKELETON].y = SKELETON_Y;
+		mobClips[RANGED_SKELETON].w = 50;
+		mobClips[RANGED_SKELETON].h = 50;
+
+		mobClips[BONENAGA].x = BONENAGA_X;
+		mobClips[BONENAGA].y = SKELETON_Y;
+		mobClips[BONENAGA].w = 50;
+		mobClips[BONENAGA].h = 50;
+
 	}
 	if (!mobNum.loadFromFile("textures/mobnum.png")) {
 		printf("Failed to load texture image!\n");
