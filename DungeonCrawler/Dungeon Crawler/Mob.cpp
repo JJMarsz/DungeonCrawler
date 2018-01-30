@@ -2,7 +2,17 @@
 #include "Room.h"
 #include "LButton.h"
 
+struct AbilityStats {
+	int atk_mod;
+	int dmg_mod;
+	int dmg_dice;
+	int num_dice;
+	int range;
+	//some special effect
+};
+
 std::unordered_map<std::string, std::vector<Mob>> mobEncMap;
+std::unordered_map<std::string, AbilityStats> abilityMap;
 
 //load all mobs into the map
 void loadMobs() {
@@ -15,8 +25,11 @@ void loadMobs() {
 		, Mob(11, 9, 8, 1, 4, 1, 6, mobClips[RANGED_SKELETON], "Ranged Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
 		, Mob(15, 40, 8, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, BOSS_BOI) 
 	};
+	abilityMap["Ray of Frost 1"] = { 5, 0, 8, 1, 6 };
+	abilityMap["Bone Naga Bite"] = { 5, 3, 4, 2, 1 };
 
 
+	
 }
 
 /* helpers */
@@ -35,7 +48,7 @@ Mob::Mob(){}
 Mob::Mob(int AC_, int HP_, int dmg_, int dice_, int atk_mod_, int dmg_mod_, int range_, SDL_Rect icon, std::string name_, int s, int d, int c, int i, int w, int ch, int move_, void(*handler_)(), UnitType type_) {
 	type = type_;
 	AC = AC_;
-	dmg = dmg_;
+	dmg_dice = dmg_;
 	dice = dice_;
 	icon_50 = icon;
 	name = name_;
@@ -198,7 +211,7 @@ void Mob::roll_attack() {
 	if (roll > party[target_index]->getAC()) {
 		int dmg = dmg_mod;
 		for (i = 0; i < dice; i++) {
-			dmg += (rand() % dmg) + 1;
+			dmg += (rand() % dmg_dice) + 1;
 		}
 		party[target_index]->damage(dmg);
 		messageBox.loadFromRenderedText("The " + name + " hit the " + party[target_index]->getName() + " for " + std::to_string(dmg) + "!", { 255, 255, 255 }, 650);
@@ -272,52 +285,53 @@ void Mob::attack(int index) {
 		rangeColor(party[target_index]->getRMO()%width, party[target_index]->getRMO() / width, range, true);
 		LOSColor(party[target_index]->getRMO() % width, party[target_index]->getRMO() / width);
 		//place unit type back into the tiles
-
+		room->getTile(RMO%width, RMO / width)->type = type_stash;
 		//fails if already in range
 		if(room->getTile(RMO%width, RMO / width)->color != RED) {
 			//move to closest red
-			int closest = 50;
-			int target_RMO, target_dist, dist_to_target;
-			for (i = 0; i < width*room->getHeight(); i++) {
-				int dist_to_RMO = std::abs(i%width - RMO % width) + std::abs(i / width - RMO / width);
-				dist_to_target = std::abs(i%width - party[target_index]->getRMO()%width) + std::abs(i / width - party[target_index]->getRMO() / width);
-				if (room->getTile(i%width, i / width)->color == RED && dist_to_RMO < closest) {
-					target_RMO = i;
-					closest = dist_to_RMO;
-					target_dist = dist_to_target;
-				}
-			}
-			//now we have a target index, clear the range and commence moving
-			room->clearRange();
-			moveButton(0);
-			ab = NOPE;
-			//use highlights to move mob accordingly
-			switch (room->getTile(target_RMO%width, target_RMO / width)->color) {
-			case YELLOW:
-				//move and attack
-				moveMob(target_RMO);
-				break;
-			case BLUE:
-				//move
-				useAction();
-				moveMob(target_RMO);
-				break;
-			case NORMAL:
-				//find closest highlighted tile to target tile
-				int dist_to_tile = 100, new_target;
-				for (i = 0; i < width*room->getHeight(); i++) {
-					int new_dist = std::abs(i%width - target_RMO % width) + std::abs(i / width - target_RMO / width);
-					if (room->getTile(i%width, i / width)->color != NORMAL && new_dist < dist_to_tile) {
-						dist_to_tile = new_dist;
-						new_target = i;
-					}
-				}
-				useAction();
-				moveMob(new_target);
-				break;
-			}
-			
+int closest = 50;
+int target_RMO, target_dist, dist_to_target;
+for (i = 0; i < width*room->getHeight(); i++) {
+	int dist_to_RMO = std::abs(i%width - RMO % width) + std::abs(i / width - RMO / width);
+	dist_to_target = std::abs(i%width - party[target_index]->getRMO() % width) + std::abs(i / width - party[target_index]->getRMO() / width);
+	if (room->getTile(i%width, i / width)->color == RED && dist_to_RMO < closest) {
+		target_RMO = i;
+		closest = dist_to_RMO;
+		target_dist = dist_to_target;
+	}
+}
+//now we have a target index, clear the range and commence moving
+room->clearRange();
+moveButton(0);
+ab = NOPE;
+//use highlights to move mob accordingly
+switch (room->getTile(target_RMO%width, target_RMO / width)->color) {
+case YELLOW:
+	//move and attack
+	moveMob(target_RMO);
+	break;
+case BLUE:
+	//move
+	useAction();
+	moveMob(target_RMO);
+	break;
+case NORMAL:
+	//find closest highlighted tile to target tile
+	int dist_to_tile = 100, new_target;
+	for (i = 0; i < width*room->getHeight(); i++) {
+		int new_dist = std::abs(i%width - target_RMO % width) + std::abs(i / width - target_RMO / width);
+		if (room->getTile(i%width, i / width)->color != NORMAL && new_dist < dist_to_tile) {
+			dist_to_tile = new_dist;
+			new_target = i;
 		}
+	}
+	useAction();
+	moveMob(new_target);
+	break;
+}
+
+		}
+		room->clearRange();
 		if (getAction()) {
 			//attack target_index
 			roll_attack();
@@ -326,6 +340,14 @@ void Mob::attack(int index) {
 	}
 }
 
+void Mob::loadAbility(std::string name) {
+	AbilityStats ab = abilityMap[name];
+	atk_mod = ab.atk_mod;
+	dmg_mod = ab.dmg_mod;
+	dmg_dice = ab.dmg_dice;
+	dice = ab.num_dice;
+	range = ab.range;
+}
 /* normal mob handlers */
 
 //handles AI response for generic non-boss melee mobs
@@ -343,8 +365,8 @@ void boneNagaHandler() {
 	//has melee bite
 
 	Unit* mob = room->getCurrUnit();
-	int target_index = mob->getTarget();
 	mob->updateThreat();
+	int target_index = mob->getTarget();
 	int width = room->getWidth();
 	std::vector<Unit*> party;
 	fillPartyVec(party);
@@ -363,14 +385,44 @@ void boneNagaHandler() {
 	//check stages in decreasing order
 	if (mob->getHP() < mob->getMaxHP() / 3) {
 		//stage 3
+		//do some running
+		std::vector<Unit*> party;
+		fillPartyVec(party);
+		int target_RMO = party[target_index]->getRMO();
+		if (std::abs(target_RMO%width - mob->getRMO() % width) + std::abs(target_RMO / width - mob->getRMO() / width) == 1){
+			//do a melee attack then run
+			mob->loadAbility("Bone Naga Bite");
+			mob->attack(0);
+		}
+		else {
+			//try to get into the red and attack
+			mob->loadAbility("Ray of Frost 1");
+			mob->attack(0);
+		}
+		//run
+		moveButton(0);
+		int dist = 0, RMO;
+		if (mob->getMoveLeft() > 0) {
+			for (int i = 0; i < width*room->getHeight(); i++) {
+				int dist_to_target = std::abs(target_RMO%width - i % width) + std::abs(target_RMO / width - i / width);
+				if (room->getTile(i%width, i / width)->color != NORMAL && dist_to_target > dist) {
+					dist = dist_to_target;
+					RMO = i;
+				}
+			}
+			mob->moveMob(RMO);
+		}
 
 	}
-	else if (std::abs(mob->getRMO() % width - party[target_index]->getRMO() % width) + std::abs(mob->getRMO() / width - party[target_index]->getRMO() / width) < mob->getMove() - 2) {
+	else if (std::abs(mob->getRMO() % width - party[target_index]->getRMO() % width) + std::abs(mob->getRMO() / width - party[target_index]->getRMO() / width) < mob->getMove() - 3) {
 		//stage 2
-
+		mob->loadAbility("Bone Naga Bite");
+		mob->attack(0);
 	}
 	else {
 		//stage 1
+		mob->loadAbility("Ray of Frost 1");
+		mob->attack(0);
 
 	}
 

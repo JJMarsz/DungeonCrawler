@@ -59,6 +59,8 @@ public:
 	virtual void addAttackThreat(int t) { return; }
 	virtual void clearAttackThreat(int i) { return; }
 	virtual int getTarget() { return -1; }
+	virtual void loadAbility(std::string name) {return; }
+	virtual void moveMob(int RMO) { return; }
 
 protected:
 	std::vector<bool> adj;

@@ -1025,7 +1025,7 @@ void drawRoom() {
 			mob_count++;
 			break;
 		case BOSS_BOI:
-
+			mobSST.render(start_x + 50 * (order->at(x)->getRMO() % room->getWidth()), start_y + 50 * (order->at(x)->getRMO() / room->getWidth()), &order->at(x)->getIcon50());
 			break;
 		}
 	}
@@ -1094,7 +1094,7 @@ void drawRoom() {
 			mob_count++;
 			break;
 		case BOSS_BOI:
-
+			mobSST.render(INIT_X, INIT_Y + 60 * x, &order->at(x)->getIcon50());
 			break;
 		}
 	}

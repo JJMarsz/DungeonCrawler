@@ -5,6 +5,7 @@
 #include "LButton.h"
 #include "party.h"
 
+
 class Mob: public Unit {
 public:
 	Mob();
@@ -22,6 +23,7 @@ public:
 	void addAttackThreat(int t);
 	void clearAttackThreat(int i){threat[i] = 0;}
 	int getTarget() { return target_index; }
+	void loadAbility(std::string name);
 private:
 	int target_index;
 	std::vector<int> threat;
@@ -29,7 +31,7 @@ private:
 	int atk_mod;
 	int dmg_mod;
 	int dice;
-	int dmg;
+	int dmg_dice;
 	int range;
 	void(*handler)();
 };

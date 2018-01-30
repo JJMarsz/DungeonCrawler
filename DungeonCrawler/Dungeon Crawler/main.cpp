@@ -407,7 +407,7 @@ int main(int argc, char* args[])
 					if (r <= 18000)
 						mod_state = MOD_UP;
 					drawRoom();
-					if (room->getCurrUnit()->getType() == ENEMY) {
+					if (room->getCurrUnit()->getType() != CHARACTER) {
 						//differentiate between melee and ranged
 						room->getCurrUnit()->callHandler();
 					}
