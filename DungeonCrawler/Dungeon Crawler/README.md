@@ -1,4 +1,0 @@
-# DungeonCrawler
-
-CREDITS:
-SDL LIBRARY
