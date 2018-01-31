@@ -39,6 +39,7 @@ EncounterList::EncounterList() {
 	//mob setup
 	mobList.resize(NUM_MOB_ENC);
 	mobList[SKELETON] = skeleton;
+	mobList[ZOMBIES] = zombie;
 }
 
 func EncounterList::getTrap(TrapIndex index) { return trapList[index]; }
@@ -66,7 +67,7 @@ void handleEncounter() {
 		break;
 	case BOSS:
 	case MOB:
-		//current_quests[quest_index].fetchMob()();
+		current_quests[quest_index].fetchMob()();
 		break;
 	default:
 		break;
@@ -392,6 +393,16 @@ void skeleton() {
 	room = new Room;
 
 	room->rollInit("Spooky, Scary, Skeletons");
+	room->placeUnits();
+	room->getCurrUnit()->resetTurn();
+	room->getCurrUnit()->updateAdj();
+}
+
+void zombie() {
+	state = DUNGEON_ROOM;
+	room = new Room;
+
+	room->rollInit("Graveyard of the Forsaken");
 	room->placeUnits();
 	room->getCurrUnit()->resetTurn();
 	room->getCurrUnit()->updateAdj();

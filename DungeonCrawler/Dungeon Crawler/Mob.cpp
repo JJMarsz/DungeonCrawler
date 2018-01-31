@@ -29,6 +29,12 @@ void loadMobs() {
 	abilityMap["Bone Naga Bite"] = { 5, 3, 4, 2, 1 };
 
 
+	//graveyard dungeon
+	mobEncMap["Graveyard of the Forsaken"] = {
+		Mob(8, 22, 6, 1, 3, 1, 1, mobClips[ZOMBIE], "Zombie", 1, -2, 3, -4, -2, -3, 4, mobHandler, ENEMY),
+		Mob(8, 15, 4, 1, 3, 1, 1, mobClips[RUNNER], "Runner", 1, -2, 3, -4, -2, -3, 7, mobHandler, ENEMY),
+		Mob()//temp
+	};
 	
 }
 

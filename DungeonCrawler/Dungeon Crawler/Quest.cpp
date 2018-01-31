@@ -52,8 +52,8 @@ QuestList::QuestList() {
 	// 3
 	// 4
 	easyQuestIndex = 0;
-	medQuestIndex = 1;//6
-	hardQuestIndex = 1;//9
+	medQuestIndex = 2;//6
+	hardQuestIndex = 2;//9
 	list.resize(NUM_QUEST);
 	list[0].q =
 	{ "Spooky, Scary, Skeletons",
@@ -65,16 +65,17 @@ QuestList::QuestList() {
 	list[0].q.loadMob(SKELETONS);
 	list[0].complete = false;
 	list[0].show = false;
-	/*list[1].q =
+	list[1].q =
 	{ "Graveyard of the Forsaken",
 		"A mass grave of war criminals has come back to life due to unforseen reasons. Someone return them to the grave.",
 		100,
 		1,
 		EASY
 	};
+	list[1].q.loadMob(ZOMBIES);
 	list[1].complete = false;
 	list[1].show = false;
-	list[2].q =
+	/*list[2].q =
 	{ "Goblins and Garden Gnomes",
 		"Goblins are kidnapping gnomes to use as decorations in their gardens! Save our smaller townsfolk by clearing out their lair!",
 		100,

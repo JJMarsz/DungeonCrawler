@@ -724,6 +724,16 @@ bool loadMedia()
 		mobClips[BONENAGA].w = 50;
 		mobClips[BONENAGA].h = 50;
 
+		mobClips[ZOMBIE].x = ZOMBIE_X;
+		mobClips[ZOMBIE].y = ZOMBIE_Y;
+		mobClips[ZOMBIE].w = 50;
+		mobClips[ZOMBIE].h = 50;
+
+		mobClips[RUNNER].x = RUNNER_X;
+		mobClips[RUNNER].y = ZOMBIE_Y;
+		mobClips[RUNNER].w = 50;
+		mobClips[RUNNER].h = 50;
+
 	}
 	if (!mobNum.loadFromFile("textures/mobnum.png")) {
 		printf("Failed to load texture image!\n");
