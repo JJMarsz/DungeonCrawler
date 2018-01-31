@@ -614,6 +614,8 @@ void returnToTown(int index) {
 	}
 	quests.completeQuest(current_quests[quest_index].getTitle());
 	quests.getQuests();
+	for (int i = 0; i < 3; i++)
+		gParty->getChar(0)->setAlive();
 	//create a new quest if neccesary
 	//setup all relevant things
 	completed.loadFromRenderedText(std::to_string(gParty->getCompleted()), textColor, 200);

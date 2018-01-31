@@ -42,6 +42,7 @@ public:
 	void heal(int heal){ health += heal; if (health > max_health) { health = max_health; } }
 	void damage(int dmg);
 	bool isAlive() { return alive; }
+	void setAlive() { alive = true; }
 
 	/* getters */
 	virtual SDL_Rect getIcon50() { return SDL_Rect(); }
