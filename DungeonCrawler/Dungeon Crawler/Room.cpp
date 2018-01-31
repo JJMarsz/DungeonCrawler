@@ -15,25 +15,18 @@ Room::Room(){
 		std::chrono::system_clock::now().time_since_epoch()
 		);
 	srand(ms.count());//random seed
-	int small_wall, med_wall;
 	switch (current_quests[quest_index].getDiff()) {
 	case EASY:
 		height = 7 + rand() % 2;
 		width = 8 + rand() % 2;
-		small_wall = 3;
-		med_wall = 1;
 		break;
 	case MEDIUM:
 		height = 9 + rand() % 2;
 		width = 10 + rand() % 2;
-		small_wall = 3;
-		med_wall = 2;
 		break;
 	case HARD:
 		height = 11 + rand() % 2;
 		width = 12 + rand() % 2;
-		small_wall = 4;
-		med_wall = 3;
 		break;
 	}
 	roomMap.resize(width*height);
@@ -61,13 +54,8 @@ Room::Room(){
 				roomMap[i + j * width].down = true;
 		}
 	}
-	//generate med_walls
+	//generate walls
 	int index;
-	/*for (i = 0; i < med_wall; i++) {
-		index = rand() % (width*height);
-		roomMap[index].type = WALL;
-
-	}*/
 	index = rand() % (width*height);
 	for (i = 0; i < height; i++) {
 		while(roomMap[index].type == WALL)
@@ -77,14 +65,6 @@ Room::Room(){
 		roomMap[index].right = true;
 		roomMap[index].down = true;
 		roomMap[index].up = true;
-		/*if (index%width > 0)
-			roomMap[index - 1].right = true;
-		if (index / width > 0)
-			roomMap[index - width].down = true;
-		if (index%width < width - 1)
-			roomMap[index + 1].left = true;
-		if (index / width < height - 1)
-			roomMap[index + width].up = true;*/
 	}
 
 
