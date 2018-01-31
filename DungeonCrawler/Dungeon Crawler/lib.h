@@ -54,9 +54,9 @@ typedef void(*func)();
 #define QUEST_THREE_X		520
 #define QUEST_PAGE_WIDTH	80
 #define QUEST_PAGE_HEIGHT	115
-#define MAX_QUESTS			3
-#define NUM_QUEST			11
-#define END_GAME			5
+#define MAX_QUESTS			1
+#define NUM_QUEST			1
+#define END_GAME			2
 
 
 #define NUM_TILES				33

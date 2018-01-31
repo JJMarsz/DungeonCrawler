@@ -534,7 +534,7 @@ void wisHandler(int index) {
 		}
 		break;
 	case 3:
-		msg_queue.push("The party leaves the test alone. Speeking of which, why is there a test here anyways?");
+		msg_queue.push("The party leaves the test alone. Speaking of which, why is there a test here anyways?");
 		break;
 	}
 }

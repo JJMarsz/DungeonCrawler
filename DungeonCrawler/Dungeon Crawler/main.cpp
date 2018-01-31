@@ -196,6 +196,18 @@ int main(int argc, char* args[])
 								message = msg_queue.front();
 								messageBox.loadFromRenderedText(message, color, 800);
 							}
+							if (display_message && messageBox.getWidth() >= 750) {
+								int text_size = MSG_TEXT_SIZE - 1;
+								while (messageBox.getWidth() >= 750) {
+									TTF_Font* font = TTF_OpenFont("PT_sans.ttf", text_size);
+									messageBox.setFont(font);
+									messageBox.loadFromRenderedText(message, color, 800);
+									TTF_CloseFont(font);
+									font = NULL;
+									messageBox.setFont(msg_font);
+									text_size--;
+								}
+							}
 						}
 						break;
 					case DUNGEON_ROOM:
@@ -297,6 +309,18 @@ int main(int argc, char* args[])
 				case CHOOSE:
 					message = msg_queue.front();
 					messageBox.loadFromRenderedText(message, color, 800);
+					if (messageBox.getWidth() >= 750) {
+						int text_size = MSG_TEXT_SIZE - 1;
+						while (messageBox.getWidth() >= 750) {
+							TTF_Font* font = TTF_OpenFont("PT_sans.ttf", text_size);
+							messageBox.setFont(font);
+							messageBox.loadFromRenderedText(message, color, 800);
+							TTF_CloseFont(font);
+							font = NULL;
+							messageBox.setFont(msg_font);
+							text_size--;
+						}
+					}
 					drawDungeon();
 					drawDungeonMenu();
 					drawChoiceMenu();

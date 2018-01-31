@@ -21,9 +21,9 @@ void loadMobs() {
 
 	//Spooky skeleton dungeon
 	mobEncMap["Spooky, Scary, Skeletons"] = { 
-		  Mob(12, 13, 6, 1, 4, 2, 1, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
-		, Mob(11, 9, 8, 1, 4, 1, 6, mobClips[RANGED_SKELETON], "Ranged Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
-		, Mob(15, 40, 8, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, BOSS_BOI) 
+		  Mob(11, 14, 4, 1, 4, 2, 1, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
+		, Mob(10, 9, 6, 1, 4, 1, 6, mobClips[RANGED_SKELETON], "Ranged Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
+		, Mob(12, 40, 8, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, BOSS_BOI) 
 	};
 	abilityMap["Ray of Frost 1"] = { 5, 0, 8, 1, 6 };
 	abilityMap["Bone Naga Bite"] = { 5, 3, 4, 2, 1 };

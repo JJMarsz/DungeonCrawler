@@ -52,19 +52,20 @@ QuestList::QuestList() {
 	// 3
 	// 4
 	easyQuestIndex = 0;
-	medQuestIndex = 6;
-	hardQuestIndex = 9;
+	medQuestIndex = 1;//6
+	hardQuestIndex = 1;//9
 	list.resize(NUM_QUEST);
 	list[0].q =
-	{ "Mines of Dorimir",
-	"The mines have become overrun with pesky kobolds. Would anyone take care of them for us?",
-	100,
-	1,
-	EASY
+	{ "Spooky, Scary, Skeletons",
+		"These skeletons are sending shivers down our spines! Please someone bury them properly!",
+		100,
+		1,
+		EASY
 	};
+	list[0].q.loadMob(SKELETONS);
 	list[0].complete = false;
 	list[0].show = false;
-	list[1].q =
+	/*list[1].q =
 	{ "Graveyard of the Forsaken",
 		"A mass grave of war criminals has come back to life due to unforseen reasons. Someone return them to the grave.",
 		100,
@@ -92,8 +93,8 @@ QuestList::QuestList() {
 	list[3].complete = false;
 	list[3].show = false;
 	list[4].q =
-	{ "Spooky, Scary, Skeletons",
-		"These skeletons are sending shivers down our spines! Please someone bury them properly!",
+	{ "Mines of Dorimir",
+		"The mines have become overrun with pesky kobolds. Would anyone take care of them for us?",
 		100,
 		1,
 		EASY
@@ -109,6 +110,8 @@ QuestList::QuestList() {
 	};
 	list[5].complete = false;
 	list[5].show = false;
+
+
 	list[medQuestIndex].q =
 	{ "Cult of Roshan",
 		"There is a cult that is converting civilians to do their evil bidding. Is there someone that can stop this?",
@@ -136,6 +139,8 @@ QuestList::QuestList() {
 	};
 	list[medQuestIndex + 2].complete = false;
 	list[medQuestIndex + 2].show = false;
+
+
 	list[hardQuestIndex].q =
 	{ "Cult of the Dragon Queen",
 		"The Dragon Queen Liktin has claimed our town as her domain. Her tyrannical rule will destroy this town. Help us someone!",
@@ -153,7 +158,7 @@ QuestList::QuestList() {
 		HARD
 	};
 	list[hardQuestIndex+1].complete = false;
-	list[hardQuestIndex+1].show = false;
+	list[hardQuestIndex+1].show = false;*/
 	for (int i = 0; i < NUM_QUEST; i++) {
 		list[i].q.loadTrap(BASIC);
 
@@ -176,8 +181,6 @@ QuestList::QuestList() {
 		list[i].q.loadChoice(INTEL);
 		list[i].q.loadChoice(WIS);
 		list[i].q.loadChoice(CHA);
-
-		list[i].q.loadMob(SKELETONS);
 	}
 }
 
@@ -223,13 +226,15 @@ void QuestList::getQuests() {
 		hardChance = 0;
 		break;
 	case 1:
-		easyChance = 80;
-		medChance = 20;
+		//should be 80, 20, 0
+		easyChance = 100;
+		medChance = 0;
 		hardChance = 0;
 		break;
 	case 2:
-		easyChance = 60;
-		medChance = 40;
+		//should be 60 40 0
+		easyChance = 100;
+		medChance = 0;
 		hardChance = 0;
 		break;
 	case 3:

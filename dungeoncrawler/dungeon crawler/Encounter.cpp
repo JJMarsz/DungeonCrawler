@@ -66,7 +66,7 @@ void handleEncounter() {
 		break;
 	case BOSS:
 	case MOB:
-		current_quests[quest_index].fetchMob()();
+		//current_quests[quest_index].fetchMob()();
 		break;
 	default:
 		break;
@@ -134,7 +134,8 @@ void bossReveal() {
 void mobReveal() {
 	std::vector<Tile*>* list = current_dungeon.getMob();
 	for (int i = 0; i < list->size(); i++) {
-		if (!current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())) {
+		if (!current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())
+			&& !current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())) {
 			current_dungeon.scoutTile(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth(), false);
 			msg_queue.push("The party finds a note written by someone detailing where some enemies might be.");
 			return;
@@ -146,7 +147,8 @@ void mobReveal() {
 void lootReveal() {
 	std::vector<Tile*>* list = current_dungeon.getLoot();
 	for (int i = 0; i < list->size(); i++) {
-		if (!current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())) {
+		if (!current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())
+			&& !current_dungeon.getVisited(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())) {
 			current_dungeon.scoutTile(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth(), false);
 			msg_queue.push("The party discovers a treasure map that leads somewhere within this dungeon!");
 			return;
@@ -158,7 +160,8 @@ void lootReveal() {
 void choiceReveal() {
 	std::vector<Tile*>* list = current_dungeon.getChoice();
 	for (int i = 0; i < list->size(); i++) {
-		if (!current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())) {
+		if (!current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())
+			&& !current_dungeon.getVisited(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())) {
 			current_dungeon.scoutTile(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth(), false);
 			msg_queue.push("The party finds a clue pertaining towards a mystical object within the dungeon.");
 			return;
@@ -170,7 +173,8 @@ void choiceReveal() {
 void trapReveal() {
 	std::vector<Tile*>* list = current_dungeon.getTrap();
 	for (int i = 0; i < list->size(); i++) {
-		if (!current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())) {
+		if (!current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth()) 
+			&& !current_dungeon.getVisited(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())) {
 			current_dungeon.scoutTile(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth(), false);
 			msg_queue.push("The party finds blueprints for a trap built within the dungeon.");
 			return;
