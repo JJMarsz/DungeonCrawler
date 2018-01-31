@@ -217,10 +217,10 @@ Party::Party() {
 	scoutUp = false;
 	scout = 1;
 	scout_max = 1;
-	peek = 2;
-	peek_max = 2;
-	rest = 1;
-	rest_max = 1;
+	peek = 3;
+	peek_max =3;
+	rest = 2;
+	rest_max = 2;
 }
 
 
