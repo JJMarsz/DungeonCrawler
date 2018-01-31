@@ -66,6 +66,7 @@ void handleEncounter() {
 		current_quests[quest_index].fetchChoice((ChoiceIndex)tile->getIndex())();
 		break;
 	case BOSS:
+		current_quests[quest_index].fetchMob()();
 	case MOB:
 		current_quests[quest_index].fetchMob()();
 		break;

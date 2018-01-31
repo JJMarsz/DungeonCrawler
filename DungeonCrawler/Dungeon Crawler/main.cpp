@@ -54,7 +54,7 @@ int main(int argc, char* args[])
 					//User requests quit
 					if(e.type == SDL_QUIT)
 						quit = true;
-					if (state == DUNGEON || state == DUNGEON_ROOM) {
+					if (state == DUNGEON || state == DUNGEON_ROOM || state == GAMEOVER || state == GAMEWON) {
 						switch (e.type) {
 						case SDL_MOUSEBUTTONDOWN:
 							MouseDown = true;
@@ -108,7 +108,7 @@ int main(int argc, char* args[])
 						}
 						break;
 					case TOWN_QUEST_BOARD:
-						for (i = 0; i < 3; ++i) {
+						for (i = 0; i < 1; ++i) {
 							questButtons[i].handleEvent(&e, i);
 						}
 						townButtons[0].handleEvent(&e, 0);
@@ -249,6 +249,11 @@ int main(int argc, char* args[])
 					case REWARD:
 						acceptrejectButtons[2].handleEvent(&e, 2);
 						break;
+					case GAMEOVER:
+					case GAMEWON:
+						if (MouseDown && MouseUp) {
+							state = MAIN_MENU;
+						}
 					default:
 						break;
 					}
@@ -475,7 +480,10 @@ int main(int argc, char* args[])
 					questXP.render(280, 240);
 					break;
 				case GAMEOVER:
-
+					gameover.render(0, 0);
+					break;
+				case GAMEWON:
+					gamewon.render(0, 0);
 					break;
 				}
 				//Update screen

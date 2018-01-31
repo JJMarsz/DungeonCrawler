@@ -401,7 +401,7 @@ void CharList::loadSprites() {
 	charList[0].setIcon50(charClips[NUM_CHAR * 2]);
 	charList[0].setIcon25(charClips[NUM_CHAR*3]);
 	charList[0].setInfo(
-		"Temp text for now, Figther."
+		"A valiant fighter whose knowledge in the art of combat is unmatched!"
 	);
 
 	//Barb
@@ -412,7 +412,7 @@ void CharList::loadSprites() {
 	charList[1].setIcon50(charClips[1 + NUM_CHAR*2]);
 	charList[1].setIcon25(charClips[1 + NUM_CHAR * 3]);
 	charList[1].setInfo(
-		"Temp text for now, Barbarian."
+		"A relentless warrior whose blinding rage can demolish any foe!"
 	);
 
 	//Paladin
@@ -423,7 +423,7 @@ void CharList::loadSprites() {
 	charList[2].setIcon50(charClips[2 + NUM_CHAR*2]);
 	charList[2].setIcon25(charClips[2 + NUM_CHAR * 3]);
 	charList[2].setInfo(
-		"Temp text for now, Paladin."
+		"An upstanding champion of the light who guides the valiant into battle!"
 	);
 
 	//Rogue
@@ -434,7 +434,7 @@ void CharList::loadSprites() {
 	charList[3].setIcon50(charClips[3 + NUM_CHAR*2]);
 	charList[3].setIcon25(charClips[3 + NUM_CHAR * 3]);
 	charList[3].setInfo(
-		"Temp text for now, Rogue."
+		"A sneaky but deadly companion who can assassinate foes in one strike!"
 	);
 
 	//Ranger
@@ -445,7 +445,7 @@ void CharList::loadSprites() {
 	charList[4].setIcon50(charClips[4 + NUM_CHAR*2]);
 	charList[4].setIcon25(charClips[4 + NUM_CHAR * 3]);
 	charList[4].setInfo(
-		"Temp text for now, Ranger."
+		"A precise hunter who can take down any enemy in his way!"
 	);
 	//generate text and whatnot
 	int count = (CHAR_BUTTON_WIDTH - 20) / 2;
@@ -462,7 +462,7 @@ void CharList::loadSprites() {
 		}
 		std::stringstream buf;
 		buf << charList[i].getName() << "\n" << std::endl;
-		buf << "Strength: " << charList[i].getStr() << "\n";
+		/*buf << "Strength: " << charList[i].getStr() << "\n";
 		buf << "Dexterity: " << charList[i].getDex() << "\n";
 		buf << "Constitution: " << charList[i].getCon() << "\n";
 		buf << "Intelligence: " << charList[i].getInt() << "\n";
@@ -470,11 +470,11 @@ void CharList::loadSprites() {
 		buf << "Charisma: " << charList[i].getCha() << "\n";
 		buf << "Speed: " << charList[i].getMove() << "\n";
 		buf << "Health: " << charList[i].getHP() << "\n";
-		buf << "AC: " << charList[i].getAC() << "\n";
-		buf << "Info: " << charList[i].getInfo() << "\n";
+		buf << "AC: " << charList[i].getAC() << "\n";*/
+		buf << charList[i].getInfo() << "\n";
 
 		//store index into text texture vector
-		charList[i].setTextIndex(loadText(CHAR_BUTTON_WIDTH, buf.str()));
+		charList[i].setTextIndex(loadText(CHAR_BUTTON_WIDTH-20, buf.str()));
 	}
 }
 /* Check to see if a character is available to be displayed */

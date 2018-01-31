@@ -94,6 +94,9 @@ extern LTexture endTurnText;
 extern LTexture mobSST;
 extern LTexture mobNum;
 extern LTexture abIconSST;
+extern LTexture charPick;
+extern LTexture gameover;
+extern LTexture gamewon;
 
 extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> tileSpriteClips;

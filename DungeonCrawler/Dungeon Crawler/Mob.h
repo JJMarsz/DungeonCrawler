@@ -15,8 +15,8 @@ public:
 	void updateThreat();
 
 	/* attack the target, returns true on kill */
-	void attack(int index);
-	void roll_attack();
+	int attack(int index);
+	int roll_attack();
 	void moveMob(int RMO_target);
 	SDL_Rect getIcon50();
 	void callHandler() { handler(); }
@@ -42,5 +42,6 @@ void loadMobs();
 
 void mobHandler();
 void boneNagaHandler();
+void wightHandler();
 #endif
 

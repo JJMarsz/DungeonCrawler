@@ -33,8 +33,11 @@ void loadMobs() {
 	mobEncMap["Graveyard of the Forsaken"] = {
 		Mob(8, 22, 6, 1, 3, 1, 1, mobClips[ZOMBIE], "Zombie", 1, -2, 3, -4, -2, -3, 4, mobHandler, ENEMY),
 		Mob(8, 15, 4, 1, 3, 1, 1, mobClips[RUNNER], "Runner", 1, -2, 3, -4, -2, -3, 7, mobHandler, ENEMY),
-		Mob()//temp
+		Mob(11, 45, 4, 1, 3, 1, 1, mobClips[WIGHT], "Wight", 2, 2, 3, 0, 1, 2, 6, wightHandler, BOSS_BOI),
 	};
+	abilityMap["Longbow"] = { 4, 2, 8, 1, 6 };
+	abilityMap["Longsword"] = { 4, 2, 10, 1, 1 };
+	abilityMap["Lifedrain"] = { 4, 2, 6, 1, 1 };
 	
 }
 
@@ -203,7 +206,8 @@ void Mob::moveMob(int RMO_target) {
 	room->getTile(RMO % width, RMO / width)->type = type_stash;
 }
 
-void Mob::roll_attack() {
+int Mob::roll_attack() {
+	useAction();
 	std::vector<Unit*> party;
 	int i;
 	fillPartyVec(party);
@@ -214,8 +218,9 @@ void Mob::roll_attack() {
 	Sleep(1000);
 	drawRoom();
 	int roll = rand() % 20 + 1 + atk_mod;
+	int dmg = -1;
 	if (roll > party[target_index]->getAC()) {
-		int dmg = dmg_mod;
+		dmg = dmg_mod;
 		for (i = 0; i < dice; i++) {
 			dmg += (rand() % dmg_dice) + 1;
 		}
@@ -229,9 +234,10 @@ void Mob::roll_attack() {
 	}
 	SDL_RenderPresent(gRenderer);
 	Sleep(1000);
+	return dmg;
 }
 
-void Mob::attack(int index) {
+int Mob::attack(int index) {
 	//discard index since mob will attack stored in target index
 	//check if already adjacent
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
@@ -279,7 +285,7 @@ void Mob::attack(int index) {
 		distance = std::abs((room->getCurrUnit()->getRMO() % width) - party[target_index]->getRMO() % width) + std::abs((room->getCurrUnit()->getRMO() / width) - party[target_index]->getRMO() / width);
 		if (distance == 1 && action) {
 			//attack target
-			roll_attack();
+			return roll_attack();
 		}
 	}
 	else {
@@ -295,55 +301,55 @@ void Mob::attack(int index) {
 		//fails if already in range
 		if(room->getTile(RMO%width, RMO / width)->color != RED) {
 			//move to closest red
-int closest = 50;
-int target_RMO, target_dist, dist_to_target;
-for (i = 0; i < width*room->getHeight(); i++) {
-	int dist_to_RMO = std::abs(i%width - RMO % width) + std::abs(i / width - RMO / width);
-	dist_to_target = std::abs(i%width - party[target_index]->getRMO() % width) + std::abs(i / width - party[target_index]->getRMO() / width);
-	if (room->getTile(i%width, i / width)->color == RED && dist_to_RMO < closest) {
-		target_RMO = i;
-		closest = dist_to_RMO;
-		target_dist = dist_to_target;
-	}
-}
-//now we have a target index, clear the range and commence moving
-room->clearRange();
-moveButton(0);
-ab = NOPE;
-//use highlights to move mob accordingly
-switch (room->getTile(target_RMO%width, target_RMO / width)->color) {
-case YELLOW:
-	//move and attack
-	moveMob(target_RMO);
-	break;
-case BLUE:
-	//move
-	useAction();
-	moveMob(target_RMO);
-	break;
-case NORMAL:
-	//find closest highlighted tile to target tile
-	int dist_to_tile = 100, new_target;
-	for (i = 0; i < width*room->getHeight(); i++) {
-		int new_dist = std::abs(i%width - target_RMO % width) + std::abs(i / width - target_RMO / width);
-		if (room->getTile(i%width, i / width)->color != NORMAL && new_dist < dist_to_tile) {
-			dist_to_tile = new_dist;
-			new_target = i;
+		int closest = 50;
+		int target_RMO, target_dist, dist_to_target;
+		for (i = 0; i < width*room->getHeight(); i++) {
+			int dist_to_RMO = std::abs(i%width - RMO % width) + std::abs(i / width - RMO / width);
+			dist_to_target = std::abs(i%width - party[target_index]->getRMO() % width) + std::abs(i / width - party[target_index]->getRMO() / width);
+			if (room->getTile(i%width, i / width)->color == RED && dist_to_RMO < closest) {
+				target_RMO = i;
+				closest = dist_to_RMO;
+				target_dist = dist_to_target;
+			}
 		}
-	}
-	useAction();
-	moveMob(new_target);
-	break;
-}
+		//now we have a target index, clear the range and commence moving
+		room->clearRange();
+		moveButton(0);
+		ab = NOPE;
+		//use highlights to move mob accordingly
+		switch (room->getTile(target_RMO%width, target_RMO / width)->color) {
+		case YELLOW:
+			//move and attack
+			moveMob(target_RMO);
+			break;
+		case BLUE:
+			//move
+			useAction();
+			moveMob(target_RMO);
+			break;
+		case NORMAL:
+			//find closest highlighted tile to target tile
+			int dist_to_tile = 100, new_target;
+			for (i = 0; i < width*room->getHeight(); i++) {
+				int new_dist = std::abs(i%width - target_RMO % width) + std::abs(i / width - target_RMO / width);
+				if (room->getTile(i%width, i / width)->color != NORMAL && new_dist < dist_to_tile) {
+					dist_to_tile = new_dist;
+					new_target = i;
+				}
+			}
+			useAction();
+			moveMob(new_target);
+			break;
+		}
 
 		}
 		room->clearRange();
 		if (getAction()) {
 			//attack target_index
-			roll_attack();
+			return roll_attack();
 		}
-
 	}
+	return -1;
 }
 
 void Mob::loadAbility(std::string name) {
@@ -392,10 +398,8 @@ void boneNagaHandler() {
 	if (mob->getHP() < mob->getMaxHP() / 3) {
 		//stage 3
 		//do some running
-		std::vector<Unit*> party;
-		fillPartyVec(party);
 		int target_RMO = party[target_index]->getRMO();
-		if (std::abs(target_RMO%width - mob->getRMO() % width) + std::abs(target_RMO / width - mob->getRMO() / width) == 1){
+		if (std::abs(target_RMO%width - mob->getRMO() % width) + std::abs(target_RMO / width - mob->getRMO() / width) == 1) {
 			//do a melee attack then run
 			mob->loadAbility("Bone Naga Bite");
 			mob->attack(0);
@@ -431,7 +435,90 @@ void boneNagaHandler() {
 		mob->attack(0);
 
 	}
-
 	endTurnHandler(0);
-	
+}
+
+void wightHandler() {
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
+	Unit* mob = room->getCurrUnit();
+	mob->updateThreat();
+	int target_index = mob->getTarget();
+	int width = room->getWidth();
+	std::vector<Unit*> party;
+	fillPartyVec(party);
+	//staged fight
+
+	//stage 1, far away from characters
+	//use longbow
+
+	//stage 2, characters are close
+	//use longsword
+
+	//stage 3, hp gets low (1/2)?
+	//use lifedrain if close, else use longbow and run
+	//if no movement options, use melee
+
+	//check stages in decreasing order
+	if (mob->getHP() < mob->getMaxHP() / 2) {
+		//stage 3
+		//do some running
+		int target_RMO = party[target_index]->getRMO();
+		if (std::abs(target_RMO%width - mob->getRMO() % width) + std::abs(target_RMO / width - mob->getRMO() / width) == 1) {
+			//custom lifedrain
+			mob->loadAbility("Lifedrain");
+			int healed = mob->attack(0);
+			if (healed != -1) {
+				messageBox.loadFromRenderedText("The Wight attempts to drain your life!", { 255, 255, 255 }, 650);
+				drawRoom();
+				messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+				Sleep(1000);
+				SDL_RenderPresent(gRenderer);
+				if (1 + (rand() % 20) + party[target_index]->getCon() <= 13) {
+					mob->heal(healed);
+					messageBox.loadFromRenderedText("The " + party[target_index]->getName() + " cannot resist the dark pull!", { 255, 255, 255 }, 650);
+				}
+				else {
+					messageBox.loadFromRenderedText("The " + party[target_index]->getName() + " resists the Wight!", { 255, 255, 255 }, 650);
+				}
+				drawRoom();
+				messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+				Sleep(1000);
+				SDL_RenderPresent(gRenderer);
+			}
+		}
+		else {
+			//try to get into the red and attack
+			mob->loadAbility("Longbow");
+			mob->attack(0);
+		}
+		//run
+		moveButton(0);
+		int dist = 0, RMO;
+		if (mob->getMoveLeft() > 0) {
+			for (int i = 0; i < width*room->getHeight(); i++) {
+				int dist_to_target = std::abs(target_RMO%width - i % width) + std::abs(target_RMO / width - i / width);
+				if (room->getTile(i%width, i / width)->color != NORMAL && dist_to_target > dist) {
+					dist = dist_to_target;
+					RMO = i;
+				}
+			}
+			mob->moveMob(RMO);
+		}
+
+	}
+	else if (std::abs(mob->getRMO() % width - party[target_index]->getRMO() % width) + std::abs(mob->getRMO() / width - party[target_index]->getRMO() / width) < mob->getMove()-1) {
+		//stage 2
+		mob->loadAbility("Longsword");
+		mob->attack(0);
+	}
+	else {
+		//stage 1
+		mob->loadAbility("Longbow");
+		mob->attack(0);
+
+	}
+	endTurnHandler(0);
 }

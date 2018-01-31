@@ -734,6 +734,11 @@ bool loadMedia()
 		mobClips[RUNNER].w = 50;
 		mobClips[RUNNER].h = 50;
 
+		mobClips[WIGHT].x = WIGHT_X;
+		mobClips[WIGHT].y = ZOMBIE_Y;
+		mobClips[WIGHT].w = 50;
+		mobClips[WIGHT].h = 50;
+
 	}
 	if (!mobNum.loadFromFile("textures/mobnum.png")) {
 		printf("Failed to load texture image!\n");
@@ -800,6 +805,9 @@ bool loadMedia()
 		abClips[BOW].w = 50;
 		abClips[BOW].h = 50;
 	}
+	charPick.loadFromFile("textures/charpick.png");
+	gameover.loadFromFile("textures/gameover.png");
+	gamewon.loadFromFile("textures/gamewon.png");
 	loadMobs();
 	return success;
 }
@@ -841,16 +849,7 @@ void close() {
 	hp0.free();
 	hp1.free();
 	hp2.free();
-	multiplierSST.free();
-	no.free();
-	dungeonroom.free();
-	roomTilesSST.free();
-	background.free();
-	endTurn.free();
-	endTurnText.free();
-	mobSST.free();
-	mobNum.free();
-	abIconSST.free();
+
 
 	//Free Textures
 	spriteSheetTexture.free();
@@ -872,6 +871,19 @@ void close() {
 	dungeonButtonSST.free();
 	choicemenu.free();
 	choiceButtonSST.free();
+	multiplierSST.free();
+	no.free();
+	dungeonroom.free();
+	roomTilesSST.free();
+	background.free();
+	endTurn.free();
+	endTurnText.free();
+	mobSST.free();
+	mobNum.free();
+	abIconSST.free();
+	charPick.free();
+	gameover.free();
+	gamewon.free();
 
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
@@ -1416,6 +1428,7 @@ void drawCharScreen() {
 	SDL_Rect barRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 	SDL_SetRenderDrawColor(gRenderer, 0xA0, 0xA0, 0xA0, 0xFF);
 	SDL_RenderFillRect(gRenderer, &barRect);
+	charPick.render(0, 0);
 	for (i = 0; i < 3; i++) {
 		charButtons[i].render();
 		displayList[i].render(50 + 250 * i, 50);
@@ -1435,8 +1448,9 @@ void drawQuestBoard() {
 	SDL_RenderFillRect(gRenderer, &barRect);
 
 	questboard.render(0, 0, NULL);
-	for (int i = 0; i < 3; i++)
-		questButtons[i].render();
+	/*for (int i = 0; i < 3; i++){
+		questButtons[i].render();*/
+	questButtons[0].render();
 }
 
 void drawShop() {

@@ -46,6 +46,9 @@ LTexture endTurnText;
 LTexture mobSST;
 LTexture mobNum;
 LTexture abIconSST;
+LTexture charPick;
+LTexture gameover;
+LTexture gamewon;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> tileSpriteClips;

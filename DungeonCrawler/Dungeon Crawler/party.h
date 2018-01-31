@@ -51,7 +51,7 @@ public:
 
 	/* for chars and enemies alike */
 	virtual void moveTo(int index) { return; }
-	virtual void attack(int index) { return; }
+	virtual int attack(int index) { return 0; }
 
 	/* mob only functions */
 	virtual void callHandler() { return; }
