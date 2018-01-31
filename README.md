@@ -1,6 +1,6 @@
 # DungeonCrawler
 
-At the moment, You are able to enter the game, select a random quest, traverse a dungeon with random encounters. Working on adding mob encounters soon. Expectation is to have a working Beta by the end of January.
+At the moment, You are able to enter the game, select a random quest (2 max quest rn), traverse a dungeon with random encounters, and fight mobs and bosses within the dungeon. THIS IS THE SOURCE CODE, if you wish to try the released version, go to my EXE repo.
 
 
 
