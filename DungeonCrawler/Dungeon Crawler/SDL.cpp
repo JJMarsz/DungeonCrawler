@@ -684,6 +684,11 @@ bool loadMedia()
 		roomTileClips[INVALID].y = INVALID_Y;
 		roomTileClips[INVALID].w = TILE_WIDTH;
 		roomTileClips[INVALID].h = TILE_HEIGHT;
+
+		roomTileClips[BLOCK].x = WALL_X;
+		roomTileClips[BLOCK].y = WALL_Y;
+		roomTileClips[BLOCK].w = TILE_WIDTH;
+		roomTileClips[BLOCK].h = TILE_HEIGHT;
 	}
 	if (!background.loadFromFile("textures/background.png")) {
 		printf("Failed to load texture image!\n");
@@ -952,6 +957,8 @@ int loadText(int w, std::string text) {
 		index += 8;
 
 	switch (index) {
+	case 0:
+		return NOWALL;
 	case 1:
 		return DOWNWALL;
 	case 2:
@@ -969,6 +976,7 @@ int loadText(int w, std::string text) {
 	case 12:
 		return LUCORNER;
 	case 15:
+		return BLOCK;
 	default:
 		return NOWALL;
 	}
