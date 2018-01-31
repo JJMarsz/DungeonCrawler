@@ -58,8 +58,17 @@ Room::Room(){
 	int index;
 	index = rand() % (width*height);
 	for (i = 0; i < height; i++) {
-		while(roomMap[index].type == WALL)
+		while (roomMap[index].type == WALL) {
 			index = rand() % (width*height);
+			if (index%width == 0)
+				index++;
+			else if (index%width == width - 1)
+				index--;
+			else if (index / width == 0)
+				index += width;
+			else if (index / width == height - 1)
+				index -= width;
+		}
 		roomMap[index].type = WALL;
 		roomMap[index].left = true;
 		roomMap[index].right = true;
@@ -177,13 +186,13 @@ void Room::placeUnits() {
 		case UP:
 			//place char at top, mob at bot
 			if (unitList[i]->getType() == CHARACTER) {
-				while (roomMap[index].type != NOTHING)
+				while (roomMap[index].type != NOTHING && notWallAdj(index))
 					index = rand() % width;
 				roomMap[index].type = CHARACTER;
 				unitList[i]->setRMO(index);
 			}
 			else {
-				while (roomMap[index + (height - 1)*width].type != NOTHING)
+				while (roomMap[index + (height - 1)*width].type != NOTHING && notWallAdj(index))
 					index = rand() % width;
 				roomMap[index + (height - 1)*width].type = ENEMY;
 				unitList[i]->setRMO(index + (height - 1)*width);
@@ -192,13 +201,13 @@ void Room::placeUnits() {
 		case LEFT:
 			//place char at left, mob on right
 			if (unitList[i]->getType() == CHARACTER) {
-				while (roomMap[index*width].type != NOTHING)
+				while (roomMap[index*width].type != NOTHING && notWallAdj(index))
 					index = rand() % height;
 				roomMap[index*width].type = CHARACTER;
 				unitList[i]->setRMO(index*width);
 			}
 			else {
-				while (roomMap[(index + 1)*width - 1].type != NOTHING)
+				while (roomMap[(index + 1)*width - 1].type != NOTHING && notWallAdj(index))
 					index = rand() % height;
 				roomMap[(index + 1)*width - 1].type = ENEMY;
 				unitList[i]->setRMO((index + 1)*width - 1);
@@ -207,13 +216,13 @@ void Room::placeUnits() {
 		case DOWN:
 			//place char on bot, mob on top
 			if (unitList[i]->getType() == CHARACTER) {
-				while (roomMap[index + (height - 1)*width].type != NOTHING)
+				while (roomMap[index + (height - 1)*width].type != NOTHING && notWallAdj(index))
 					index = rand() % width;
 				roomMap[index + (height - 1)*width].type = CHARACTER;
 				unitList[i]->setRMO(index + (height - 1)*width);
 			}
 			else {
-				while (roomMap[index].type != NOTHING)
+				while (roomMap[index].type != NOTHING && notWallAdj(index))
 					index = rand() % width;
 				roomMap[index].type = ENEMY;
 				unitList[i]->setRMO(index);
@@ -222,13 +231,13 @@ void Room::placeUnits() {
 		case RIGHT:
 			//place char on right, mob on left
 			if (unitList[i]->getType() == CHARACTER) {
-				while (roomMap[(index + 1)*width - 1].type != NOTHING)
+				while (roomMap[(index + 1)*width - 1].type != NOTHING && notWallAdj(index))
 					index = rand() % height;
 				roomMap[(index + 1)*width - 1].type = CHARACTER;
 				unitList[i]->setRMO((index + 1)*width - 1);
 			}
 			else {
-				while (roomMap[index*width].type != NOTHING)
+				while (roomMap[index*width].type != NOTHING && notWallAdj(index))
 					index = rand() % height;
 				roomMap[index*width].type = ENEMY;
 				unitList[i]->setRMO(index*width);
@@ -237,6 +246,37 @@ void Room::placeUnits() {
 		}
 	}
 	
+}
+
+bool Room::notWallAdj(int index) {
+	int count = 0;
+	if (index%width > 0) {
+		if (roomMap[index - 1].type == WALL)
+			count++;
+	}
+	else
+		count++;
+	if (index/width > 0) {
+		if (roomMap[index - width].type == WALL)
+			count++;
+	}
+	else
+		count++;
+	if (index%width < width - 1) {
+		if (roomMap[index + 1].type == WALL)
+			count++;
+	}
+	else
+		count++;
+	if (index/width < height - 1) {
+		if (roomMap[index + width].type == WALL)
+			count++;
+	}
+	else
+		count++;
+	if (count == 4)
+		return false;
+	return true;
 }
 
 void Room::passControl() {

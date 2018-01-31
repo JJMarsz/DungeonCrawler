@@ -36,7 +36,7 @@ public:
 	void checkState();
 	void killEnemy() { enemy_count--; }
 	void killCharacter() { char_count--; }
-
+	bool notWallAdj(int index);
 private:
 	//maintain for initiative purposes
 	std::vector<Unit*> unitList;
