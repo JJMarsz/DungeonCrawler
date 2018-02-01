@@ -1,35 +1,4 @@
-﻿  party.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\party.cpp(31): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\party.cpp(37): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\party.cpp(48): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\party.cpp(67): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\party.cpp(145): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\party.cpp(147): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\party.cpp(149): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\party.cpp(185): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\party.cpp(192): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\party.cpp(199): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\party.cpp(382): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\party.cpp(505): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-  Mob.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(61): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(114): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(120): warning C4553: '==': operator has no effect; did you intend '='?
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(172): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(177): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(184): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(187): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(195): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(220): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(270): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(320): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(337): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(347): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(519): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(610): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(628): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\mob.cpp(655): warning C4018: '<': signed/unsigned mismatch
-  LButton.cpp
+﻿  LButton.cpp
 c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(261): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
 c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(295): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
 c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(327): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
@@ -41,58 +10,5 @@ c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(485): 
 c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(517): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
 c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(549): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
 c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(720): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(795): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-  Generating Code...
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(849): warning C4715: 'edgeCase': not all control paths return a value
-  Compiling...
-  main.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\main.cpp(26): warning C4101: 'w': unreferenced local variable
-  dungeon.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(65): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(171): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(200): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(330): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(339): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(446): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(829): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\dungeon.cpp(1054): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-  SDL.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(844): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(1051): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(1092): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(1100): warning C4244: 'argument': conversion from 'double' to 'const unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(1101): warning C4244: 'argument': conversion from 'double' to 'const unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(1102): warning C4244: 'argument': conversion from 'double' to 'const unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(1154): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(1381): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\sdl.cpp(1448): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-  Room.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\room.cpp(17): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\room.cpp(90): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\room.cpp(147): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\room.cpp(156): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\room.cpp(180): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\room.cpp(288): warning C4018: '<': signed/unsigned mismatch
-  Quest.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\quest.cpp(212): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\quest.cpp(223): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\quest.cpp(299): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\quest.cpp(317): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\quest.cpp(332): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\quest.cpp(347): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-  LTexture.cpp
-  Encounter.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(91): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(139): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(152): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(165): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(178): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(229): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\encounter.cpp(343): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-  Ability.cpp
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\ability.cpp(109): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\ability.cpp(138): warning C4244: 'argument': conversion from '__int64' to 'unsigned int', possible loss of data
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\ability.cpp(166): warning C4018: '<': signed/unsigned mismatch
-c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\ability.cpp(190): warning C4018: '<': signed/unsigned mismatch
-  Generating Code...
+c:\users\jacob\desktop\dungeon\dungeoncrawler\dungeon crawler\lbutton.cpp(797): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
   Dungeon Crawler.vcxproj -> C:\Users\Jacob\Desktop\Dungeon\DungeonCrawler\Debug\Dungeon Crawler.exe

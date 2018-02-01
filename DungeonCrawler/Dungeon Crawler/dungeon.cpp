@@ -446,6 +446,15 @@ void Dungeon::deadendProspectGenerate() {
 		srand(ms.count());//random seed
 		int selected = possible[rand() % possible.size()];
 		dungMap[selected].setType(DEADEND);
+		//find adjacent path to link
+		if (dungMap[selected + 1].getType() == PATH)
+			dungMap[selected].setPrev(&dungMap[selected + 1]);
+		else if (dungMap[selected - 1].getType() == PATH)
+			dungMap[selected].setPrev(&dungMap[selected - 1]);
+		else if (dungMap[selected + width].getType() == PATH)
+			dungMap[selected].setPrev(&dungMap[selected + width]);
+		else if (dungMap[selected - width].getType() == PATH)
+			dungMap[selected].setPrev(&dungMap[selected - width]);
 		//now generate the path for this deadend
 		int d_count = 2;//limits the downs to only 2 which prevents obviously bad paths
 
