@@ -40,6 +40,7 @@ EncounterList::EncounterList() {
 	mobList.resize(NUM_MOB_ENC);
 	mobList[SKELETON] = skeleton;
 	mobList[ZOMBIES] = zombie;
+	mobList[GOBLINS] = goblin;
 }
 
 func EncounterList::getTrap(TrapIndex index) { return trapList[index]; }
@@ -404,6 +405,16 @@ void zombie() {
 	room = new Room;
 
 	room->rollInit("Graveyard of the Forsaken");
+	room->placeUnits();
+	room->getCurrUnit()->resetTurn();
+	room->getCurrUnit()->updateAdj();
+}
+
+void goblin() {
+	state = DUNGEON_ROOM;
+	room = new Room;
+
+	room->rollInit("Goblins and Garden Gnomes");
 	room->placeUnits();
 	room->getCurrUnit()->resetTurn();
 	room->getCurrUnit()->updateAdj();

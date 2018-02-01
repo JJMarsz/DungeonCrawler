@@ -55,7 +55,7 @@ typedef void(*func)();
 #define QUEST_PAGE_WIDTH	80
 #define QUEST_PAGE_HEIGHT	115
 #define MAX_QUESTS			1
-#define NUM_QUEST			2
+#define NUM_QUEST			3
 #define END_GAME			2
 
 
@@ -225,7 +225,7 @@ typedef void(*func)();
 #define MOBFIVE_X				60
 /* MOB STUFF */
 
-#define NUM_MOBS				6
+#define NUM_MOBS				10
 
 /* Skeleton dungeon */
 #define SKELETON_Y				0
@@ -238,6 +238,13 @@ typedef void(*func)();
 #define ZOMBIE_X				0
 #define RUNNER_X				50
 #define WIGHT_X					100
+
+/* Goblin dungeon */
+#define GOBLIN_Y				100
+#define GOBLIN_X				0
+#define HOBGOBLIN_X				50
+#define WORG_X					100
+#define BUGBEAR_X				150
 
 enum LButtonSprite
 {
@@ -365,7 +372,12 @@ enum MobName {
 
 	ZOMBIE,
 	RUNNER,
-	WIGHT
+	WIGHT,
+
+	GOBLIN,
+	HOBGOBLIN,
+	WORG,
+	BUGBEAR
 };
 
 enum MobNum {

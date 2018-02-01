@@ -38,6 +38,18 @@ void loadMobs() {
 	abilityMap["Longbow"] = { 4, 2, 8, 1, 6 };
 	abilityMap["Longsword"] = { 4, 2, 10, 1, 1 };
 	abilityMap["Lifedrain"] = { 4, 2, 6, 1, 1 };
+
+	//goblin dungeon
+	mobEncMap["Goblins and Garden Gnomes"] = {
+		Mob(10, 11, 6, 1, 4, 2, 4, mobClips[GOBLIN], "Goblin", -1, 2, 0, 0, -1, -1, 5, mobHandler, ENEMY),
+		Mob(11, 13, 8, 1, 5, 0, 1, mobClips[HOBGOBLIN], "Hobgoblin", 1, 1, 1, 0, 0, -1, 6, mobHandler, ENEMY),
+		Mob(10, 9, 4, 2, 5, 2, 1, mobClips[WORG], "Worg", 3, 1, 1, -2, 0, -1, 8, mobHandler, ENEMY),
+		Mob(13, 35, 6, 1, 3, 1, 1, mobClips[BUGBEAR], "Bugbear", 3, 2, 2, 0, 1, 0, 6, bugBearHandler, BOSS_BOI),
+	};
+	abilityMap["Morningstar"] = { 4, 3, 8, 1, 1 };
+	abilityMap["Javelin"] = { 4, 2, 6, 2, 6 };
+
+	//beast dungeon
 	
 }
 
@@ -93,33 +105,39 @@ void Mob::updateThreat() {
 	fillPartyVec(party);
 	int mobx = getRMO() % width;
 	int moby = getRMO() / width;
-	int x, y, distance;
+	int x, y;
 	double slice, diff, ratio;
 	int health_ratio;
+	//get true distance, unreachable is set to 1000
+	std::vector<int> dist = scanRoom();
+
 	for (i = 0; i < party.size(); i++) {
 		//distance update threat
 		x = party[i]->getRMO() % width;
 		y = party[i]->getRMO() / width;
-		distance = std::abs(x - mobx) + std::abs(y - moby);
-		if(distance > 16)
+		//make unreachable targets very unthreatening
+		if (dist[i] == 1000) {
+			threat[i] == -50;
+		}
+		else if(dist[i] > 16)
 			threat[i] += 1;
-		else if (distance > 8)
+		else if (dist[i] > 8)
 			threat[i] += 2;
-		else if (distance > 7)
+		else if (dist[i] > 7)
 			threat[i] += 3;
-		else if (distance > 6)
+		else if (dist[i] > 6)
 			threat[i] += 4;
-		else if (distance > 5)
+		else if (dist[i] > 5)
 			threat[i] += 5;
-		else if (distance > 4)
+		else if (dist[i] > 4)
 			threat[i] += 6;
-		else if (distance > 3)
+		else if (dist[i] > 3)
 			threat[i] += 7;
-		else if (distance > 2)
+		else if (dist[i] > 2)
 			threat[i] += 8;
-		else if (distance > 1)
+		else if (dist[i] > 1)
 			threat[i] += 9;
-		else if (distance == 1)
+		else if (dist[i] == 1)
 			threat[i] += 16;
 		//hp update threat
 		slice = (double)(party[i]->getMaxHP()) / 11;
@@ -182,6 +200,62 @@ void Mob::addAttackThreat(int t) {
 			return;
 		}
 	}
+}
+
+//will find true distance to every character
+std::vector<int> Mob::scanRoom() {
+	std::vector<Unit*> party;
+	fillPartyVec(party);
+	std::vector<int> partyDistVec(party.size(), 1000);
+	int width = room->getWidth();
+	std::vector<int>distVec(width*room->getHeight(), -1);
+	distVec[RMO] = 0;
+	std::queue<int> prevQ;
+	prevQ.push(RMO);
+	int count=0;
+	while (!prevQ.empty()) {
+		int x = prevQ.front() % width;
+		int y = prevQ.front() / width;
+		if (room->getTile(x, y)->type == CHARACTER) {
+			for (int i = 0; i < party.size(); i++) {
+				if (party[i]->getRMO() == prevQ.front()) {
+					partyDistVec[i] = distVec[party[i]->getRMO()];
+					count++;
+					break;
+				}
+			}
+		}
+		if (count == party.size())
+			return partyDistVec;
+		prevQ.pop();
+
+		//add all adjacent non in distVec tiles
+		if (x > 0) {
+			if (distVec[x - 1 + y * width] == -1 && (room->getTile(x - 1,y)->type == NOTHING || room->getTile(x - 1, y)->type == CHARACTER)) {
+				distVec[x - 1 + y * width] = distVec[x + y * width] + 1;
+				prevQ.push(x - 1 + y * width);
+			}
+		}
+		if (y > 0) {
+			if (distVec[x + (y - 1) * width] == -1 && (room->getTile(x, y - 1)->type == NOTHING || room->getTile(x, y - 1)->type == CHARACTER)) {
+				distVec[x + (y - 1) * width] = distVec[x + y * width] + 1;
+				prevQ.push(x + (y - 1) * width);
+			}
+		}
+		if (x < room->getWidth() - 1) {
+			if (distVec[x + 1 + y * width] == -1 && (room->getTile(x + 1, y)->type == NOTHING || room->getTile(x + 1, y)->type == CHARACTER)) {
+				distVec[x + 1 + y * width] = distVec[x + y * width] + 1;
+				prevQ.push(x + 1 + y * width);
+			}
+		}
+		if (y < room->getHeight() - 1) {
+			if (distVec[x + (y + 1) * width] == -1 && (room->getTile(x, y + 1)->type == NOTHING || room->getTile(x, y + 1)->type == CHARACTER)) {
+				distVec[x + (y + 1) * width] = distVec[x + y * width] + 1;
+				prevQ.push(x + (y + 1) * width);
+			}
+		}
+	}
+	return partyDistVec;
 }
 
 //moves mob to target RMO
@@ -474,8 +548,8 @@ void wightHandler() {
 				messageBox.loadFromRenderedText("The Wight attempts to drain your life!", { 255, 255, 255 }, 650);
 				drawRoom();
 				messageBox.render((650 - messageBox.getWidth()) / 2, 614);
-				Sleep(1000);
 				SDL_RenderPresent(gRenderer);
+				Sleep(1000);
 				if (1 + (rand() % 20) + party[target_index]->getCon() <= 13) {
 					mob->heal(healed);
 					messageBox.loadFromRenderedText("The " + party[target_index]->getName() + " cannot resist the dark pull!", { 255, 255, 255 }, 650);
@@ -485,8 +559,8 @@ void wightHandler() {
 				}
 				drawRoom();
 				messageBox.render((650 - messageBox.getWidth()) / 2, 614);
-				Sleep(1000);
 				SDL_RenderPresent(gRenderer);
+				Sleep(1000);
 			}
 		}
 		else {
@@ -517,6 +591,94 @@ void wightHandler() {
 	else {
 		//stage 1
 		mob->loadAbility("Longbow");
+		mob->attack(0);
+
+	}
+	endTurnHandler(0);
+}
+
+void bugBearHandler() {
+	Unit* mob = room->getCurrUnit();
+	mob->updateThreat();
+	int target_index = mob->getTarget();
+	int width = room->getWidth();
+	std::vector<Unit*> party;
+	fillPartyVec(party);
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
+	//staged fight
+
+	//stage 1, far away from characters
+	//use range, stay away
+
+	//stage 2, characters are close
+	//use melee to attack
+
+	//stage 3, spin, hit all adj chars if >2 chars near
+	//run away and use range
+
+	//check stages in decreasing order
+	if (std::abs(mob->getRMO() % width - party[target_index]->getRMO() % width) + std::abs(mob->getRMO() / width - party[target_index]->getRMO() / width) == 1) {
+		//stage 3 custom spin attack
+		//find out who is adjacent to bugbear
+		int i, roll;
+		std::vector<Unit*> adj;
+		for (i = 0; i < party.size(); i++) {
+			int x = party[i]->getRMO() % width;
+			int y = party[i]->getRMO() / width;
+			if (x > 0) {
+				if(room->getTile(x-1, y)->type == BOSS_BOI)
+					adj.push_back(party[i]);
+			}
+			if (y > 0) {
+				if (room->getTile(x, y - 1)->type == BOSS_BOI) 
+					adj.push_back(party[i]);
+			}
+			if (x < room->getWidth() - 1) {
+				if (room->getTile(x + 1, y)->type == BOSS_BOI) 
+					adj.push_back(party[i]);
+			}
+
+			if (y < room->getHeight() - 1) {
+				if (room->getTile(x, y + 1)->type == BOSS_BOI) 
+					adj.push_back(party[i]);
+			}
+		}
+		messageBox.loadFromRenderedText("The Bugbear furiously spins!", { 255, 255, 255 }, 650);
+		drawRoom();
+		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+		SDL_RenderPresent(gRenderer);
+		Sleep(1000);
+		int dmg = 4 + rand() % 10;
+		for (i = 0; i < adj.size(); i++) {
+			roll = adj[i]->getDex() + 1 + rand() % 20;
+			if (roll > 13) {
+				messageBox.loadFromRenderedText("The Bugbear misses the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+			}
+			else if (roll > 10) {
+				messageBox.loadFromRenderedText("The Bugbear grazes the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+				adj[i]->damage(dmg / 2);
+			}
+			else {
+				messageBox.loadFromRenderedText("The Bugbear hits the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+				adj[i]->damage(dmg);
+			}
+			drawRoom();
+			messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+			SDL_RenderPresent(gRenderer);
+			Sleep(500);
+		}
+	}
+	else if (std::abs(mob->getRMO() % width - party[target_index]->getRMO() % width) + std::abs(mob->getRMO() / width - party[target_index]->getRMO() / width) < mob->getMove() - 3) {
+		//stage 2
+		mob->loadAbility("Morningstar");
+		mob->attack(0);
+	}
+	else {
+		//stage 1
+		mob->loadAbility("Javelin");
 		mob->attack(0);
 
 	}

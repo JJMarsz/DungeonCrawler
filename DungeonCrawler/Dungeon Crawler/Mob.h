@@ -24,6 +24,7 @@ public:
 	void clearAttackThreat(int i){threat[i] = 0;}
 	int getTarget() { return target_index; }
 	void loadAbility(std::string name);
+	std::vector<int> scanRoom();
 private:
 	int target_index;
 	std::vector<int> threat;
@@ -43,5 +44,6 @@ void loadMobs();
 void mobHandler();
 void boneNagaHandler();
 void wightHandler();
+void bugBearHandler();
 #endif
 

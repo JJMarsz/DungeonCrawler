@@ -787,6 +787,7 @@ void LOSColor(int x, int y) {
 				double lerp_y = lerp(y * 50, 50*(RMO/width), t);
 				if (room->getTile((int)(lerp_x / 50), (int)(lerp_y / 50))->type != NOTHING) {
 					room->getTile(RMO%width, RMO / width)->color = NORMAL;
+					break;
 				}
 			}
 		}

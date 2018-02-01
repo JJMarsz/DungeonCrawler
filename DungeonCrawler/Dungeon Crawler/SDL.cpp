@@ -744,6 +744,26 @@ bool loadMedia()
 		mobClips[WIGHT].w = 50;
 		mobClips[WIGHT].h = 50;
 
+		mobClips[GOBLIN].x = GOBLIN_X;
+		mobClips[GOBLIN].y = GOBLIN_Y;
+		mobClips[GOBLIN].w = 50;
+		mobClips[GOBLIN].h = 50;
+
+		mobClips[HOBGOBLIN].x = HOBGOBLIN_X;
+		mobClips[HOBGOBLIN].y = GOBLIN_Y;
+		mobClips[HOBGOBLIN].w = 50;
+		mobClips[HOBGOBLIN].h = 50;
+
+		mobClips[WORG].x = WORG_X;
+		mobClips[WORG].y = GOBLIN_Y;
+		mobClips[WORG].w = 50;
+		mobClips[WORG].h = 50;
+
+		mobClips[BUGBEAR].x = BUGBEAR_X;
+		mobClips[BUGBEAR].y = GOBLIN_Y;
+		mobClips[BUGBEAR].w = 50;
+		mobClips[BUGBEAR].h = 50;
+
 	}
 	if (!mobNum.loadFromFile("textures/mobnum.png")) {
 		printf("Failed to load texture image!\n");

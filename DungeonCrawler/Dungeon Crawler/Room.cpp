@@ -123,7 +123,7 @@ void Room::rollInit(std::string quest_name) {
 	else{
 		switch (current_quests[quest_index].getDiff()) {
 		case EASY:
-			enemy_count = 3;
+			enemy_count = 4;
 			break;
 		case MEDIUM:
 			enemy_count = 4;
@@ -274,7 +274,7 @@ bool Room::notWallAdj(int index) {
 	}
 	else
 		count++;
-	if (count == 4)
+	if (count >= 3)
 		return false;
 	return true;
 }

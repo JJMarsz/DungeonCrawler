@@ -52,7 +52,7 @@ QuestList::QuestList() {
 	// 3
 	// 4
 	easyQuestIndex = 0;
-	medQuestIndex = 2;//6
+	medQuestIndex = 3;//6
 	hardQuestIndex = 2;//9
 	list.resize(NUM_QUEST);
 	list[0].q =
@@ -75,16 +75,17 @@ QuestList::QuestList() {
 	list[1].q.loadMob(ZOMBIES);
 	list[1].complete = false;
 	list[1].show = false;
-	/*list[2].q =
+	list[2].q =
 	{ "Goblins and Garden Gnomes",
 		"Goblins are kidnapping gnomes to use as decorations in their gardens! Save our smaller townsfolk by clearing out their lair!",
 		100,
 		1,
 		EASY
 	};
+	list[2].q.loadMob(GOBLINS);
 	list[2].complete = false;
 	list[2].show = false;
-	list[3].q =
+	/*list[3].q =
 	{ "Tyranno-WHAT?",
 		"The town has gone jurassic! We need someone to clear out these dinosaurs!",
 		100,
