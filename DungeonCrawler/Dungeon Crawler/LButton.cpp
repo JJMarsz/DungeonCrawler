@@ -789,7 +789,7 @@ void LOSColor(int x, int y) {
 				double lerp_x = lerp(x*50, 50*(RMO%width), t);
 				double lerp_y = lerp(y * 50, 50*(RMO/width), t);
 				if (room->getTile((int)(lerp_x / 50), (int)(lerp_y / 50))->type != NOTHING) {
-					if (i != diag || room->getTile((int)(lerp_x / 50), (int)(lerp_y / 50))->type != WALL) {
+					if (i != diag || room->getTile((int)(lerp_x / 50), (int)(lerp_y / 50))->type == WALL) {
 						room->getTile(RMO%width, RMO / width)->color = NORMAL;
 						break;
 					}
@@ -827,10 +827,9 @@ bool edgeCase(int prev_x, int prev_y, int x, int y) {
 		? 0
 	    0 ? <-
 	*/
-	if (prev_x < x && prev_y < y) {
-		if (room->getTile(prev_x, y)->type != NOTHING && room->getTile(x, prev_y)->type != NOTHING)
-			return true;
-	}
+	if (room->getTile(prev_x, y)->type != NOTHING && room->getTile(x, prev_y)->type != NOTHING)
+		return true;
+	
 	return false;
 
 }

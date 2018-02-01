@@ -55,16 +55,51 @@ Room::Room(){
 		}
 	}
 	//generate walls
+	int dung_width = current_dungeon.getWidth();
+	Tile* curr = current_dungeon.getTile(gParty->getX() + gParty->getY()*dung_width);
+	Tile* prev = curr->getPrev();
+	int prev_RMO = prev->getX() + prev->getY()*dung_width;
+	int curr_RMO = curr->getX() + curr->getY()*dung_width;
+	Direction dir;
+	if (curr_RMO - prev_RMO == 1) {
+		dir = LEFT;
+	}
+	else if (curr_RMO - prev_RMO == -1) {
+		dir = RIGHT;
+	}
+	else if (curr_RMO - prev_RMO > 1) {
+		dir = UP;
+	}
+	else if (curr_RMO - prev_RMO < -1) {
+		dir = DOWN;
+	}
 	int index;
-	index = rand() % ((width - 2)*(height - 2));
+	index = rand() % ((width - 4)*(height - 4));
+	int x, y;
 	for (i = 0; i < height; i++) {
-		int x = index % (width - 2) + 1;
-		int y = index / (width - 2) + 1;
-		while (roomMap[x + y * (width)].type != NOTHING) {
-			index = rand() % ((width - 2)*(height - 2));
-			x = index % (width - 2) + 1;
-			y = index / (width - 2) + 1;
+		switch (dir) {
+		case LEFT:
+		case RIGHT:
+			x = index % (width - 4) + 2;
+			y = index / (width - 4);
+			while (roomMap[x + y * (width)].type != NOTHING) {
+				index = rand() % ((width - 4)*(height));
+				x = index % (width - 4) + 2;
+				y = index / (width - 4);
+			}
+			break;
+		case UP:
+		case DOWN:
+			x = index % (width);
+			y = index / (width) + 2;
+			while (roomMap[x + y * (width)].type != NOTHING) {
+				index = rand() % ((width)*(height - 4));
+				x = index % (width);
+				y = index / (width) + 2;
+			}
+			break;
 		}
+		
 		roomMap[x + y*width].type = WALL;
 		roomMap[x + y * width].left = true;
 		roomMap[x + y * width].right = true;
