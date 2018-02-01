@@ -329,7 +329,7 @@ CharList::CharList() {
 		1,	//wis
 		0,	//cha
 		6,	//movement
-		20,	//Health
+		28,	//Health
 		14	//AC
 		},
 	{ "Barbarian",
@@ -340,7 +340,7 @@ CharList::CharList() {
 		0,	//wis
 		-1,	//cha
 		6,	//movement
-		25,	//Health
+		32,	//Health
 		13	//AC
 	},
 	{ "Paladin",
@@ -351,7 +351,7 @@ CharList::CharList() {
 		3,	//wis
 		0,	//cha
 		6,	//movement
-		18,	//Health
+		24,	//Health
 		15	//AC
 	},
 	{ "Rogue",
@@ -362,7 +362,7 @@ CharList::CharList() {
 		2,	//wis
 		1,	//cha
 		6,	//movement
-		13,	//Health
+		23,	//Health
 		13	//AC
 	},
 	{ "Ranger",
@@ -373,7 +373,7 @@ CharList::CharList() {
 		3,	//wis
 		0,	//cha
 		7,	//movement
-		18,	//Health
+		25,	//Health
 		13	//AC
 	}
 	};

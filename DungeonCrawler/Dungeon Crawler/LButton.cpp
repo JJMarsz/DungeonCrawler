@@ -772,9 +772,12 @@ void LOSColor(int x, int y) {
 	//attempt to draw a line from player to every tile within range
 	//any tile blocked will be uncolored
 	int width = room->getWidth();
+	int prev_x = x, prev_y = y;
 	for (int RMO = 0; RMO < width*room->getHeight(); RMO++) {
 		//only check for tiles within range
 		if (room->getTile(RMO%width, RMO / width)->color == RED) {
+			prev_x = RMO % width;
+			prev_y = RMO / width;
 			//apply linear interpolation
 			//obtain the diagonal distance
 			int diag = diagonal_distance(x, y, RMO%width, RMO/width);
@@ -789,9 +792,60 @@ void LOSColor(int x, int y) {
 					room->getTile(RMO%width, RMO / width)->color = NORMAL;
 					break;
 				}
+				/*if (edgeCase(prev_x, prev_y, lerp_x/50, lerp_y/50)) {
+					room->getTile(RMO%width, RMO / width)->color = NORMAL;
+					break;
+				*/
+				prev_x = (int)lerp_x/50;
+				prev_y = (int)lerp_y/50;
 			}
 		}
 	}
+}
+
+bool edgeCase(int prev_x, int prev_y, int x, int y) {
+	int width = room->getWidth();
+	//has to be a diagonal
+	if (std::abs(x - prev_x) + std::abs(y = prev_y) == 1)
+		return false;
+	//now guarunteed diaganol
+	int low_x, low_y, high_x, high_y;
+	if (prev_x > x) {
+		low_x = x;
+		high_x = prev_x;
+	}
+	else {
+		low_x = prev_x;
+		high_x = x;
+	}
+	if (prev_y > y) {
+		low_y = y;
+		high_y = prev_y;
+	}
+	else {
+		low_y = prev_y;
+		high_y = y;
+	}
+	//now we have bounds
+	//these are the cases we want to detect
+	/*
+	# 0
+	0 #
+	where top left is low_x and low_y and bot right is high_x and high_y
+	*/
+	if (room->getTile(low_x, low_y)->type != NOTHING && room->getTile(high_x, high_y)->type != NOTHING) {
+		return true;
+	}
+
+	/*
+	0 #
+	# 0
+	where top right is low_y and high_x and bot left is high_y and low_x
+	*/
+	if (room->getTile(high_x, low_y)->type != NOTHING && room->getTile(low_y, high_y)->type != NOTHING) {
+		return true;
+	}
+
 }
 
 void moveButton(int index) {

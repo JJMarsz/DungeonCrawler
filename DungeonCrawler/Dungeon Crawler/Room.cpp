@@ -56,24 +56,20 @@ Room::Room(){
 	}
 	//generate walls
 	int index;
-	index = rand() % (width*height);
+	index = rand() % ((width - 2)*(height - 2));
 	for (i = 0; i < height; i++) {
-		while (roomMap[index].type == WALL) {
-			index = rand() % (width*height);
-			if (index%width == 0)
-				index++;
-			else if (index%width == width - 1)
-				index--;
-			else if (index / width == 0)
-				index += width;
-			else if (index / width == height - 1)
-				index -= width;
+		int x = index % (width - 2) + 1;
+		int y = index / (width - 2) + 1;
+		while (roomMap[x + y * (width)].type != NOTHING) {
+			index = rand() % ((width - 2)*(height - 2));
+			x = index % (width - 2) + 1;
+			y = index / (width - 2) + 1;
 		}
-		roomMap[index].type = WALL;
-		roomMap[index].left = true;
-		roomMap[index].right = true;
-		roomMap[index].down = true;
-		roomMap[index].up = true;
+		roomMap[x + y*width].type = WALL;
+		roomMap[x + y * width].left = true;
+		roomMap[x + y * width].right = true;
+		roomMap[x + y * width].down = true;
+		roomMap[x + y * width].up = true;
 	}
 
 
