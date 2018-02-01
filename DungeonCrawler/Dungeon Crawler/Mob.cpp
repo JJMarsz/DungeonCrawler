@@ -311,6 +311,64 @@ int Mob::roll_attack() {
 	return dmg;
 }
 
+int Mob::getBestRMO(bool closest) {
+	std::vector<Unit*> party;
+	fillPartyVec(party);
+	int width = room->getWidth();
+	std::vector<int> distVec(room->getWidth()*room->getHeight(), -1);
+	std::queue<int> prevQ;
+	distVec[party[target_index]->getRMO()] = 0;
+	
+	prevQ.push(party[target_index]->getRMO());
+	//this will populate our distance vector with valid true path cost from the target
+	while (!prevQ.empty()) {
+		int x = prevQ.front() % width;
+		int y = prevQ.front() / width;
+		prevQ.pop();
+
+		//add all adjacent non in distVec tiles
+		if (x > 0) {
+			if (distVec[x - 1 + y * width] == -1 && (room->getTile(x - 1, y)->type == NOTHING)) {
+				distVec[x - 1 + y * width] = distVec[x + y * width] + 1;
+				prevQ.push(x - 1 + y * width);
+			}
+		}
+		if (y > 0) {
+			if (distVec[x + (y - 1) * width] == -1 && (room->getTile(x, y - 1)->type == NOTHING)) {
+				distVec[x + (y - 1) * width] = distVec[x + y * width] + 1;
+				prevQ.push(x + (y - 1) * width);
+			}
+		}
+		if (x < room->getWidth() - 1) {
+			if (distVec[x + 1 + y * width] == -1 && (room->getTile(x + 1, y)->type == NOTHING)) {
+				distVec[x + 1 + y * width] = distVec[x + y * width] + 1;
+				prevQ.push(x + 1 + y * width);
+			}
+		}
+		if (y < room->getHeight() - 1) {
+			if (distVec[x + (y + 1) * width] == -1 && (room->getTile(x, y + 1)->type == NOTHING)) {
+				distVec[x + (y + 1) * width] = distVec[x + y * width] + 1;
+				prevQ.push(x + (y + 1) * width);
+			}
+		}
+	}
+	//now we have a vector filled with distance data
+	//loop through highlighted ones to and return one with smallest distance
+	int closest_dist = 1000;
+	int RMO_target;
+	for (int i = 0; i < width*room->getHeight(); i++) {
+		if (room->getTile(i%width, i / width)->color != NORMAL && distVec[i] < closest && closest) {
+			closest_dist = distVec[i];
+			RMO_target = i;
+		}
+		else if(room->getTile(i%width, i / width)->color != NORMAL && distVec[i] > closest){
+			closest_dist = distVec[i];
+			RMO_target = i;
+		}
+	}
+	return RMO_target;
+}
+
 int Mob::attack(int index) {
 	//discard index since mob will attack stored in target index
 	//check if already adjacent
@@ -329,11 +387,11 @@ int Mob::attack(int index) {
 	if (range == 1) {
 		//use move
 		if (distance != 1) {
-			int dist;
 			//move towards target
 			moveButton(0);
 			ab = NOPE;
-			std::vector<int> distances(room->getWidth()*room->getHeight(), -1);
+			int RMO_target = getBestRMO(true);
+			/*std::vector<int> distances(room->getWidth()*room->getHeight(), -1);
 			for (i = 0; i < distances.size(); i++) {
 				if (room->getTile(i % width, i / width)->color != NORMAL) {
 					//get distance and store in vector
@@ -349,7 +407,7 @@ int Mob::attack(int index) {
 					dist = distances[i];
 					RMO_target = i;
 				}
-			}
+			}*/
 			//dash if selected tile is in dash zone
 			if (room->getTile(RMO_target%width, RMO_target / width)->color == BLUE) {
 				useAction();
