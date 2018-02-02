@@ -724,6 +724,11 @@ bool loadMedia()
 		mobClips[RANGED_SKELETON].w = 50;
 		mobClips[RANGED_SKELETON].h = 50;
 
+		mobClips[HORSE_SKELETON].x = HORSE_SKELETON_X;
+		mobClips[HORSE_SKELETON].y = SKELETON_Y;
+		mobClips[HORSE_SKELETON].w = 50;
+		mobClips[HORSE_SKELETON].h = 50;
+
 		mobClips[BONENAGA].x = BONENAGA_X;
 		mobClips[BONENAGA].y = SKELETON_Y;
 		mobClips[BONENAGA].w = 50;
@@ -738,6 +743,11 @@ bool loadMedia()
 		mobClips[RUNNER].y = ZOMBIE_Y;
 		mobClips[RUNNER].w = 50;
 		mobClips[RUNNER].h = 50;
+
+		mobClips[BLOATED].x = BLOATED_X;
+		mobClips[BLOATED].y = ZOMBIE_Y;
+		mobClips[BLOATED].w = 50;
+		mobClips[BLOATED].h = 50;
 
 		mobClips[WIGHT].x = WIGHT_X;
 		mobClips[WIGHT].y = ZOMBIE_Y;

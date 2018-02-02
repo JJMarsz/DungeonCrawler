@@ -225,19 +225,21 @@ typedef void(*func)();
 #define MOBFIVE_X				60
 /* MOB STUFF */
 
-#define NUM_MOBS				10
+#define NUM_MOBS				12
 
 /* Skeleton dungeon */
 #define SKELETON_Y				0
 #define SKELETON_X				0
 #define RANGED_SKELETON_X		50
-#define BONENAGA_X				100
+#define HORSE_SKELETON_X		100
+#define BONENAGA_X				150
 
 /* Zombie dungeon */
 #define ZOMBIE_Y				50
 #define ZOMBIE_X				0
 #define RUNNER_X				50
-#define WIGHT_X					100
+#define BLOATED_X				100
+#define WIGHT_X					150
 
 /* Goblin dungeon */
 #define GOBLIN_Y				100
@@ -367,10 +369,12 @@ enum Highlight {
 enum MobName {
 	SKELETON,
 	RANGED_SKELETON,
+	HORSE_SKELETON,
 	BONENAGA,
 
 	ZOMBIE,
 	RUNNER,
+	BLOATED,
 	WIGHT,
 
 	GOBLIN,

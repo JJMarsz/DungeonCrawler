@@ -21,9 +21,10 @@ void loadMobs() {
 
 	//Spooky skeleton dungeon
 	mobEncMap["Spooky, Scary, Skeletons"] = { 
-		  Mob(11, 14, 4, 1, 4, 2, 1, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
-		, Mob(10, 9, 6, 1, 4, 1, 4, mobClips[RANGED_SKELETON], "Ranged Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
-		, Mob(12, 40, 8, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, ENEMY) 
+		  Mob(11, 16, 4, 1, 4, 2, 1, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
+		, Mob(10, 13, 6, 1, 4, 1, 4, mobClips[RANGED_SKELETON], "Ranged Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
+		, Mob(10, 15, 4, 2, 5, 2, 1, mobClips[HORSE_SKELETON], "Skeleton Warhorse", 4, 1, 2, -4, -1, -3, 8, mobHandler, ENEMY)
+		, Mob(12, 50, 8, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, ENEMY) 
 	};
 	abilityMap["Ray of Frost 1"] = { 5, 0, 8, 1, 6 };
 	abilityMap["Bone Naga Bite"] = { 5, 3, 4, 2, 1 };
@@ -31,9 +32,10 @@ void loadMobs() {
 
 	//graveyard dungeon
 	mobEncMap["Graveyard of the Forsaken"] = {
-		Mob(8, 22, 6, 1, 3, 1, 1, mobClips[ZOMBIE], "Zombie", 1, -2, 3, -4, -2, -3, 4, mobHandler, ENEMY),
+		Mob(8, 20, 6, 1, 3, 1, 1, mobClips[ZOMBIE], "Zombie", 1, -2, 3, -4, -2, -3, 4, mobHandler, ENEMY),
 		Mob(8, 15, 4, 1, 3, 1, 1, mobClips[RUNNER], "Runner", 1, -2, 3, -4, -2, -3, 7, mobHandler, ENEMY),
-		Mob(11, 45, 4, 1, 3, 1, 1, mobClips[WIGHT], "Wight", 2, 2, 3, 0, 1, 2, 6, wightHandler, ENEMY),
+		Mob(8, 28, 8, 1, 4, 2, 1, mobClips[BLOATED], "Bloated Zombie", 4, -2, 4, -4, -2, -3, 3, mobHandler, ENEMY),
+		Mob(11, 55, 4, 1, 3, 1, 1, mobClips[WIGHT], "Wight", 2, 2, 3, 0, 1, 2, 6, wightHandler, ENEMY),
 	};
 	abilityMap["Longbow"] = { 4, 2, 8, 1, 6 };
 	abilityMap["Longsword"] = { 4, 2, 10, 1, 1 };
@@ -44,7 +46,7 @@ void loadMobs() {
 		Mob(10, 11, 6, 1, 4, 2, 4, mobClips[GOBLIN], "Goblin", -1, 2, 0, 0, -1, -1, 5, mobHandler, ENEMY),
 		Mob(11, 13, 8, 1, 5, 0, 1, mobClips[HOBGOBLIN], "Hobgoblin", 1, 1, 1, 0, 0, -1, 6, mobHandler, ENEMY),
 		Mob(10, 9, 4, 2, 4, 0, 1, mobClips[WORG], "Worg", 3, 1, 1, -2, 0, -1, 8, mobHandler, ENEMY),
-		Mob(12, 40, 6, 1, 3, 1, 1, mobClips[BUGBEAR], "Bugbear", 3, 2, 2, 0, 1, 0, 6, bugBearHandler, ENEMY),
+		Mob(12, 50, 6, 1, 3, 1, 1, mobClips[BUGBEAR], "Bugbear", 3, 2, 2, 0, 1, 0, 6, bugBearHandler, ENEMY),
 	};
 	abilityMap["Morningstar"] = { 4, 3, 8, 1, 1 };
 	abilityMap["Javelin"] = { 4, 2, 6, 2, 6 };
@@ -534,7 +536,7 @@ void boneNagaHandler() {
 		}
 		//run
 		moveButton(0);
-		int dist = 0, RMO;
+		int dist = 0, RMO = -1;
 		if (mob->getMoveLeft() > 0) {
 			for (int i = 0; i < width*room->getHeight(); i++) {
 				int dist_to_target = std::abs(target_RMO%width - i % width) + std::abs(target_RMO / width - i / width);
@@ -543,7 +545,8 @@ void boneNagaHandler() {
 					RMO = i;
 				}
 			}
-			mob->moveMob(RMO);
+			if (RMO != -1)
+				mob->moveMob(RMO);
 		}
 
 	}
@@ -619,7 +622,7 @@ void wightHandler() {
 		}
 		//run
 		moveButton(0);
-		int dist = 0, RMO;
+		int dist = 0, RMO = -1;
 		if (mob->getMoveLeft() > 0) {
 			for (int i = 0; i < width*room->getHeight(); i++) {
 				int dist_to_target = std::abs(target_RMO%width - i % width) + std::abs(target_RMO / width - i / width);
@@ -628,7 +631,8 @@ void wightHandler() {
 					RMO = i;
 				}
 			}
-			mob->moveMob(RMO);
+			if(RMO != -1)
+				mob->moveMob(RMO);
 		}
 
 	}
