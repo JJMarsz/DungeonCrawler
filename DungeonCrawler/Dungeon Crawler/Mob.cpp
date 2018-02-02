@@ -23,7 +23,7 @@ void loadMobs() {
 	mobEncMap["Spooky, Scary, Skeletons"] = { 
 		  Mob(11, 14, 4, 1, 4, 2, 1, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
 		, Mob(10, 9, 6, 1, 4, 1, 4, mobClips[RANGED_SKELETON], "Ranged Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
-		, Mob(12, 40, 8, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, BOSS_BOI) 
+		, Mob(12, 40, 8, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, ENEMY) 
 	};
 	abilityMap["Ray of Frost 1"] = { 5, 0, 8, 1, 6 };
 	abilityMap["Bone Naga Bite"] = { 5, 3, 4, 2, 1 };
@@ -33,7 +33,7 @@ void loadMobs() {
 	mobEncMap["Graveyard of the Forsaken"] = {
 		Mob(8, 22, 6, 1, 3, 1, 1, mobClips[ZOMBIE], "Zombie", 1, -2, 3, -4, -2, -3, 4, mobHandler, ENEMY),
 		Mob(8, 15, 4, 1, 3, 1, 1, mobClips[RUNNER], "Runner", 1, -2, 3, -4, -2, -3, 7, mobHandler, ENEMY),
-		Mob(11, 45, 4, 1, 3, 1, 1, mobClips[WIGHT], "Wight", 2, 2, 3, 0, 1, 2, 6, wightHandler, BOSS_BOI),
+		Mob(11, 45, 4, 1, 3, 1, 1, mobClips[WIGHT], "Wight", 2, 2, 3, 0, 1, 2, 6, wightHandler, ENEMY),
 	};
 	abilityMap["Longbow"] = { 4, 2, 8, 1, 6 };
 	abilityMap["Longsword"] = { 4, 2, 10, 1, 1 };
@@ -43,8 +43,8 @@ void loadMobs() {
 	mobEncMap["Goblins and Garden Gnomes"] = {
 		Mob(10, 11, 6, 1, 4, 2, 4, mobClips[GOBLIN], "Goblin", -1, 2, 0, 0, -1, -1, 5, mobHandler, ENEMY),
 		Mob(11, 13, 8, 1, 5, 0, 1, mobClips[HOBGOBLIN], "Hobgoblin", 1, 1, 1, 0, 0, -1, 6, mobHandler, ENEMY),
-		Mob(10, 9, 4, 2, 5, 2, 1, mobClips[WORG], "Worg", 3, 1, 1, -2, 0, -1, 8, mobHandler, ENEMY),
-		Mob(13, 35, 6, 1, 3, 1, 1, mobClips[BUGBEAR], "Bugbear", 3, 2, 2, 0, 1, 0, 6, bugBearHandler, BOSS_BOI),
+		Mob(10, 9, 4, 2, 4, 0, 1, mobClips[WORG], "Worg", 3, 1, 1, -2, 0, -1, 8, mobHandler, ENEMY),
+		Mob(12, 40, 6, 1, 3, 1, 1, mobClips[BUGBEAR], "Bugbear", 3, 2, 2, 0, 1, 0, 6, bugBearHandler, ENEMY),
 	};
 	abilityMap["Morningstar"] = { 4, 3, 8, 1, 1 };
 	abilityMap["Javelin"] = { 4, 2, 6, 2, 6 };
@@ -270,7 +270,7 @@ void Mob::moveMob(int RMO_target) {
 	for (int i = 0; i < RMO_list.size(); i++) {
 		//SDL_Delay(100);
 		setRMO(RMO_list[i]);
-		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = ENEMY;
+		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = type_stash;
 		drawRoom();
 		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
 		room->getTile(RMO_list[i] % width, RMO_list[i] / width)->type = NOTHING;
@@ -351,11 +351,15 @@ int Mob::getBestRMO(int index) {
 		}
 	}
 	//now we have a vector filled with distance data
-	//loop through highlighted ones to and return one with smallest distance
+	//use a priorityqueue setup to get to closest tile
 	int closest_dist = 999;
-	int RMO_target;
+	int RMO_target = -1;
+	//std::priority_queue<int> pq;
+	//std::vector<bool> visited(width*room->getHeight(), false);
+	//pq.push()
 	for (int i = 0; i < width*room->getHeight(); i++) {
-		if (room->getTile(i%width, i / width)->color != NORMAL && distVec[i] < closest_dist) {
+		//uses an A* like hueristic to make sure mob choose closest tile to target that uses the least amount of movement
+		if (room->getTile(i%width, i / width)->color != NORMAL && distVec[i] <= closest_dist) {
 			closest_dist = distVec[i];
 			RMO_target = i;
 		}
@@ -674,20 +678,20 @@ void bugBearHandler() {
 			int x = party[i]->getRMO() % width;
 			int y = party[i]->getRMO() / width;
 			if (x > 0) {
-				if(room->getTile(x-1, y)->type == BOSS_BOI)
+				if(room->getTile(x-1, y)->type == ENEMY)
 					adj.push_back(party[i]);
 			}
 			if (y > 0) {
-				if (room->getTile(x, y - 1)->type == BOSS_BOI) 
+				if (room->getTile(x, y - 1)->type == ENEMY) 
 					adj.push_back(party[i]);
 			}
 			if (x < room->getWidth() - 1) {
-				if (room->getTile(x + 1, y)->type == BOSS_BOI) 
+				if (room->getTile(x + 1, y)->type == ENEMY) 
 					adj.push_back(party[i]);
 			}
 
 			if (y < room->getHeight() - 1) {
-				if (room->getTile(x, y + 1)->type == BOSS_BOI) 
+				if (room->getTile(x, y + 1)->type == ENEMY) 
 					adj.push_back(party[i]);
 			}
 		}

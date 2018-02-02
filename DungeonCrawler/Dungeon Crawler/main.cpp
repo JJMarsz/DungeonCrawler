@@ -444,7 +444,7 @@ int main(int argc, char* args[])
 					if (hover) {
 						switch (ab) {
 						case ATTACK:
-							if (room->getTile((x / 50) - (start_x / 50), (y / 50) - (start_y / 50))->type != ENEMY && room->getTile((x / 50) - (start_x / 50), (y / 50) - (start_y / 50))->type != BOSS_BOI) {
+							if (room->getTile((x / 50) - (start_x / 50), (y / 50) - (start_y / 50))->type != ENEMY) {
 								roomTilesSST.render(x + (start_x % 50), y + (start_y % 50), &roomTileClips[INVALID]);
 								MouseDown = false;
 								MouseUp = false;

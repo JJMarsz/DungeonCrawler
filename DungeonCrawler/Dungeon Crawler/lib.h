@@ -352,7 +352,6 @@ enum UpgradeState {
 enum UnitType {
 	CHARACTER,
 	ENEMY,
-	BOSS_BOI,
 	NOTHING,
 	WALL
 };
