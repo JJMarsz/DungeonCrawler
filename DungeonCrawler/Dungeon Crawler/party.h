@@ -225,6 +225,7 @@ public:
 	void loadSprites();
 	int size();
 	Character getChar(int index);
+	void resetList();
 private:
 	std::vector<Character> charList;
 	std::vector<bool> picked;

@@ -362,3 +362,10 @@ void QuestList::getHardQuest() {
 	}
 	current_quests.push_back(showQuest(index));
 }
+
+void QuestList::resetList() {
+	for (int i = 0; i < list.size(); i++) {
+		list[i].show = false;
+		list[i].complete = false;
+	}
+}

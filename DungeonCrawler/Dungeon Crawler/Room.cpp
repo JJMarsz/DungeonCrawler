@@ -313,6 +313,10 @@ void Room::checkState() {
 		gParty = NULL;
 		delete room;
 		room = NULL;
+		r = 1275;
+		ab = NOPE;
+		chars.resetList();
+		quests.resetList();
 	}
 	else if (enemy_count <= 0) {
 		state = DUNGEON;

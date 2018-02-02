@@ -69,6 +69,7 @@ public:
 	void getEasyQuest();
 	void getMedQuest();
 	void getHardQuest();
+	void resetList();
 
 private:
 	std::vector<QuestDesc> list;

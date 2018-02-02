@@ -136,7 +136,7 @@ void Mob::updateThreat() {
 		y = party[i]->getRMO() / width;
 		//make unreachable targets very unthreatening
 		if (dist[i] == 1000) {
-			threat[i] = -50;
+			threat[i] = -10;
 		}
 		else if(dist[i] > 16)
 			threat[i] += 1;
@@ -187,19 +187,25 @@ void Mob::updateThreat() {
 	
 	//find highest threat 
 	std::vector<int> target;
-	int highest_threat = 0;
+	int highest_threat = -11;
 	for (i = 0; i < party.size(); i++) {
 		if (threat[i] > highest_threat)
 			highest_threat = threat[i];
 	}
-	if (highest_threat != 0) {
+	//if (highest_threat != 0) {
 		//put highest threat into vec
 		for (i = 0; i < party.size(); i++) {
 			if (threat[i] == highest_threat)
 				target.push_back(i);
 		}
 		target_index = target[rand() % target.size()];
-	}
+	//}
+	//case where char dies, everything else is obstructed, so default to prev target
+	//choose target as last in party
+	//more than likely only happens 
+	//if (target_index >= party.size()) {
+	//	target_index = party.size() - 1;
+	//}
 }
 
 void Mob::addAttackThreat(int t) {
@@ -269,9 +275,8 @@ std::vector<int> Mob::scanRoom() {
 			}
 		}
 	}
-	if (partyDistVec[0] == 1000 && partyDistVec[1] == 1000) {
-		//while (1);
-	}
+	//im not sure as to why it breaks if this isn't here, but i guess critical part
+	partyDistVec[0] = partyDistVec[0];
 	return partyDistVec;
 }
 
@@ -390,6 +395,11 @@ int Mob::getBestRMO(int index) {
 			closest_dist = distVec[i];
 		}
 	}
+	//mob has no path to best RMO
+	if (RMO_target != -1) {
+		if (room->getTile(RMO_target%width, RMO_target / width)->type == NORMAL)
+			return -1;
+	}
 	return RMO_target;
 }
 
@@ -415,33 +425,29 @@ int Mob::attack(int index) {
 			moveButton(0);
 			ab = NOPE;
 			int RMO_target = getBestRMO(party[target_index]->getRMO());
-			/*std::vector<int> distances(room->getWidth()*room->getHeight(), -1);
-			for (i = 0; i < distances.size(); i++) {
-				if (room->getTile(i % width, i / width)->color != NORMAL) {
-					//get distance and store in vector
-					dist = std::abs(party[target_index]->getRMO() % width - i % width) + std::abs(party[target_index]->getRMO() / width - i / width);
-					distances[i] = dist;
-				}
-			}
-			int RMO_target = 0;
-			//get RMO
-			dist = 20;
-			for (i = 0; i < distances.size(); i++) {
-				if (dist > distances[i] && distances[i] != -1) {
-					dist = distances[i];
-					RMO_target = i;
-				}
-			}*/
 			if (RMO_target == -1) {
 				//cannot reach anymob, revert to using manhatten dist
 				RMO_target = getBestManhDist(party[target_index]->getRMO());
 			}
-			//dash if selected tile is in dash zone
-			if (room->getTile(RMO_target%width, RMO_target / width)->color == BLUE) {
+			switch (room->getTile(RMO_target%width, RMO_target / width)->color) {
+			case YELLOW:
+				//move and attack
+				moveMob(RMO_target);
+				break;
+			case BLUE:
+				//move
 				useAction();
+				moveMob(RMO_target);
+				break;
+			case NORMAL:
+				//find closest highlighted tile to target tile
+				int new_target = getBestRMO(RMO_target);
+				useAction();
+				moveMob(new_target);
+				break;
 			}
-			moveMob(RMO_target);
 		}
+		room->clearRange();
 		distance = std::abs((room->getCurrUnit()->getRMO() % width) - party[target_index]->getRMO() % width) + std::abs((room->getCurrUnit()->getRMO() / width) - party[target_index]->getRMO() / width);
 		if (distance == 1 && action) {
 			//attack target
@@ -464,7 +470,9 @@ int Mob::attack(int index) {
 			int target_RMO = getBestRMO(RMO);
 			if (target_RMO == -1) {
 				//cannot reach anymob, revert to using manhatten dist
+				//since you cannot reach, delete action so that it isnt used later even though it doesnt have LOS
 				target_RMO = getBestManhDist(party[target_index]->getRMO());
+				useAction();
 			}
 			/*int closest = 50;
 			int target_RMO, target_dist, dist_to_target;

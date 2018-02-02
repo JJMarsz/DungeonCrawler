@@ -611,6 +611,11 @@ void returnToTown(int index) {
 	//check if game is done
 	if (gParty->getCompleted() >= END_GAME) {
 		state = GAMEWON;
+		delete gParty;
+		gParty = NULL;
+		chars.resetList();
+		quests.resetList();
+		return;
 	}
 	quests.completeQuest(current_quests[quest_index].getTitle());
 	quests.getQuests();

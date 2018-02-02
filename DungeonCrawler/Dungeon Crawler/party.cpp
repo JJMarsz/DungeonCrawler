@@ -523,3 +523,11 @@ int CharList::getIndex(std::string name) {
 	}
 	return -1;
 }
+
+
+void CharList::resetList() {
+	for (int i = 0; i < picked.size(); i++) {
+		picked[i] = false;
+		showed[i] = false;
+	}
+}

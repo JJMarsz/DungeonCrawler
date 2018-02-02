@@ -212,39 +212,47 @@ int main(int argc, char* args[])
 						break;
 					case DUNGEON_ROOM:
 						hover_info = false;
-						for (int i = 0; i < TOTAL_BUTTONS; ++i){
-							Buttons[i].handleEvent(&e, i);
-						}
-						endTurnButton.handleEvent(&e, 0);
-						start_x = (650 - room->getWidth() * 50) / 2;
-						start_y = (600 - room->getHeight() * 50) / 2;
-						SDL_GetMouseState(&x, &y);
-						hover = false;
-						//within bounds
-						if (start_x + room->getWidth() * 50 > x && start_x < x && start_y < y && start_y + room->getHeight() * 50 > y) {
-							if (y % 50 < 25)
-								y -= (start_y % 50);
-							y = y / 50;
-							y = y * 50;
-							if (x % 50 < 25)
-								x -= (start_x % 50);
-							x = x / 50;
-							x = x * 50;
-							if (room->getTile((x / 50) - (start_x / 50), (y / 50) - (start_y / 50))->color != NORMAL)
-								hover = true;
-							if (prev_x != x || prev_y != y) {
+						if (room->getCurrUnit()->getType() == CHARACTER) {
+							for (int i = 0; i < TOTAL_BUTTONS; ++i) {
+								Buttons[i].handleEvent(&e, i);
+							}
+							endTurnButton.handleEvent(&e, 0);
+							start_x = (650 - room->getWidth() * 50) / 2;
+							start_y = (600 - room->getHeight() * 50) / 2;
+							SDL_GetMouseState(&x, &y);
+							hover = false;
+							//within bounds
+							if (start_x + room->getWidth() * 50 > x && start_x < x && start_y < y && start_y + room->getHeight() * 50 > y) {
+								if (y % 50 < 25)
+									y -= (start_y % 50);
+								y = y / 50;
+								y = y * 50;
+								if (x % 50 < 25)
+									x -= (start_x % 50);
+								x = x / 50;
+								x = x * 50;
+								if (room->getTile((x / 50) - (start_x / 50), (y / 50) - (start_y / 50))->color != NORMAL)
+									hover = true;
+								if (prev_x != x || prev_y != y) {
+									MouseDown = false;
+									MouseUp = false;
+									MouseRight = false;
+								}
+								prev_x = x;
+								prev_y = y;
+							}
+							else {
 								MouseDown = false;
 								MouseUp = false;
 								MouseRight = false;
 							}
-							prev_x = x;
-							prev_y = y;
 						}
 						else {
 							MouseDown = false;
 							MouseUp = false;
 							MouseRight = false;
 						}
+						
 						break;
 					case REWARD:
 						acceptrejectButtons[2].handleEvent(&e, 2);
