@@ -109,7 +109,7 @@ int Ability::rollSingleHit(int atk_mod, int dmg_mod, int target_AC) {
 	srand(ms.count());//random seed
 	int i;
 	int roll = 1 + rand() % 20;
-	if (roll + atk_mod <= target_AC) {
+	if (roll + atk_mod + gParty->getProf() <= target_AC) {
 		messageBox.loadFromRenderedText("The " + room->getCurrUnit()->getName() + " missed the attack!", { 255, 255, 255 }, 650);
 		return -1;
 	}

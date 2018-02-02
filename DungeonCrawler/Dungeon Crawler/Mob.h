@@ -25,7 +25,7 @@ public:
 	int getTarget() { return target_index; }
 	void loadAbility(std::string name);
 	std::vector<int> scanRoom();
-	int getBestRMO(bool closest);
+	int getBestRMO(int index);
 private:
 	int target_index;
 	std::vector<int> threat;

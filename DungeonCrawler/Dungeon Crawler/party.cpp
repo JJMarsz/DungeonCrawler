@@ -221,6 +221,7 @@ Party::Party() {
 	peek_max =3;
 	rest = 2;
 	rest_max = 2;
+	prof_bonus = 2;
 }
 
 

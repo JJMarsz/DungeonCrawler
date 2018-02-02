@@ -189,6 +189,8 @@ public:
 	bool checkRest();
 	void resetAbilities();
 	void resetHealth();
+	int getProf() { return prof_bonus; }
+	void upProf() { prof_bonus++; }
 
 private:
 	int numChar;
@@ -206,6 +208,7 @@ private:
 	int scout_max;
 	int rest;
 	int rest_max;
+	int prof_bonus;
 };
 
 /* contains available characters */

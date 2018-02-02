@@ -22,7 +22,7 @@ void loadMobs() {
 	//Spooky skeleton dungeon
 	mobEncMap["Spooky, Scary, Skeletons"] = { 
 		  Mob(11, 14, 4, 1, 4, 2, 1, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
-		, Mob(10, 9, 6, 1, 4, 1, 6, mobClips[RANGED_SKELETON], "Ranged Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
+		, Mob(10, 9, 6, 1, 4, 1, 4, mobClips[RANGED_SKELETON], "Ranged Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
 		, Mob(12, 40, 8, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, BOSS_BOI) 
 	};
 	abilityMap["Ray of Frost 1"] = { 5, 0, 8, 1, 6 };
@@ -311,15 +311,13 @@ int Mob::roll_attack() {
 	return dmg;
 }
 
-int Mob::getBestRMO(bool closest) {
-	std::vector<Unit*> party;
-	fillPartyVec(party);
+int Mob::getBestRMO(int index) {
 	int width = room->getWidth();
-	std::vector<int> distVec(room->getWidth()*room->getHeight(), -1);
+	std::vector<int> distVec(room->getWidth()*room->getHeight(), 1000);
 	std::queue<int> prevQ;
-	distVec[party[target_index]->getRMO()] = 0;
+	distVec[index] = 0;
 	
-	prevQ.push(party[target_index]->getRMO());
+	prevQ.push(index);
 	//this will populate our distance vector with valid true path cost from the target
 	while (!prevQ.empty()) {
 		int x = prevQ.front() % width;
@@ -328,25 +326,25 @@ int Mob::getBestRMO(bool closest) {
 
 		//add all adjacent non in distVec tiles
 		if (x > 0) {
-			if (distVec[x - 1 + y * width] == -1 && (room->getTile(x - 1, y)->type == NOTHING)) {
+			if (distVec[x - 1 + y * width] == 1000 && (room->getTile(x - 1, y)->type == NOTHING)) {
 				distVec[x - 1 + y * width] = distVec[x + y * width] + 1;
 				prevQ.push(x - 1 + y * width);
 			}
 		}
 		if (y > 0) {
-			if (distVec[x + (y - 1) * width] == -1 && (room->getTile(x, y - 1)->type == NOTHING)) {
+			if (distVec[x + (y - 1) * width] == 1000 && (room->getTile(x, y - 1)->type == NOTHING)) {
 				distVec[x + (y - 1) * width] = distVec[x + y * width] + 1;
 				prevQ.push(x + (y - 1) * width);
 			}
 		}
 		if (x < room->getWidth() - 1) {
-			if (distVec[x + 1 + y * width] == -1 && (room->getTile(x + 1, y)->type == NOTHING)) {
+			if (distVec[x + 1 + y * width] == 1000 && (room->getTile(x + 1, y)->type == NOTHING)) {
 				distVec[x + 1 + y * width] = distVec[x + y * width] + 1;
 				prevQ.push(x + 1 + y * width);
 			}
 		}
 		if (y < room->getHeight() - 1) {
-			if (distVec[x + (y + 1) * width] == -1 && (room->getTile(x, y + 1)->type == NOTHING)) {
+			if (distVec[x + (y + 1) * width] == 1000 && (room->getTile(x, y + 1)->type == NOTHING)) {
 				distVec[x + (y + 1) * width] = distVec[x + y * width] + 1;
 				prevQ.push(x + (y + 1) * width);
 			}
@@ -354,14 +352,10 @@ int Mob::getBestRMO(bool closest) {
 	}
 	//now we have a vector filled with distance data
 	//loop through highlighted ones to and return one with smallest distance
-	int closest_dist = 1000;
+	int closest_dist = 999;
 	int RMO_target;
 	for (int i = 0; i < width*room->getHeight(); i++) {
-		if (room->getTile(i%width, i / width)->color != NORMAL && distVec[i] < closest && closest) {
-			closest_dist = distVec[i];
-			RMO_target = i;
-		}
-		else if(room->getTile(i%width, i / width)->color != NORMAL && distVec[i] > closest){
+		if (room->getTile(i%width, i / width)->color != NORMAL && distVec[i] < closest_dist) {
 			closest_dist = distVec[i];
 			RMO_target = i;
 		}
@@ -390,7 +384,7 @@ int Mob::attack(int index) {
 			//move towards target
 			moveButton(0);
 			ab = NOPE;
-			int RMO_target = getBestRMO(true);
+			int RMO_target = getBestRMO(party[target_index]->getRMO());
 			/*std::vector<int> distances(room->getWidth()*room->getHeight(), -1);
 			for (i = 0; i < distances.size(); i++) {
 				if (room->getTile(i % width, i / width)->color != NORMAL) {
@@ -433,47 +427,40 @@ int Mob::attack(int index) {
 		//fails if already in range
 		if(room->getTile(RMO%width, RMO / width)->color != RED) {
 			//move to closest red
-		int closest = 50;
-		int target_RMO, target_dist, dist_to_target;
-		for (i = 0; i < width*room->getHeight(); i++) {
-			int dist_to_RMO = std::abs(i%width - RMO % width) + std::abs(i / width - RMO / width);
-			dist_to_target = std::abs(i%width - party[target_index]->getRMO() % width) + std::abs(i / width - party[target_index]->getRMO() / width);
-			if (room->getTile(i%width, i / width)->color == RED && dist_to_RMO < closest) {
-				target_RMO = i;
-				closest = dist_to_RMO;
-				target_dist = dist_to_target;
-			}
-		}
-		//now we have a target index, clear the range and commence moving
-		room->clearRange();
-		moveButton(0);
-		ab = NOPE;
-		//use highlights to move mob accordingly
-		switch (room->getTile(target_RMO%width, target_RMO / width)->color) {
-		case YELLOW:
-			//move and attack
-			moveMob(target_RMO);
-			break;
-		case BLUE:
-			//move
-			useAction();
-			moveMob(target_RMO);
-			break;
-		case NORMAL:
-			//find closest highlighted tile to target tile
-			int dist_to_tile = 100, new_target;
+			int target_RMO = getBestRMO(RMO);
+			/*int closest = 50;
+			int target_RMO, target_dist, dist_to_target;
 			for (i = 0; i < width*room->getHeight(); i++) {
-				int new_dist = std::abs(i%width - target_RMO % width) + std::abs(i / width - target_RMO / width);
-				if (room->getTile(i%width, i / width)->color != NORMAL && new_dist < dist_to_tile) {
-					dist_to_tile = new_dist;
-					new_target = i;
+				int dist_to_RMO = std::abs(i%width - RMO % width) + std::abs(i / width - RMO / width);
+				dist_to_target = std::abs(i%width - party[target_index]->getRMO() % width) + std::abs(i / width - party[target_index]->getRMO() / width);
+				if (room->getTile(i%width, i / width)->color == RED && dist_to_RMO < closest) {
+					target_RMO = i;
+					closest = dist_to_RMO;
+					target_dist = dist_to_target;
 				}
+			}*/
+			//now we have a target index, clear the range and commence moving
+			room->clearRange();
+			moveButton(0);
+			ab = NOPE;
+			//use highlights to move mob accordingly
+			switch (room->getTile(target_RMO%width, target_RMO / width)->color) {
+			case YELLOW:
+				//move and attack
+				moveMob(target_RMO);
+				break;
+			case BLUE:
+				//move
+				useAction();
+				moveMob(target_RMO);
+				break;
+			case NORMAL:
+				//find closest highlighted tile to target tile
+				int new_target = getBestRMO(target_RMO);
+				useAction();
+				moveMob(new_target);
+				break;
 			}
-			useAction();
-			moveMob(new_target);
-			break;
-		}
-
 		}
 		room->clearRange();
 		if (getAction()) {
