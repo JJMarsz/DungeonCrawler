@@ -43,9 +43,9 @@ void loadMobs() {
 
 	//goblin dungeon
 	mobEncMap["Goblins and Garden Gnomes"] = {
-		Mob(10, 11, 6, 1, 4, 2, 4, mobClips[GOBLIN], "Goblin", -1, 2, 0, 0, -1, -1, 5, mobHandler, ENEMY),
-		Mob(11, 13, 8, 1, 5, 0, 1, mobClips[HOBGOBLIN], "Hobgoblin", 1, 1, 1, 0, 0, -1, 6, mobHandler, ENEMY),
-		Mob(10, 9, 4, 2, 4, 0, 1, mobClips[WORG], "Worg", 3, 1, 1, -2, 0, -1, 8, mobHandler, ENEMY),
+		Mob(10, 14, 6, 1, 4, 2, 4, mobClips[GOBLIN], "Goblin", -1, 2, 0, 0, -1, -1, 5, mobHandler, ENEMY),
+		Mob(11, 16, 8, 1, 5, 0, 1, mobClips[HOBGOBLIN], "Hobgoblin", 1, 1, 1, 0, 0, -1, 6, mobHandler, ENEMY),
+		Mob(10, 12, 4, 2, 4, 0, 1, mobClips[WORG], "Worg", 3, 1, 1, -2, 0, -1, 8, mobHandler, ENEMY),
 		Mob(13, 50, 6, 1, 3, 1, 1, mobClips[BUGBEAR], "Bugbear", 3, 2, 2, 0, 1, 0, 6, bugBearHandler, ENEMY),
 	};
 	abilityMap["Morningstar"] = { 4, 3, 8, 1, 1 };
@@ -54,8 +54,8 @@ void loadMobs() {
 	//orc dungeon
 	mobEncMap["Mines of Dorimir"] = {
 		Mob(11, 15, 6, 1, 5, 3, 3, mobClips[ORC], "Orc", 3, 1, 3, -2, 0, 0, 6, mobHandler, ENEMY),
-		Mob(12, 22, 8, 1, 5, 1, 1, mobClips[OROG], "Orog", 4, 1, 4, 1, 0, 1, 6, mobHandler, ENEMY),
-		Mob(11, 28, 10, 1, 5, 1, 1, mobClips[OGRILLON], "Ogrillon", 3, 0, 2, -2, -1, 0, 6, mobHandler, ENEMY),
+		Mob(12, 22, 8, 1, 3, 1, 1, mobClips[OROG], "Orog", 4, 1, 4, 1, 0, 1, 6, mobHandler, ENEMY),
+		Mob(11, 28, 8, 1, 3, 1, 1, mobClips[OGRILLON], "Ogrillon", 3, 0, 2, -2, -1, 0, 6, mobHandler, ENEMY),
 		Mob(13, 52, 12, 1, 5, 1, 1, mobClips[WAR_CHIEF], "Orc War Chief", 4, 1, 4, 0, 0, 3, 6, warChiefHandler, ENEMY)
 	};
 	abilityMap["Greataxe 1"] = { 5, 2, 12, 1, 1 };
@@ -108,9 +108,14 @@ SDL_Rect Mob::getIcon50() {
 }
 
 void Mob::updateThreat() {
+
 	//get distance to all 3 party members
 	std::vector<Unit*> party;
 	int i;
+	//reset threat vec
+	for (i = 0; i < threat.size(); i++) {
+		threat[i] = 0;
+	}
 	int width = room->getWidth();
 	fillPartyVec(party);
 	int mobx = getRMO() % width;
@@ -118,6 +123,10 @@ void Mob::updateThreat() {
 	int x, y;
 	double slice, diff, ratio;
 	int health_ratio;
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
 	//get true distance, unreachable is set to 1000
 	std::vector<int> dist = scanRoom();
 
@@ -127,7 +136,7 @@ void Mob::updateThreat() {
 		y = party[i]->getRMO() / width;
 		//make unreachable targets very unthreatening
 		if (dist[i] == 1000) {
-			threat[i] == -50;
+			threat[i] = -50;
 		}
 		else if(dist[i] > 16)
 			threat[i] += 1;
@@ -183,19 +192,13 @@ void Mob::updateThreat() {
 		if (threat[i] > highest_threat)
 			highest_threat = threat[i];
 	}
-	//put highest threat into vec
-	for (i = 0; i < party.size(); i++) {
-		if (threat[i] == highest_threat)
-			target.push_back(i);
-	}
-	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
-		std::chrono::system_clock::now().time_since_epoch()
-		);
-	srand(ms.count());//random seed
-	target_index = target[rand() % target.size()];
-	//reset threat vec
-	for (i = 0; i < threat.size(); i++) {
-		threat[i] = 0;
+	if (highest_threat != 0) {
+		//put highest threat into vec
+		for (i = 0; i < party.size(); i++) {
+			if (threat[i] == highest_threat)
+				target.push_back(i);
+		}
+		target_index = target[rand() % target.size()];
 	}
 }
 
@@ -238,7 +241,8 @@ std::vector<int> Mob::scanRoom() {
 		if (count == party.size())
 			return partyDistVec;
 		prevQ.pop();
-
+		if (room->getTile(x, y)->type == CHARACTER)
+			continue;
 		//add all adjacent non in distVec tiles
 		if (x > 0) {
 			if (distVec[x - 1 + y * width] == -1 && (room->getTile(x - 1,y)->type == NOTHING || room->getTile(x - 1, y)->type == CHARACTER)) {
@@ -264,6 +268,9 @@ std::vector<int> Mob::scanRoom() {
 				prevQ.push(x + (y + 1) * width);
 			}
 		}
+	}
+	if (partyDistVec[0] == 1000 && partyDistVec[1] == 1000) {
+		//while (1);
 	}
 	return partyDistVec;
 }
@@ -321,6 +328,18 @@ int Mob::roll_attack() {
 	return dmg;
 }
 
+int Mob::getBestManhDist(int index) {
+	int width = room->getWidth();
+	int best_RMO = 10000;
+	for (int i = 0; i < width*room->getHeight(); i++) {
+		if (std::abs(index%width - i % width) + std::abs(index / width - i / width) < std::abs(index%width - best_RMO % width) + std::abs(index / width - best_RMO / width)
+			&& (room->getTile(i%width, i/width)->type == NOTHING))
+			best_RMO = i;
+	}
+	return best_RMO;
+
+}
+
 int Mob::getBestRMO(int index) {
 	int width = room->getWidth();
 	std::vector<int> distVec(room->getWidth()*room->getHeight(), 1000);
@@ -364,9 +383,6 @@ int Mob::getBestRMO(int index) {
 	//use a priorityqueue setup to get to closest tile
 	int closest_dist = 999;
 	int RMO_target = -1;
-	//std::priority_queue<int> pq;
-	//std::vector<bool> visited(width*room->getHeight(), false);
-	//pq.push()
 	for (int i = 0; i < width*room->getHeight(); i++) {
 		//uses an A* like hueristic to make sure mob choose closest tile to target that uses the least amount of movement
 		if (room->getTile(i%width, i / width)->color != NORMAL && distVec[i] <= closest_dist) {
@@ -416,6 +432,10 @@ int Mob::attack(int index) {
 					RMO_target = i;
 				}
 			}*/
+			if (RMO_target == -1) {
+				//cannot reach anymob, revert to using manhatten dist
+				RMO_target = getBestManhDist(party[target_index]->getRMO());
+			}
 			//dash if selected tile is in dash zone
 			if (room->getTile(RMO_target%width, RMO_target / width)->color == BLUE) {
 				useAction();
@@ -442,6 +462,10 @@ int Mob::attack(int index) {
 		if(room->getTile(RMO%width, RMO / width)->color != RED) {
 			//move to closest red
 			int target_RMO = getBestRMO(RMO);
+			if (target_RMO == -1) {
+				//cannot reach anymob, revert to using manhatten dist
+				target_RMO = getBestManhDist(party[target_index]->getRMO());
+			}
 			/*int closest = 50;
 			int target_RMO, target_dist, dist_to_target;
 			for (i = 0; i < width*room->getHeight(); i++) {

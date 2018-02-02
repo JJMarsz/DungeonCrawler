@@ -24,9 +24,11 @@ public:
 	void clearAttackThreat(int i){threat[i] = 0;}
 	int getTarget() { return target_index; }
 	void loadAbility(std::string name);
+
+private:
 	std::vector<int> scanRoom();
 	int getBestRMO(int index);
-private:
+	int getBestManhDist(int index);
 	int target_index;
 	std::vector<int> threat;
 	SDL_Rect icon_50;
