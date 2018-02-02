@@ -55,11 +55,12 @@ enum ChoiceIndex {
 
 //even though there will be custom mob encounters per each quest
 //keep them organized in one list and let quest index into them
-#define NUM_MOB_ENC		3
+#define NUM_MOB_ENC		4
 enum MobIndex {
 	SKELETONS,
 	ZOMBIES,
-	GOBLINS
+	GOBLINS,
+	ORCS
 };
 
 class EncounterList {
@@ -112,4 +113,5 @@ void testCha();
 void skeleton();
 void zombie();
 void goblin();
+void orc();
 #endif

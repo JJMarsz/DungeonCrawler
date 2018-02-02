@@ -24,7 +24,7 @@ void loadMobs() {
 		  Mob(11, 16, 4, 1, 4, 2, 1, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
 		, Mob(10, 13, 6, 1, 4, 1, 4, mobClips[RANGED_SKELETON], "Ranged Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
 		, Mob(10, 15, 4, 2, 5, 2, 1, mobClips[HORSE_SKELETON], "Skeleton Warhorse", 4, 1, 2, -4, -1, -3, 8, mobHandler, ENEMY)
-		, Mob(12, 50, 8, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, ENEMY) 
+		, Mob(13, 50, 8, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, ENEMY) 
 	};
 	abilityMap["Ray of Frost 1"] = { 5, 0, 8, 1, 6 };
 	abilityMap["Bone Naga Bite"] = { 5, 3, 4, 2, 1 };
@@ -35,7 +35,7 @@ void loadMobs() {
 		Mob(8, 20, 6, 1, 3, 1, 1, mobClips[ZOMBIE], "Zombie", 1, -2, 3, -4, -2, -3, 4, mobHandler, ENEMY),
 		Mob(8, 15, 4, 1, 3, 1, 1, mobClips[RUNNER], "Runner", 1, -2, 3, -4, -2, -3, 7, mobHandler, ENEMY),
 		Mob(8, 28, 8, 1, 4, 2, 1, mobClips[BLOATED], "Bloated Zombie", 4, -2, 4, -4, -2, -3, 3, mobHandler, ENEMY),
-		Mob(11, 55, 4, 1, 3, 1, 1, mobClips[WIGHT], "Wight", 2, 2, 3, 0, 1, 2, 6, wightHandler, ENEMY),
+		Mob(12, 58, 4, 1, 3, 1, 1, mobClips[WIGHT], "Wight", 2, 2, 3, 0, 1, 2, 6, wightHandler, ENEMY),
 	};
 	abilityMap["Longbow"] = { 4, 2, 8, 1, 6 };
 	abilityMap["Longsword"] = { 4, 2, 10, 1, 1 };
@@ -46,12 +46,20 @@ void loadMobs() {
 		Mob(10, 11, 6, 1, 4, 2, 4, mobClips[GOBLIN], "Goblin", -1, 2, 0, 0, -1, -1, 5, mobHandler, ENEMY),
 		Mob(11, 13, 8, 1, 5, 0, 1, mobClips[HOBGOBLIN], "Hobgoblin", 1, 1, 1, 0, 0, -1, 6, mobHandler, ENEMY),
 		Mob(10, 9, 4, 2, 4, 0, 1, mobClips[WORG], "Worg", 3, 1, 1, -2, 0, -1, 8, mobHandler, ENEMY),
-		Mob(12, 50, 6, 1, 3, 1, 1, mobClips[BUGBEAR], "Bugbear", 3, 2, 2, 0, 1, 0, 6, bugBearHandler, ENEMY),
+		Mob(13, 50, 6, 1, 3, 1, 1, mobClips[BUGBEAR], "Bugbear", 3, 2, 2, 0, 1, 0, 6, bugBearHandler, ENEMY),
 	};
 	abilityMap["Morningstar"] = { 4, 3, 8, 1, 1 };
 	abilityMap["Javelin"] = { 4, 2, 6, 2, 6 };
 
-	//beast dungeon
+	//orc dungeon
+	mobEncMap["Mines of Dorimir"] = {
+		Mob(11, 15, 6, 1, 5, 3, 3, mobClips[ORC], "Orc", 3, 1, 3, -2, 0, 0, 6, mobHandler, ENEMY),
+		Mob(12, 22, 8, 1, 5, 1, 1, mobClips[OROG], "Orog", 4, 1, 4, 1, 0, 1, 6, mobHandler, ENEMY),
+		Mob(11, 28, 10, 1, 5, 1, 1, mobClips[OGRILLON], "Ogrillon", 3, 0, 2, -2, -1, 0, 6, mobHandler, ENEMY),
+		Mob(13, 52, 12, 1, 5, 1, 1, mobClips[WAR_CHIEF], "Orc War Chief", 4, 1, 4, 0, 0, 3, 6, warChiefHandler, ENEMY)
+	};
+	abilityMap["Greataxe 1"] = { 5, 2, 12, 1, 1 };
+	abilityMap["Greataxe 2"] = { 3, 3, 10, 1, 1 };
 	
 }
 
@@ -362,8 +370,8 @@ int Mob::getBestRMO(int index) {
 	for (int i = 0; i < width*room->getHeight(); i++) {
 		//uses an A* like hueristic to make sure mob choose closest tile to target that uses the least amount of movement
 		if (room->getTile(i%width, i / width)->color != NORMAL && distVec[i] <= closest_dist) {
-			closest_dist = distVec[i];
 			RMO_target = i;
+			closest_dist = distVec[i];
 		}
 	}
 	return RMO_target;
@@ -732,6 +740,97 @@ void bugBearHandler() {
 	else {
 		//stage 1
 		mob->loadAbility("Javelin");
+		mob->attack(0);
+
+	}
+	endTurnHandler(0);
+}
+
+void warChiefHandler() {
+	//3 staged
+	//stage 1 charge into battle
+	//stage 2 2/3 hp rage, start spinning
+	//stage 3 1/3 hp extra attack
+
+	int i, roll;
+	Unit* mob = room->getCurrUnit();
+	mob->updateThreat();
+	int target_index = mob->getTarget();
+	int width = room->getWidth();
+	std::vector<Unit*> party;
+	fillPartyVec(party);
+	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
+		std::chrono::system_clock::now().time_since_epoch()
+		);
+	srand(ms.count());//random seed
+
+	if (mob->getHP() < mob->getMaxHP() / 3) {
+		//stage 3 attacks twice
+		mob->loadAbility("Greataxe 2");
+		messageBox.loadFromRenderedText("The War Chief is raging! He attacks with great speed!", { 255, 255, 255 }, 650);
+		drawRoom();
+		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+		SDL_RenderPresent(gRenderer);
+		Sleep(1000);
+		mob->attack(0);
+		mob->resetTurn();
+		mob->updateThreat();
+		target_index = mob->getTarget();
+		mob->attack(0);
+		
+	}
+	else if (mob->getHP() < (2*mob->getMaxHP()) / 3) {
+		//stage 2 spinint i, roll;
+		std::vector<Unit*> adj;
+		for (i = 0; i < party.size(); i++) {
+			int x = party[i]->getRMO() % width;
+			int y = party[i]->getRMO() / width;
+			if (x > 0) {
+				if (room->getTile(x - 1, y)->type == ENEMY)
+					adj.push_back(party[i]);
+			}
+			if (y > 0) {
+				if (room->getTile(x, y - 1)->type == ENEMY)
+					adj.push_back(party[i]);
+			}
+			if (x < room->getWidth() - 1) {
+				if (room->getTile(x + 1, y)->type == ENEMY)
+					adj.push_back(party[i]);
+			}
+
+			if (y < room->getHeight() - 1) {
+				if (room->getTile(x, y + 1)->type == ENEMY)
+					adj.push_back(party[i]);
+			}
+		}
+		messageBox.loadFromRenderedText("The War Chief furiously spins!", { 255, 255, 255 }, 650);
+		drawRoom();
+		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+		SDL_RenderPresent(gRenderer);
+		Sleep(1000);
+		int dmg = 4 + rand() % 10;
+		for (i = 0; i < adj.size(); i++) {
+			roll = adj[i]->getDex() + 1 + rand() % 20;
+			if (roll > 13) {
+				messageBox.loadFromRenderedText("The War Chief misses the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+			}
+			else if (roll > 10) {
+				messageBox.loadFromRenderedText("The War Chief grazes the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+				adj[i]->damage(dmg / 2);
+			}
+			else {
+				messageBox.loadFromRenderedText("The War Chief hits the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+				adj[i]->damage(dmg);
+			}
+			drawRoom();
+			messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+			SDL_RenderPresent(gRenderer);
+			Sleep(500);
+		}
+	}
+	else {
+		//stage 1 charge at target
+		mob->loadAbility("Greataxe 1");
 		mob->attack(0);
 
 	}

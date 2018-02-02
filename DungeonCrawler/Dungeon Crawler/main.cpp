@@ -108,7 +108,7 @@ int main(int argc, char* args[])
 						}
 						break;
 					case TOWN_QUEST_BOARD:
-						for (i = 0; i < 1; ++i) {
+						for (i = 0; i < 3; ++i) {
 							questButtons[i].handleEvent(&e, i);
 						}
 						townButtons[0].handleEvent(&e, 0);

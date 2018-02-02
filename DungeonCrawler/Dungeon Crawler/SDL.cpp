@@ -774,6 +774,26 @@ bool loadMedia()
 		mobClips[BUGBEAR].w = 50;
 		mobClips[BUGBEAR].h = 50;
 
+		mobClips[ORC].x = ORC_X;
+		mobClips[ORC].y = ORC_Y;
+		mobClips[ORC].w = 50;
+		mobClips[ORC].h = 50;
+
+		mobClips[OROG].x = OROG_X;
+		mobClips[OROG].y = ORC_Y;
+		mobClips[OROG].w = 50;
+		mobClips[OROG].h = 50;
+
+		mobClips[OGRILLON].x = OGRILLON_X;
+		mobClips[OGRILLON].y = ORC_Y;
+		mobClips[OGRILLON].w = 50;
+		mobClips[OGRILLON].h = 50;
+
+		mobClips[WAR_CHIEF].x = CHIEF_X;
+		mobClips[WAR_CHIEF].y = ORC_Y;
+		mobClips[WAR_CHIEF].w = 50;
+		mobClips[WAR_CHIEF].h = 50;
+
 	}
 	if (!mobNum.loadFromFile("textures/mobnum.png")) {
 		printf("Failed to load texture image!\n");
@@ -1480,9 +1500,9 @@ void drawQuestBoard() {
 	SDL_RenderFillRect(gRenderer, &barRect);
 
 	questboard.render(0, 0, NULL);
-	/*for (int i = 0; i < 3; i++){
-		questButtons[i].render();*/
-	questButtons[0].render();
+	for (int i = 0; i < 3; i++) {
+		questButtons[i].render();
+	}
 }
 
 void drawShop() {

@@ -52,8 +52,8 @@ QuestList::QuestList() {
 	// 3
 	// 4
 	easyQuestIndex = 0;
-	medQuestIndex = 3;//6
-	hardQuestIndex = 2;//9
+	medQuestIndex = 4;//6
+	hardQuestIndex = 4;//9
 	list.resize(NUM_QUEST);
 	list[0].q =
 	{ "Spooky, Scary, Skeletons",
@@ -85,6 +85,16 @@ QuestList::QuestList() {
 	list[2].q.loadMob(GOBLINS);
 	list[2].complete = false;
 	list[2].show = false;
+	list[3].q =
+	{ "Mines of Dorimir",
+		"The mines was taken over by Orcs! We need the profit from the mines otherwise the town will go broke! Also, Orcs are scary...",
+		100,
+		1,
+		EASY
+	};
+	list[3].q.loadMob(ORCS);
+	list[3].complete = false;
+	list[3].show = false;
 	/*list[3].q =
 	{ "Tyranno-WHAT?",
 		"The town has gone jurassic! We need someone to clear out these dinosaurs!",

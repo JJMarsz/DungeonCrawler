@@ -46,5 +46,6 @@ void mobHandler();
 void boneNagaHandler();
 void wightHandler();
 void bugBearHandler();
+void warChiefHandler();
 #endif
 
