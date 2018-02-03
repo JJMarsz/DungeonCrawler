@@ -21,13 +21,13 @@ void loadMobs() {
 
 	//Spooky skeleton dungeon
 	mobEncMap["Spooky, Scary, Skeletons"] = { 
-		  Mob(11, 16, 4, 1, 4, 2, 1, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
-		, Mob(10, 13, 6, 1, 4, 1, 4, mobClips[RANGED_SKELETON], "Ranged Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
-		, Mob(10, 15, 4, 2, 5, 2, 1, mobClips[HORSE_SKELETON], "Skeleton Warhorse", 4, 1, 2, -4, -1, -3, 8, mobHandler, ENEMY)
-		, Mob(13, 50, 8, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, ENEMY) 
+		  Mob(11, 18, 6, 1, 4, 2, 1, mobClips[SKELETON], "Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
+		, Mob(10, 15, 8, 1, 4, 1, 4, mobClips[RANGED_SKELETON], "Ranged Skeleton", 0, 2, 2, -2, -2, -3, 6, mobHandler, ENEMY)
+		, Mob(10, 15, 6, 2, 5, 2, 1, mobClips[HORSE_SKELETON], "Skeleton Warhorse", 4, 1, 2, -4, -1, -3, 8, mobHandler, ENEMY)
+		, Mob(13, 50, 10, 1, 5, 3, 8, mobClips[BONENAGA], "Bone Naga", 2, 3, 1, 2, 2, 3, 6, boneNagaHandler, ENEMY) 
 	};
-	abilityMap["Ray of Frost 1"] = { 5, 0, 8, 1, 6 };
-	abilityMap["Bone Naga Bite"] = { 5, 3, 4, 2, 1 };
+	abilityMap["Ray of Frost 1"] = { 5, 0, 10, 1, 6 };
+	abilityMap["Bone Naga Bite"] = { 5, 4, 4, 2, 1 };
 
 
 	//graveyard dungeon
@@ -37,9 +37,9 @@ void loadMobs() {
 		Mob(8, 28, 8, 1, 4, 2, 1, mobClips[BLOATED], "Bloated Zombie", 4, -2, 4, -4, -2, -3, 3, mobHandler, ENEMY),
 		Mob(12, 58, 4, 1, 3, 1, 1, mobClips[WIGHT], "Wight", 2, 2, 3, 0, 1, 2, 6, wightHandler, ENEMY),
 	};
-	abilityMap["Longbow"] = { 4, 2, 8, 1, 6 };
-	abilityMap["Longsword"] = { 4, 2, 10, 1, 1 };
-	abilityMap["Lifedrain"] = { 4, 2, 6, 1, 1 };
+	abilityMap["Longbow"] = { 5, 2, 8, 1, 6 };
+	abilityMap["Longsword"] = { 5, 2, 10, 1, 1 };
+	abilityMap["Lifedrain"] = { 5, 3, 6, 1, 1 };
 
 	//goblin dungeon
 	mobEncMap["Goblins and Garden Gnomes"] = {
@@ -54,8 +54,8 @@ void loadMobs() {
 	//orc dungeon
 	mobEncMap["Mines of Dorimir"] = {
 		Mob(11, 15, 6, 1, 5, 3, 3, mobClips[ORC], "Orc", 3, 1, 3, -2, 0, 0, 6, mobHandler, ENEMY),
-		Mob(12, 22, 8, 1, 3, 1, 1, mobClips[OROG], "Orog", 4, 1, 4, 1, 0, 1, 6, mobHandler, ENEMY),
-		Mob(11, 28, 8, 1, 3, 1, 1, mobClips[OGRILLON], "Ogrillon", 3, 0, 2, -2, -1, 0, 6, mobHandler, ENEMY),
+		Mob(12, 18, 8, 1, 3, 1, 1, mobClips[OROG], "Orog", 4, 1, 4, 1, 0, 1, 6, mobHandler, ENEMY),
+		Mob(11, 24, 8, 1, 3, 1, 1, mobClips[OGRILLON], "Ogrillon", 3, 0, 2, -2, -1, 0, 6, mobHandler, ENEMY),
 		Mob(13, 52, 12, 1, 5, 1, 1, mobClips[WAR_CHIEF], "Orc War Chief", 4, 1, 4, 0, 0, 3, 6, warChiefHandler, ENEMY)
 	};
 	abilityMap["Greataxe 1"] = { 5, 2, 12, 1, 1 };
@@ -758,46 +758,53 @@ void bugBearHandler() {
 			int x = party[i]->getRMO() % width;
 			int y = party[i]->getRMO() / width;
 			if (x > 0) {
-				if(room->getTile(x-1, y)->type == ENEMY)
+				if(room->getTile(x-1, y)->type == CHARACTER)
 					adj.push_back(party[i]);
 			}
 			if (y > 0) {
-				if (room->getTile(x, y - 1)->type == ENEMY) 
+				if (room->getTile(x, y - 1)->type == CHARACTER) 
 					adj.push_back(party[i]);
 			}
 			if (x < room->getWidth() - 1) {
-				if (room->getTile(x + 1, y)->type == ENEMY) 
+				if (room->getTile(x + 1, y)->type == CHARACTER) 
 					adj.push_back(party[i]);
 			}
 
 			if (y < room->getHeight() - 1) {
-				if (room->getTile(x, y + 1)->type == ENEMY) 
+				if (room->getTile(x, y + 1)->type == CHARACTER) 
 					adj.push_back(party[i]);
 			}
 		}
-		messageBox.loadFromRenderedText("The Bugbear furiously spins!", { 255, 255, 255 }, 650);
-		drawRoom();
-		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
-		SDL_RenderPresent(gRenderer);
-		Sleep(1000);
-		int dmg = 4 + rand() % 10;
-		for (i = 0; i < adj.size(); i++) {
-			roll = adj[i]->getDex() + 1 + rand() % 20;
-			if (roll > 13) {
-				messageBox.loadFromRenderedText("The Bugbear misses the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
-			}
-			else if (roll > 10) {
-				messageBox.loadFromRenderedText("The Bugbear grazes the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
-				adj[i]->damage(dmg / 2);
-			}
-			else {
-				messageBox.loadFromRenderedText("The Bugbear hits the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
-				adj[i]->damage(dmg);
-			}
+		if (adj.size() != 0) {
+			messageBox.loadFromRenderedText("The Bugbear furiously spins!", { 255, 255, 255 }, 650);
 			drawRoom();
 			messageBox.render((650 - messageBox.getWidth()) / 2, 614);
 			SDL_RenderPresent(gRenderer);
-			Sleep(500);
+			Sleep(1000);
+			int dmg = 4 + rand() % 10;
+			for (i = 0; i < adj.size(); i++) {
+				roll = adj[i]->getDex() + 1 + rand() % 20;
+				if (roll > 13) {
+					messageBox.loadFromRenderedText("The Bugbear misses the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+				}
+				else if (roll > 10) {
+					messageBox.loadFromRenderedText("The Bugbear grazes the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+					adj[i]->damage(dmg / 2);
+				}
+				else {
+					messageBox.loadFromRenderedText("The Bugbear hits the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+					adj[i]->damage(dmg);
+				}
+				drawRoom();
+				messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+				SDL_RenderPresent(gRenderer);
+				Sleep(500);
+			}
+		}
+		else {
+			//revert to prev stage since no one is near
+			mob->loadAbility("Morningstar");
+			mob->attack(0);
 		}
 	}
 	else if (std::abs(mob->getRMO() % width - party[target_index]->getRMO() % width) + std::abs(mob->getRMO() / width - party[target_index]->getRMO() / width) < mob->getMove() - 3) {

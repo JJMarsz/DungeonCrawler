@@ -563,6 +563,8 @@ bool loadMedia()
 		success = false;
 	}
 	else {
+
+		dungeonButtonSST.setBlendMode(SDL_BLENDMODE_BLEND);
 		for (i = 0; i < BUTTON_SPRITE_TOTAL; i++) {
 			clips[i].y = i * 46;
 			clips[i].x = 0;
@@ -1444,7 +1446,12 @@ void drawDungeonMenu() {
 		if (health_ratio > 10)
 			health_ratio = 10;
 		healthboxSST.render(70 + 120*i, SCREEN_HEIGHT - 60, &healthBoxClips[health_ratio]);
+		if ((ab == PEEK && (i == 2)) || (ab == SCOUT && (i == 1)))
+			dungeonButtonSST.setColor(50, 200, 255);
 		dungeonButtons[i].render();
+		dungeonButtonSST.setColor(255, 255, 255);
+
+		
 		
 	}
 	multiplierSST.render(SCREEN_WIDTH - 225, SCREEN_HEIGHT - 65, &multiplyClips[gParty->getRest()]);
