@@ -41,7 +41,7 @@ public:
 	void useBAction() { bAction = false; }
 	bool getBAction() { return bAction; }
 
-	void heal(int heal){ health += heal; if (health > max_health) { health = max_health; } }
+	void heal(int heal) { health += heal; if (health > max_health) { health = max_health; } alive = true; }
 	void damage(int dmg);
 	bool isAlive() { return alive; }
 	void setAlive() { alive = true; }

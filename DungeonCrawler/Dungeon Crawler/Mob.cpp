@@ -335,11 +335,47 @@ int Mob::roll_attack() {
 
 int Mob::getBestManhDist(int index) {
 	int width = room->getWidth();
-	int best_RMO = 10000;
-	for (int i = 0; i < width*room->getHeight(); i++) {
-		if (std::abs(index%width - i % width) + std::abs(index / width - i / width) < std::abs(index%width - best_RMO % width) + std::abs(index / width - best_RMO / width)
-			&& (room->getTile(i%width, i/width)->type == NOTHING))
-			best_RMO = i;
+	std::queue<int> prevQ;
+	std::vector<int> distVec(width*room->getHeight(), 1000);
+	distVec[RMO] = 0;
+	prevQ.push(RMO);
+	int best = 100000;
+	int best_RMO = -1;
+	//this will populate our distance vector with valid true path cost from the target
+	while (!prevQ.empty()) {
+		int x = prevQ.front() % width;
+		int y = prevQ.front() / width;
+		int dist = std::abs(x - index%width) + std::abs(y - index / width);
+		if (dist < best) {
+			best_RMO = prevQ.front();
+			best = dist;
+		}
+		prevQ.pop();
+		//add all adjacent non in distVec tiles
+		if (x > 0) {
+			if ((room->getTile(x - 1, y)->type == NOTHING)) {
+				distVec[x - 1 + y * width] = distVec[x + y * width] + 1;
+				prevQ.push(x - 1 + y * width);
+			}
+		}
+		if (y > 0) {
+			if (distVec[x + (y - 1) * width] == 1000 && (room->getTile(x, y - 1)->type == NOTHING)) {
+				distVec[x + (y - 1) * width] = distVec[x + y * width] + 1;
+				prevQ.push(x + (y - 1) * width);
+			}
+		}
+		if (x < room->getWidth() - 1) {
+			if (distVec[x + 1 + y * width] == 1000 && (room->getTile(x + 1, y)->type == NOTHING)) {
+				distVec[x + 1 + y * width] = distVec[x + y * width] + 1;
+				prevQ.push(x + 1 + y * width);
+			}
+		}
+		if (y < room->getHeight() - 1) {
+			if (distVec[x + (y + 1) * width] == 1000 && (room->getTile(x, y + 1)->type == NOTHING)) {
+				distVec[x + (y + 1) * width] = distVec[x + y * width] + 1;
+				prevQ.push(x + (y + 1) * width);
+			}
+		}
 	}
 	return best_RMO;
 
@@ -818,46 +854,53 @@ void warChiefHandler() {
 			int x = party[i]->getRMO() % width;
 			int y = party[i]->getRMO() / width;
 			if (x > 0) {
-				if (room->getTile(x - 1, y)->type == ENEMY)
+				if (room->getTile(x - 1, y)->type == CHARACTER)
 					adj.push_back(party[i]);
 			}
 			if (y > 0) {
-				if (room->getTile(x, y - 1)->type == ENEMY)
+				if (room->getTile(x, y - 1)->type == CHARACTER)
 					adj.push_back(party[i]);
 			}
 			if (x < room->getWidth() - 1) {
-				if (room->getTile(x + 1, y)->type == ENEMY)
+				if (room->getTile(x + 1, y)->type == CHARACTER)
 					adj.push_back(party[i]);
 			}
 
 			if (y < room->getHeight() - 1) {
-				if (room->getTile(x, y + 1)->type == ENEMY)
+				if (room->getTile(x, y + 1)->type == CHARACTER)
 					adj.push_back(party[i]);
 			}
 		}
-		messageBox.loadFromRenderedText("The War Chief furiously spins!", { 255, 255, 255 }, 650);
-		drawRoom();
-		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
-		SDL_RenderPresent(gRenderer);
-		Sleep(1000);
-		int dmg = 4 + rand() % 10;
-		for (i = 0; i < adj.size(); i++) {
-			roll = adj[i]->getDex() + 1 + rand() % 20;
-			if (roll > 13) {
-				messageBox.loadFromRenderedText("The War Chief misses the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
-			}
-			else if (roll > 10) {
-				messageBox.loadFromRenderedText("The War Chief grazes the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
-				adj[i]->damage(dmg / 2);
-			}
-			else {
-				messageBox.loadFromRenderedText("The War Chief hits the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
-				adj[i]->damage(dmg);
-			}
+		if (adj.size() != 0) {
+			messageBox.loadFromRenderedText("The War Chief furiously spins!", { 255, 255, 255 }, 650);
 			drawRoom();
 			messageBox.render((650 - messageBox.getWidth()) / 2, 614);
 			SDL_RenderPresent(gRenderer);
-			Sleep(500);
+			Sleep(1000);
+			int dmg = 4 + rand() % 10;
+			for (i = 0; i < adj.size(); i++) {
+				roll = adj[i]->getDex() + 1 + rand() % 20;
+				if (roll > 13) {
+					messageBox.loadFromRenderedText("The War Chief misses the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+				}
+				else if (roll > 10) {
+					messageBox.loadFromRenderedText("The War Chief grazes the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+					adj[i]->damage(dmg / 2);
+				}
+				else {
+					messageBox.loadFromRenderedText("The War Chief hits the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+					adj[i]->damage(dmg);
+				}
+				drawRoom();
+				messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+				SDL_RenderPresent(gRenderer);
+				Sleep(500);
+			}
+		}
+		else {
+			//revert to stage 1 if no chars
+			mob->loadAbility("Greataxe 1");
+			mob->attack(0);
 		}
 	}
 	else {
