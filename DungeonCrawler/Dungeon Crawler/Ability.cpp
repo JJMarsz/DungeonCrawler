@@ -207,7 +207,16 @@ void greatAxeClick(int index) {
 	if (target == NULL)
 		return;
 	Unit* curr = room->getCurrUnit();
-	int dmg = curr->getAb("Greataxe", ACTION)->rollSingleHit(curr->getStr(), curr->getStr(), target->getAC());
+	//custom barb passive, less hp, bonus to atk and dmg
+	int bonus = 0;
+	int HP_diff = curr->getMaxHP() - curr->getHP();
+	int slice = curr->getMaxHP() / curr->getOffset();
+	for (int i = 1; i < curr->getOffset(); i++) {
+		if (HP_diff >= slice * i) {
+			bonus++;
+		}
+	}
+	int dmg = curr->getAb("Greataxe", ACTION)->rollSingleHit(curr->getStr() + bonus, curr->getStr() + bonus, target->getAC());
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}
@@ -279,7 +288,11 @@ void bowClick(int index) {
 	if (target == NULL)
 		return;
 	Unit* curr = room->getCurrUnit();
-	int dmg = curr->getAb("Bow", ACTION)->rollSingleHit(curr->getDex(), curr->getDex(), target->getAC());
+	int width = room->getWidth();
+	//custom ranger ability
+	//add offset and distance away to atk mod
+	int atk_mod = curr->getDex() + curr->getOffset() + std::abs(curr->getRMO() % width - target->getRMO() % width) + std::abs(curr->getRMO() / width - target->getRMO() / width);
+	int dmg = curr->getAb("Bow", ACTION)->rollSingleHit(atk_mod, curr->getDex(), target->getAC());
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}

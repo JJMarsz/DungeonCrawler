@@ -33,6 +33,8 @@ public:
 	int getAC() { return AC; }
 	int getMove() { return move; }
 	std::string getName() { return name; }
+	int getOffset() { return offset; }
+	void setOffset(int o) { offset = o; }
 
 	void useAction() { action = false; }
 	bool getAction() { return action; }
@@ -87,6 +89,9 @@ protected:
 	//actions
 	bool action;
 	bool bAction;
+
+	//ability things
+	int offset;
 
 };
 

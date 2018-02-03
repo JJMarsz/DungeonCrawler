@@ -107,6 +107,7 @@ Character::Character(std::string name_, int str_, int dex_, int con_, int intel_
 	AC = AC_;
 	xp = 0;
 	type = CHARACTER;
+	offset = -3;
 }
 
 Character::Character(){}
@@ -408,12 +409,13 @@ void CharList::loadSprites() {
 	//Barb
 	picked[1] = false;
 	showed[1] = false;
+	charList[1].setOffset(3);
 	charList[1].setBigClip(charClips[1]);
 	charList[1].setIcon100(charClips[1 + NUM_CHAR]);
 	charList[1].setIcon50(charClips[1 + NUM_CHAR*2]);
 	charList[1].setIcon25(charClips[1 + NUM_CHAR * 3]);
 	charList[1].setInfo(
-		"A relentless warrior whose blinding rage can demolish any foe!"
+		"A relentless warrior whose blinding rage can demolish any foe!\n\nBLOOD LUST: The Barbarian grows stronger and more accurate the more damaged he becomes."
 	);
 
 	//Paladin
@@ -435,18 +437,19 @@ void CharList::loadSprites() {
 	charList[3].setIcon50(charClips[3 + NUM_CHAR*2]);
 	charList[3].setIcon25(charClips[3 + NUM_CHAR * 3]);
 	charList[3].setInfo(
-		"A sneaky but deadly companion who can assassinate foes in one strike!"
+		"A sneaky but deadly companion who can assassinate foes in one strike!\n\nSNEAK ATTACK: If an ally is adjacent to an enemy or the Rogue has not started his round next to enemy, the Rogue can deal a sneak attack for extra damage."
 	);
 
 	//Ranger
 	picked[4] = false;
 	showed[4] = false;
+	charList[4].setOffset(-4);
 	charList[4].setBigClip(charClips[4]);
 	charList[4].setIcon100(charClips[4 + NUM_CHAR]);
 	charList[4].setIcon50(charClips[4 + NUM_CHAR*2]);
 	charList[4].setIcon25(charClips[4 + NUM_CHAR * 3]);
 	charList[4].setInfo(
-		"A precise hunter who can take down any enemy in his way!"
+		"A precise hunter who can take down any enemy in his way!\n\nEAGLE EYE: The ranger benefits from long distance attacks. Recieves a bonus to attacks from longer distances and a penalty to attacks from shorter distances."
 	);
 	//generate text and whatnot
 	int count = (CHAR_BUTTON_WIDTH - 20) / 2;
