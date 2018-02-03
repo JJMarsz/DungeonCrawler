@@ -36,7 +36,7 @@ public:
 	void checkState();
 	void killEnemy() { enemy_count--; }
 	void killCharacter() { char_count--; }
-	bool notWallAdj(int index);
+	int getTurn() { return turn_count; }
 private:
 	//maintain for initiative purposes
 	std::vector<Unit*> unitList;
@@ -46,6 +46,7 @@ private:
 	int init_index;
 	int char_count;
 	int enemy_count;
+	int turn_count;
 };
 
 

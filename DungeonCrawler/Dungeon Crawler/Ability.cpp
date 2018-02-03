@@ -98,7 +98,6 @@ Ability::Ability(std::string name_, std::string info_, AbilityType type_, int cd
 	button_handler = button;
 	click_handler = click;
 	icon = icon_;
-	sneak_dice = 1;
 }
 
 int Ability::rollSingleHit(int atk_mod, int dmg_mod, int target_AC) {
@@ -130,7 +129,7 @@ int Ability::rollSingleHit(int atk_mod, int dmg_mod, int target_AC) {
 }
 
 //click handlers for abilities
-int Ability::rollSneakAttack(int atk_mod, int dmg_mod, int target_AC) {
+int Ability::rollSneakAttack(int atk_mod, int dmg_mod, int s_dice, int target_AC) {
 	//returns -1 on miss and dmg on hit
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
 		std::chrono::system_clock::now().time_since_epoch()
@@ -147,13 +146,13 @@ int Ability::rollSneakAttack(int atk_mod, int dmg_mod, int target_AC) {
 		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
 		SDL_RenderPresent(gRenderer);
 		Sleep(800);
-		roll = dmg_mod + num_dice*dmg_dice + 6*sneak_dice;
+		roll = dmg_mod + num_dice*dmg_dice + 6*s_dice;
 	}
 	else
 		roll = dmg_mod;
 	for (i = 0; i < num_dice; i++)
 		roll += 1 + rand() % dmg_dice;
-	for (i = 0; i < sneak_dice; i++)
+	for (i = 0; i < s_dice; i++)
 		roll += 1 + rand() % 6;
 	drawRoom();
 	messageBox.loadFromRenderedText("The " + room->getCurrUnit()->getName() + " landed a sneak attack and dealt " + std::to_string(roll) + " damage!", { 255, 255, 255 }, 650);
@@ -169,6 +168,48 @@ Unit* getTarget(int index) {
 		}
 	}
 	return NULL;
+}
+
+int getAdjAllies(int l) {
+	Unit* curr = room->getCurrUnit();
+	int width = room->getWidth();
+	std::queue<int> q;
+	std::unordered_map<int, int> distmap;
+	distmap[curr->getRMO()] = l;
+	q.push(curr->getRMO());
+	int char_count = 0;
+	while (!q.empty()) {
+		int x = q.front() % width;
+		int y = q.front() / width;
+		q.pop();
+		if (distmap[x + y * width] <= 0)
+			continue;
+		if (x > 0) {
+			if (room->getTile(x - 1, y)->type == CHARACTER)
+				char_count++;
+			distmap[(x - 1) + y * width] = distmap[(x)+y * width] - 1;
+			q.push((x - 1) + y * width);
+		}
+		if (y > 0) {
+			if (room->getTile(x, y - 1)->type == CHARACTER)
+				char_count++;
+			distmap[(x) + (y-1) * width] = distmap[(x)+y * width] - 1;
+			q.push((x) + (y-1) * width);
+		}
+		if (x < room->getWidth() - 1) {
+			if (room->getTile(x + 1, y)->type == CHARACTER)
+				char_count++;
+			distmap[(x + 1) + y * width] = distmap[(x)+y * width] - 1;
+			q.push((x + 1) + y * width);
+		}
+		if (y < room->getHeight() - 1) {
+			if (room->getTile(x, y + 1)->type == CHARACTER)
+				char_count++;
+			distmap[(x) + (y+1) * width] = distmap[(x)+y * width] - 1;
+			q.push((x) + (y+1) * width);
+		}
+	}
+	return char_count;
 }
 
 void moveClick(int index) {
@@ -233,7 +274,12 @@ void longSwordClick(int index) {
 	if (target == NULL)
 		return;
 	Unit* curr = room->getCurrUnit();
-	int dmg = curr->getAb("Longsword", ACTION)->rollSingleHit(curr->getStr(), curr->getStr(), target->getAC());
+	int bonus = 0;
+	//vustom fighter passive, bonust atk and dmg the longer the battle takes
+	for (int i = 0; i < room->getTurn()/curr->getOffset(); i++) {
+		bonus++;
+	}
+	int dmg = curr->getAb("Longsword", ACTION)->rollSingleHit(curr->getStr() + bonus, curr->getStr() + bonus, target->getAC());
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}
@@ -250,7 +296,8 @@ void morningStarClick(int index) {
 	if (target == NULL)
 		return;
 	Unit* curr = room->getCurrUnit();
-	int dmg = curr->getAb("Morningstar", ACTION)->rollSingleHit(curr->getStr(), curr->getStr(), target->getAC());
+	int bonus = getAdjAllies(curr->getOffset());
+	int dmg = curr->getAb("Morningstar", ACTION)->rollSingleHit(curr->getStr() + bonus, curr->getStr() + bonus, target->getAC());
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}
@@ -268,7 +315,7 @@ void daggerClick(int index) {
 	Unit* curr = room->getCurrUnit();
 	int dmg;
 	if (room->getTile(target->getRMO() % room->getWidth(), target->getRMO() / room->getWidth())->color == ORANGE) {
-		dmg = curr->getAb("Dagger", ACTION)->rollSneakAttack(curr->getDex(), curr->getDex(), target->getAC());
+		dmg = curr->getAb("Dagger", ACTION)->rollSneakAttack(curr->getDex(), curr->getDex(), curr->getOffset(), target->getAC());
 	}
 	else
 		dmg = curr->getAb("Dagger", ACTION)->rollSingleHit(curr->getDex(), curr->getDex(), target->getAC());

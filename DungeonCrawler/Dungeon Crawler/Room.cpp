@@ -11,6 +11,7 @@ Room::Room(){
 	init_index = 0;
 	char_count = 0;
 	enemy_count = 0;
+	turn_count = 1;
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
 		std::chrono::system_clock::now().time_since_epoch()
 		);
@@ -291,6 +292,9 @@ void Room::placeUnits() {
 }
 
 void Room::passControl() {
+	if (enemy_count + char_count == init_index + 1) {
+		turn_count++;
+	}
 	init_index++;
 	init_index %= unitList.size();
 	//update cds for this chars abs

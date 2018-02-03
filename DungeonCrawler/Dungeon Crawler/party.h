@@ -90,7 +90,7 @@ protected:
 	bool action;
 	bool bAction;
 
-	//ability things
+	//multipurpose variable used for base abilities in chars
 	int offset;
 
 };

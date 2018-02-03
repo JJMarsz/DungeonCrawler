@@ -398,12 +398,13 @@ void CharList::loadSprites() {
 	//Figther
 	picked[0] = false;
 	showed[0] = false;
+	charList[0].setOffset(3);
 	charList[0].setBigClip(charClips[0]);
 	charList[0].setIcon100(charClips[NUM_CHAR]);
 	charList[0].setIcon50(charClips[NUM_CHAR * 2]);
 	charList[0].setIcon25(charClips[NUM_CHAR*3]);
 	charList[0].setInfo(
-		"A valiant fighter whose knowledge in the art of combat is unmatched!"
+		"A valiant fighter whose knowledge in the art of combat is unmatched!\n\nBORN IN BATTLE: As a master of combat, the Fighter learns more about his enemies the longer he fights. The longer the battle goes, the mre accurate and deadly he becomes."
 	);
 
 	//Barb
@@ -421,17 +422,19 @@ void CharList::loadSprites() {
 	//Paladin
 	picked[2] = false;
 	showed[2] = false;
+	charList[2].setOffset(1);
 	charList[2].setBigClip(charClips[2]);
 	charList[2].setIcon100(charClips[2 + NUM_CHAR]);
 	charList[2].setIcon50(charClips[2 + NUM_CHAR*2]);
 	charList[2].setIcon25(charClips[2 + NUM_CHAR * 3]);
 	charList[2].setInfo(
-		"An upstanding champion of the light who guides the valiant into battle!"
+		"An upstanding champion of the light who guides the valiant into battle!\n\nSTAND TOGETHER: The Paladin is stronger when he has his allies close. He gains a bonus to his damage and accuracy if there are allies nearby."
 	);
 
 	//Rogue
 	picked[3] = false;
 	showed[3] = false;
+	charList[3].setOffset(1);
 	charList[3].setBigClip(charClips[3]);
 	charList[3].setIcon100(charClips[3 + NUM_CHAR]);
 	charList[3].setIcon50(charClips[3 + NUM_CHAR*2]);
