@@ -24,7 +24,7 @@ void Unit::damage(int dmg) {
 	if (health <= 0) {
 		health = 0;
 		alive = false;
-		if (state = DUNGEON_ROOM) {
+		if (state == DUNGEON_ROOM) {
 			if (type == CHARACTER) {
 				room->killCharacter();
 				//clear any residual threat from mobs
