@@ -54,14 +54,6 @@ private:
 };
 
 
-//Rendered texts
-//extern LTexture buttonOneText;
-//extern LTexture buttonTwoText;
-//extern LTexture buttonThreeText;
-
-//Character spritesheet along with clips
-extern LTexture spriteSheetTexture;
-
 //button spritesheet along with clips
 extern LTexture buttonSpriteSheetTexture;
 extern LTexture mainMenu;
@@ -97,8 +89,8 @@ extern LTexture abIconSST;
 extern LTexture charPick;
 extern LTexture gameover;
 extern LTexture gamewon;
+extern LTexture credit;
 
-extern std::vector<SDL_Rect> spriteClips;
 extern std::vector<SDL_Rect> tileSpriteClips;
 extern std::vector<SDL_Rect> charClips;
 extern std::vector<SDL_Rect> healthBoxClips;

@@ -53,7 +53,7 @@ void loadMobs() {
 
 	//orc dungeon
 	mobEncMap["Mines of Dorimir"] = {
-		Mob(11, 15, 6, 1, 5, 3, 3, mobClips[ORC], "Orc", 3, 1, 3, -2, 0, 0, 6, mobHandler, ENEMY),
+		Mob(11, 15, 6, 1, 5, 2, 3, mobClips[ORC], "Orc", 3, 1, 3, -2, 0, 0, 6, mobHandler, ENEMY),
 		Mob(12, 18, 8, 1, 3, 1, 1, mobClips[OROG], "Orog", 4, 1, 4, 1, 0, 1, 6, mobHandler, ENEMY),
 		Mob(11, 24, 8, 1, 3, 1, 1, mobClips[OGRILLON], "Ogrillon", 3, 0, 2, -2, -1, 0, 6, mobHandler, ENEMY),
 		Mob(13, 52, 12, 1, 5, 1, 1, mobClips[WAR_CHIEF], "Orc War Chief", 4, 1, 4, 0, 0, 3, 6, warChiefHandler, ENEMY)
@@ -427,8 +427,16 @@ int Mob::getBestRMO(int index) {
 	for (int i = 0; i < width*room->getHeight(); i++) {
 		//uses an A* like hueristic to make sure mob choose closest tile to target that uses the least amount of movement
 		if (room->getTile(i%width, i / width)->color != NORMAL && distVec[i] <= closest_dist) {
-			RMO_target = i;
-			closest_dist = distVec[i];
+			if (RMO_target != -1 && distVec[i] == closest_dist) {
+				if (std::abs(RMO_target%width - RMO % width) + std::abs(RMO_target / width - RMO / width) > std::abs(i%width - RMO % width) + std::abs(i / width - RMO / width)) {
+					RMO_target = i;
+					closest_dist = distVec[i];
+				}
+			}
+			else {
+				RMO_target = i;
+				closest_dist = distVec[i];
+			}
 		}
 	}
 	//mob has no path to best RMO
@@ -758,20 +766,20 @@ void bugBearHandler() {
 			int x = party[i]->getRMO() % width;
 			int y = party[i]->getRMO() / width;
 			if (x > 0) {
-				if(room->getTile(x-1, y)->type == CHARACTER)
+				if(room->getTile(x-1, y)->type == ENEMY)
 					adj.push_back(party[i]);
 			}
 			if (y > 0) {
-				if (room->getTile(x, y - 1)->type == CHARACTER) 
+				if (room->getTile(x, y - 1)->type == ENEMY) 
 					adj.push_back(party[i]);
 			}
 			if (x < room->getWidth() - 1) {
-				if (room->getTile(x + 1, y)->type == CHARACTER) 
+				if (room->getTile(x + 1, y)->type == ENEMY) 
 					adj.push_back(party[i]);
 			}
 
 			if (y < room->getHeight() - 1) {
-				if (room->getTile(x, y + 1)->type == CHARACTER) 
+				if (room->getTile(x, y + 1)->type == ENEMY) 
 					adj.push_back(party[i]);
 			}
 		}
@@ -788,17 +796,17 @@ void bugBearHandler() {
 					messageBox.loadFromRenderedText("The Bugbear misses the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
 				}
 				else if (roll > 10) {
-					messageBox.loadFromRenderedText("The Bugbear grazes the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+					messageBox.loadFromRenderedText("The Bugbear grazes the " + adj[i]->getName()  + " for " + std::to_string(dmg/2) + "!", { 255, 255, 255 }, 650);
 					adj[i]->damage(dmg / 2);
 				}
 				else {
-					messageBox.loadFromRenderedText("The Bugbear hits the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+					messageBox.loadFromRenderedText("The Bugbear hits the " + adj[i]->getName() + " for " + std::to_string(dmg) + "!", { 255, 255, 255 }, 650);
 					adj[i]->damage(dmg);
 				}
 				drawRoom();
 				messageBox.render((650 - messageBox.getWidth()) / 2, 614);
 				SDL_RenderPresent(gRenderer);
-				Sleep(500);
+				Sleep(1000);
 			}
 		}
 		else {
@@ -861,20 +869,20 @@ void warChiefHandler() {
 			int x = party[i]->getRMO() % width;
 			int y = party[i]->getRMO() / width;
 			if (x > 0) {
-				if (room->getTile(x - 1, y)->type == CHARACTER)
+				if (room->getTile(x - 1, y)->type == ENEMY)
 					adj.push_back(party[i]);
 			}
 			if (y > 0) {
-				if (room->getTile(x, y - 1)->type == CHARACTER)
+				if (room->getTile(x, y - 1)->type == ENEMY)
 					adj.push_back(party[i]);
 			}
 			if (x < room->getWidth() - 1) {
-				if (room->getTile(x + 1, y)->type == CHARACTER)
+				if (room->getTile(x + 1, y)->type == ENEMY)
 					adj.push_back(party[i]);
 			}
 
 			if (y < room->getHeight() - 1) {
-				if (room->getTile(x, y + 1)->type == CHARACTER)
+				if (room->getTile(x, y + 1)->type == ENEMY)
 					adj.push_back(party[i]);
 			}
 		}
@@ -891,17 +899,17 @@ void warChiefHandler() {
 					messageBox.loadFromRenderedText("The War Chief misses the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
 				}
 				else if (roll > 10) {
-					messageBox.loadFromRenderedText("The War Chief grazes the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+					messageBox.loadFromRenderedText("The War Chief grazes the " + adj[i]->getName() + " for " + std::to_string(dmg / 2) + "!", { 255, 255, 255 }, 650);
 					adj[i]->damage(dmg / 2);
 				}
 				else {
-					messageBox.loadFromRenderedText("The War Chief hits the " + adj[i]->getName() + "!", { 255, 255, 255 }, 650);
+					messageBox.loadFromRenderedText("The War Chief hits the " + adj[i]->getName() + " for " + std::to_string(dmg) + "!", { 255, 255, 255 }, 650);
 					adj[i]->damage(dmg);
 				}
 				drawRoom();
 				messageBox.render((650 - messageBox.getWidth()) / 2, 614);
 				SDL_RenderPresent(gRenderer);
-				Sleep(500);
+				Sleep(1000);
 			}
 		}
 		else {

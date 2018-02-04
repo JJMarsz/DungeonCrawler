@@ -74,7 +74,6 @@ bool init()
 	}
 
 	//set up relevant data structures
-	spriteClips.resize(6);
 	tileSpriteClips.resize(NUM_TILES);
 	texts.reserve(20);
 	charClips.resize(NUM_CHAR*4);
@@ -161,38 +160,6 @@ bool loadMedia()
 		tutorialtext.loadFromRenderedText("Tutorial", textColor, 200);
 		creditstext.loadFromRenderedText("Credits", textColor, 200);
 
-	}
-
-
-	//Load spritesheet texture
-	if (!spriteSheetTexture.loadFromFile("textures/sprites.png")) {
-		printf("Failed to load texture image!\n");
-		success = false;
-	}
-	else {
-		//Set big enemy sprite
-		spriteClips[0].x = 0;
-		spriteClips[0].y = 0;
-		spriteClips[0].w = 50;
-		spriteClips[0].h = 50;
-
-		//Set big player sprite
-		spriteClips[1].x = 50;
-		spriteClips[1].y = 0;
-		spriteClips[1].w = 50;
-		spriteClips[1].h = 50;
-
-		//Set small enemy sprite
-		spriteClips[2].x = 0;
-		spriteClips[2].y = 50;
-		spriteClips[2].w = 40;
-		spriteClips[2].h = 40;
-
-		//Set small player sprite
-		spriteClips[3].x = 50;
-		spriteClips[3].y = 50;
-		spriteClips[3].w = 40;
-		spriteClips[3].h = 40;
 	}
 
 	//Load button spritesheet texture
@@ -865,6 +832,7 @@ bool loadMedia()
 	charPick.loadFromFile("textures/charpick.png");
 	gameover.loadFromFile("textures/gameover.png");
 	gamewon.loadFromFile("textures/gamewon.png");
+	credit.loadFromFile("textures/credits.png");
 	loadMobs();
 	return success;
 }
@@ -909,7 +877,6 @@ void close() {
 
 
 	//Free Textures
-	spriteSheetTexture.free();
 	buttonSpriteSheetTexture.free();
 	tileSST.free();
 	charSST.free();
@@ -941,6 +908,7 @@ void close() {
 	charPick.free();
 	gameover.free();
 	gamewon.free();
+	credit.free();
 
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);

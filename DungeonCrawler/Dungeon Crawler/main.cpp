@@ -54,7 +54,7 @@ int main(int argc, char* args[])
 					//User requests quit
 					if(e.type == SDL_QUIT)
 						quit = true;
-					if (state == DUNGEON || state == DUNGEON_ROOM || state == GAMEOVER || state == GAMEWON) {
+					if (state == DUNGEON || state == DUNGEON_ROOM || state == GAMEOVER || state == GAMEWON || state == CREDITS) {
 						switch (e.type) {
 						case SDL_MOUSEBUTTONDOWN:
 							MouseDown = true;
@@ -259,8 +259,11 @@ int main(int argc, char* args[])
 						break;
 					case GAMEOVER:
 					case GAMEWON:
+					case CREDITS:
 						if (MouseDown && MouseUp) {
 							state = MAIN_MENU;
+							MouseDown = false;
+							MouseUp = false;
 						}
 					default:
 						break;
@@ -492,6 +495,9 @@ int main(int argc, char* args[])
 					break;
 				case GAMEWON:
 					gamewon.render(0, 0);
+					break;
+				case CREDITS:
+					credit.render(0, 0);
 					break;
 				}
 				//Update screen

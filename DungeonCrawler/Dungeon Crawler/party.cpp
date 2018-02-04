@@ -358,14 +358,14 @@ CharList::CharList() {
 	},
 	{ "Rogue",
 		-1,	//str	
-		3,	//dex
+		4,	//dex
 		0,	//con
 		2,	//int
 		2,	//wis
 		1,	//cha
 		6,	//movement
 		23,	//Health
-		13	//AC
+		14	//AC
 	},
 	{ "Ranger",
 		-1,	//str	

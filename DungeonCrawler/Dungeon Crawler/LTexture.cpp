@@ -3,7 +3,6 @@
 
 LTexture buttonSpriteSheetTexture;
 LTexture mainMenu;
-LTexture spriteSheetTexture;
 LTexture tileSST;
 LTexture charSST;
 LTexture townmenu;
@@ -49,6 +48,7 @@ LTexture abIconSST;
 LTexture charPick;
 LTexture gameover;
 LTexture gamewon;
+LTexture credit;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> tileSpriteClips;

@@ -187,7 +187,7 @@ void Room::rollInit(std::string quest_name) {
 			init.push_back(roll);
 		}
 	}
-	unitList.resize(MAX_CHAR + enemy_count);
+	unitList.resize(char_count + enemy_count);
 
 	//sort create sorted list
 	std::sort(init.begin(), init.end(), wayToSort);

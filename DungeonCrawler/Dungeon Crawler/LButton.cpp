@@ -141,6 +141,7 @@ void tutorial(int index) {
 }
 
 void credits(int index) {
+	state = CREDITS;
 	return;
 }
 
@@ -630,6 +631,7 @@ void returnToTown(int index) {
 	xp2.loadFromRenderedText(std::to_string(gParty->getXP(2)), textColor, 200);
 
 }
+
 
 
 struct moveCell {
