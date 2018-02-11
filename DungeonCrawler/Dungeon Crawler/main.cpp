@@ -24,6 +24,8 @@ int main(int argc, char* args[])
 	bool MouseUp = false;
 	bool MouseRight = false;
 	int w;
+	int msg_timeout = 0;
+	messageBox.loadFromRenderedText("", color, 800);
 	//Start up SDL and create window
 	if (!init())
 	{
@@ -145,57 +147,50 @@ int main(int argc, char* args[])
 						break;
 					case DUNGEON:
 						hover_info = false;
-						if (msg_queue.empty()) {
-							dungeonButtons[0].handleEvent(&e, 0);
-							dungeonButtons[1].handleEvent(&e, 1);
-							dungeonButtons[2].handleEvent(&e, 2);
-							start_x = (SCREEN_WIDTH - current_dungeon.getWidth() * 50) / 2;
-							SDL_GetMouseState(&x, &y);
-							hover = false;
-							//within bounds
-							if (start_x + current_dungeon.getWidth() * 50 > x && start_x < x && 0 < y && current_dungeon.getHeight() * 50 > y) {
-								if (ab == SCOUT) {
-									if (!(start_x + current_dungeon.getWidth() * 50 > x + 50) || !(current_dungeon.getHeight() * 50 > y + 50))
-										break;
-								}
+						dungeonButtons[0].handleEvent(&e, 0);
+						dungeonButtons[1].handleEvent(&e, 1);
+						dungeonButtons[2].handleEvent(&e, 2);
+						start_x = (SCREEN_WIDTH - current_dungeon.getWidth() * 50) / 2;
+						SDL_GetMouseState(&x, &y);
+						hover = false;
+						//within bounds
+						if (start_x + current_dungeon.getWidth() * 50 > x && start_x < x && 0 < y && current_dungeon.getHeight() * 50 > y) {
+							if (ab == SCOUT) {
+								if (!(start_x + current_dungeon.getWidth() * 50 > x + 50) || !(current_dungeon.getHeight() * 50 > y + 50))
+									break;
+							}
 									
-								y = y / 50;
-								y = y * 50;
-								if (x % 50 < 25)
-									x -= (start_x % 50);
-								x = x / 50;
-								x = x * 50;
-								if (gParty->isAdj(x / 50 - (start_x / 50), y / 50) || ab == SCOUT)
-									hover = true;
-								if (prev_x != x || prev_y != y) {
-									MouseDown = false;
-									MouseUp = false;
-									MouseRight = false;
-								}
-								prev_x = x;
-								prev_y = y;
+							y = y / 50;
+							y = y * 50;
+							if (x % 50 < 25)
+								x -= (start_x % 50);
+							x = x / 50;
+							x = x * 50;
+							if (gParty->isAdj(x / 50 - (start_x / 50), y / 50) || ab == SCOUT)
+								hover = true;
+							if (prev_x != x || prev_y != y) {
+								MouseDown = false;
+								MouseUp = false;
+								MouseRight = false;
 							}
+							prev_x = x;
+							prev_y = y;
 						}
-						else {//new message or display current one
-							//display new message or end displaying messages
-							if (MouseDown == true && MouseUp == true && MouseRight == false) {
-								msg_queue.pop();
-								if (msg_queue.empty()) {
-									display_message = false;
-									message = "";
+						
 
-								}
-								else {
-									message = msg_queue.front();
-									messageBox.loadFromRenderedText(message, color, 800);
-								}
-							}
-							else if(message == ""){
-								//first message from message queue
+						if (!msg_queue.empty()) {
+							//new message or display current one
+							//display new message or end displaying messages
+
+							//first message from message queue
+							if(message == "")
 								display_message = true;
-								message = msg_queue.front();
-								messageBox.loadFromRenderedText(message, color, 800);
-							}
+							//display message
+							message = msg_queue.front();
+							messageBox.loadFromRenderedText(message, color, 800);
+							
+							
+							//shrink the message size until it fits
 							if (display_message && messageBox.getWidth() >= 750) {
 								int text_size = MSG_TEXT_SIZE - 1;
 								while (messageBox.getWidth() >= 750) {
@@ -208,6 +203,10 @@ int main(int argc, char* args[])
 									text_size--;
 								}
 							}
+						}
+						else {
+							display_message = false;
+							message = "";
 						}
 						break;
 					case DUNGEON_ROOM:
@@ -251,6 +250,7 @@ int main(int argc, char* args[])
 							MouseDown = false;
 							MouseUp = false;
 							MouseRight = false;
+							enemyturn.render(0, 600);
 						}
 						
 						break;
@@ -357,6 +357,19 @@ int main(int argc, char* args[])
 					if (r <= 900)
 						mod_state = MOD_UP;
 					SDL_Delay(10);
+
+					if (!msg_queue.empty()) {
+						//if there are multiple messages in the queue
+						//start counting until a message can timeout
+						if (msg_timeout < 150) {
+							msg_timeout++;
+						}
+						else {
+							msg_timeout = 0;
+							msg_queue.pop();
+						}
+					}
+
 					if (hover) {
 						if (MouseDown && MouseUp && !MouseRight && ab == NOPE) {
 							gParty->moveParty(x / 50 - (start_x / 50), y / 50);
@@ -450,6 +463,11 @@ int main(int argc, char* args[])
 					if (room->getCurrUnit()->getType() != CHARACTER) {
 						//differentiate between melee and ranged
 						room->getCurrUnit()->callHandler();
+						//pop off all events that occured during the enemys turn
+						while (SDL_PollEvent(&e) != 0) {}
+						message = "";
+						messageBox.loadFromRenderedText("", color, 800);
+						endTurnHandler(0);
 					}
 
 					if (hover) {

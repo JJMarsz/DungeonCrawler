@@ -49,6 +49,7 @@ LTexture charPick;
 LTexture gameover;
 LTexture gamewon;
 LTexture credit;
+LTexture enemyturn;
 
 std::vector<SDL_Rect> spriteClips;
 std::vector<SDL_Rect> tileSpriteClips;

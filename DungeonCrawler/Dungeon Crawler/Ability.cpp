@@ -258,11 +258,11 @@ void greatAxeClick(int index) {
 		}
 	}
 	int dmg = curr->getAb("Greataxe", ACTION)->rollSingleHit(curr->getStr() + bonus, curr->getStr() + bonus, target->getAC());
+	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+	SDL_RenderPresent(gRenderer);
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}
-	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
-	SDL_RenderPresent(gRenderer);
 	Sleep(1000);
 	room->getCurrUnit()->useAction();
 	room->clearRange();
@@ -280,11 +280,11 @@ void longSwordClick(int index) {
 		bonus++;
 	}
 	int dmg = curr->getAb("Longsword", ACTION)->rollSingleHit(curr->getStr() + bonus, curr->getStr() + bonus, target->getAC());
+	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+	SDL_RenderPresent(gRenderer);
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}
-	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
-	SDL_RenderPresent(gRenderer);
 	Sleep(1000);
 	room->getCurrUnit()->useAction();
 	room->clearRange();
@@ -298,11 +298,11 @@ void morningStarClick(int index) {
 	Unit* curr = room->getCurrUnit();
 	int bonus = getAdjAllies(curr->getOffset());
 	int dmg = curr->getAb("Morningstar", ACTION)->rollSingleHit(curr->getStr() + bonus, curr->getStr() + bonus, target->getAC());
+	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+	SDL_RenderPresent(gRenderer);
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}
-	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
-	SDL_RenderPresent(gRenderer);
 	Sleep(1000);
 	room->getCurrUnit()->useAction();
 	room->clearRange();
@@ -319,11 +319,11 @@ void daggerClick(int index) {
 	}
 	else
 		dmg = curr->getAb("Dagger", ACTION)->rollSingleHit(curr->getDex(), curr->getDex(), target->getAC());
+	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+	SDL_RenderPresent(gRenderer);
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}
-	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
-	SDL_RenderPresent(gRenderer);
 	Sleep(1000);
 	room->getCurrUnit()->useAction();
 	room->clearRange();
@@ -340,11 +340,11 @@ void bowClick(int index) {
 	//add offset and distance away to atk mod
 	int atk_mod = curr->getDex() + curr->getOffset() + std::abs(curr->getRMO() % width - target->getRMO() % width) + std::abs(curr->getRMO() / width - target->getRMO() / width);
 	int dmg = curr->getAb("Bow", ACTION)->rollSingleHit(atk_mod, curr->getDex(), target->getAC());
+	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+	SDL_RenderPresent(gRenderer);
 	if (-1 != dmg) {
 		target->damage(dmg);
 	}
-	messageBox.render((650 - messageBox.getWidth()) / 2, 614);
-	SDL_RenderPresent(gRenderer);
 	Sleep(1000);
 	room->getCurrUnit()->useAction();
 	room->clearRange();

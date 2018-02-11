@@ -90,6 +90,7 @@ extern LTexture charPick;
 extern LTexture gameover;
 extern LTexture gamewon;
 extern LTexture credit;
+extern LTexture enemyturn;
 
 extern std::vector<SDL_Rect> tileSpriteClips;
 extern std::vector<SDL_Rect> charClips;

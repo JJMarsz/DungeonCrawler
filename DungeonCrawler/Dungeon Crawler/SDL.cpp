@@ -833,6 +833,7 @@ bool loadMedia()
 	gameover.loadFromFile("textures/gameover.png");
 	gamewon.loadFromFile("textures/gamewon.png");
 	credit.loadFromFile("textures/credits.png");
+	enemyturn.loadFromFile("textures/enemyturn.png");
 	loadMobs();
 	return success;
 }
@@ -874,6 +875,7 @@ void close() {
 	hp0.free();
 	hp1.free();
 	hp2.free();
+	enemyturn.free();
 
 
 	//Free Textures
@@ -1087,13 +1089,12 @@ void drawRoom() {
 	double slice, diff, ratio;
 	SDL_Color textColor = { 255, 255, 255 };
 	for (x = 0; x < order->size(); x++){
-		slice = (double)(order->at(x)->getMaxHP()) / 11;
+		slice = (double)(order->at(x)->getMaxHP()) / 10;
 		diff = (order->at(x)->getMaxHP() - order->at(x)->getHP());
 		ratio = diff / slice;
-		ratio += .5;
 		health_ratio = (int)ratio;
-		if (health_ratio > 10)
-			health_ratio = 10;
+		if (health_ratio < 0)
+			health_ratio = 0;
 		healthBoxClips[health_ratio].w = 20;
 		healthboxSST.render(INIT_X - 25, INIT_Y + 60 * x, &healthBoxClips[health_ratio]);
 		healthBoxClips[health_ratio].w = 50;
@@ -1151,6 +1152,8 @@ void drawRoom() {
 		Buttons[x].render();
 		abIconSST.render(BUTTON_ONE_X + 60 * x, BUTTON_Y, abList[x]->getIcon());
 	}
+	if(currUnit->getType() == ENEMY)
+		enemyturn.render(0, 600);
 }
 
 void drawUnits() {
@@ -1406,13 +1409,12 @@ void drawDungeonMenu() {
 	//all char stuff
 	for (int i = 0; i < 3; i++) {
 		charSST.render(10 + i*120, SCREEN_HEIGHT - 60, &gParty->getChar(i)->getIcon50());
-		double slice = (double)(gParty->getChar(i)->getMaxHP()) / 11;
+		double slice = (double)(gParty->getChar(i)->getMaxHP()) / 10;
 		double diff = (gParty->getChar(i)->getMaxHP() - gParty->getChar(i)->getHP());
 		double ratio = diff / slice;
-		ratio += .5;
 		health_ratio =  (int)ratio;
-		if (health_ratio > 10)
-			health_ratio = 10;
+		if (health_ratio < 0)
+			health_ratio = 0;
 		healthboxSST.render(70 + 120*i, SCREEN_HEIGHT - 60, &healthBoxClips[health_ratio]);
 		if ((ab == PEEK && (i == 2)) || (ab == SCOUT && (i == 1)))
 			dungeonButtonSST.setColor(50, 200, 255);

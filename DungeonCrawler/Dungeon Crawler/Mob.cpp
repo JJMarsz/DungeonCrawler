@@ -157,7 +157,7 @@ void Mob::updateThreat() {
 		else if (dist[i] > 1)
 			threat[i] += 9;
 		else if (dist[i] == 1)
-			threat[i] += 16;
+			threat[i] += 14;
 		//hp update threat
 		slice = (double)(party[i]->getMaxHP()) / 11;
 		diff = (party[i]->getMaxHP() - party[i]->getHP());
@@ -320,9 +320,9 @@ int Mob::roll_attack() {
 		for (i = 0; i < dice; i++) {
 			dmg += (rand() % dmg_dice) + 1;
 		}
-		party[target_index]->damage(dmg);
 		messageBox.loadFromRenderedText("The " + name + " hit the " + party[target_index]->getName() + " for " + std::to_string(dmg) + "!", { 255, 255, 255 }, 650);
 		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+		party[target_index]->damage(dmg);
 	}
 	else {
 		messageBox.loadFromRenderedText("The " + name + " missed the " + party[target_index]->getName() + ".", { 255, 255, 255 }, 650);
@@ -518,17 +518,6 @@ int Mob::attack(int index) {
 				target_RMO = getBestManhDist(party[target_index]->getRMO());
 				useAction();
 			}
-			/*int closest = 50;
-			int target_RMO, target_dist, dist_to_target;
-			for (i = 0; i < width*room->getHeight(); i++) {
-				int dist_to_RMO = std::abs(i%width - RMO % width) + std::abs(i / width - RMO / width);
-				dist_to_target = std::abs(i%width - party[target_index]->getRMO() % width) + std::abs(i / width - party[target_index]->getRMO() / width);
-				if (room->getTile(i%width, i / width)->color == RED && dist_to_RMO < closest) {
-					target_RMO = i;
-					closest = dist_to_RMO;
-					target_dist = dist_to_target;
-				}
-			}*/
 			//now we have a target index, clear the range and commence moving
 			room->clearRange();
 			moveButton(0);
@@ -576,7 +565,7 @@ void mobHandler() {
 	Unit* mob = room->getCurrUnit();
 	mob->updateThreat();
 	mob->attack(0);
-	endTurnHandler(0);
+	
 }
 
 /* Boss mob handlers */
@@ -645,7 +634,6 @@ void boneNagaHandler() {
 		mob->attack(0);
 
 	}
-	endTurnHandler(0);
 }
 
 void wightHandler() {
@@ -731,7 +719,7 @@ void wightHandler() {
 		mob->attack(0);
 
 	}
-	endTurnHandler(0);
+	
 }
 
 void bugBearHandler() {
@@ -826,7 +814,7 @@ void bugBearHandler() {
 		mob->attack(0);
 
 	}
-	endTurnHandler(0);
+	
 }
 
 void warChiefHandler() {
@@ -924,5 +912,5 @@ void warChiefHandler() {
 		mob->attack(0);
 
 	}
-	endTurnHandler(0);
+	
 }

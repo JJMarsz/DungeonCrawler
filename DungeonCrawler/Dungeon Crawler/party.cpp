@@ -12,10 +12,21 @@ std::vector<Character> displayList;
 //unit stuff
 
 void Unit::damage(int dmg) {
-	health -= dmg;
 	int count = -1;
 	int i;
 	std::vector<Unit*>* init = room->getInititiveOrder();
+
+	//setup a gradual decrease in hp
+	for (i = 0; i < dmg; i++) {
+		Sleep(100);
+		health -= 1;
+		if (health < 0)
+			break;
+		drawRoom();
+		messageBox.render((650 - messageBox.getWidth()) / 2, 614);
+		SDL_RenderPresent(gRenderer);
+	}
+
 	//add attack threat to mob
 	if (type != CHARACTER) {
 		addAttackThreat(dmg / 3);
