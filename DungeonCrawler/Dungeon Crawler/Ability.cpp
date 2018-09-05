@@ -3,8 +3,6 @@
 
 std::unordered_map<std::string, Ability> abMap;
 
-void(*click_handler)(int index) = NULL;
-
 void loadAbilityMap(){
 	//universal abilities
 	abMap["Move"] = Ability("Move", "Move the character", FREE, 1, 6, 0, 0, moveButton, moveClick, &abClips[MOVEMENT]);
@@ -15,8 +13,6 @@ void loadAbilityMap(){
 	abMap["Morningstar"] = Ability("Morningstar", "Use and action to attack with a morningstar", ACTION, 1, 1, 1, 6, morningStarButton, morningStarClick, &abClips[MORNINGSTAR]);
 	abMap["Dagger"] = Ability("Dagger", "Use and action to attack with a dagger, with sneak attack", ACTION, 1, 1, 1, 4, daggerButton, daggerClick, &abClips[DAGGER]);
 	abMap["Bow"] = Ability("Bow", "Use and action to shoot an arrow", ACTION, 1, 6, 1, 8, bowButton, bowClick, &abClips[BOW]);
-
-	
 }
 
 //generate paths
@@ -58,8 +54,6 @@ void bloom(std::vector<int> &prevVec, int start, int end) {
 			}
 		}
 	}
-
-
 }
 
 std::vector<int> getPath(int end, int start) {
@@ -81,10 +75,6 @@ std::vector<int> getPath(int end, int start) {
 	}
 	retvec.push_back(RMO);
 	return retvec;
-}
-
-Ability::Ability() {
-
 }
 
 Ability::Ability(std::string name_, std::string info_, AbilityType type_, int cd, int l, int dice, int dmg, void(*button)(int index), void(*click)(int index), SDL_Rect* icon_) {
@@ -240,7 +230,7 @@ void moveClick(int index) {
 	if (curr->getMoveLeft() > 0 || curr->getAction())
 		moveButton(0);
 	else
-		ab = NOPE;
+		gameData.ab = NOPE;
 }
 
 void greatAxeClick(int index) {

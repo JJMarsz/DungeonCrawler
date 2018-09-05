@@ -1,9 +1,6 @@
 #ifndef SDL_H
 #define SDL_H
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
 #include "lib.h"
 
 //Starts up SDL and creates window
@@ -71,7 +68,6 @@ extern TTF_Font* msg_font;
 //The window we'll be rendering to
 extern SDL_Window* gWindow;
 extern ScreenState state;
-extern AbilityState ab;
 extern int r;
 
 #endif

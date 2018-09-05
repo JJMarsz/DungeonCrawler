@@ -14,6 +14,11 @@
 #include <chrono>
 #include <cmath>
 #include <Windows.h>
+#include <thread>
+#include <mutex>
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
 
 typedef void(*func)();
 
@@ -198,8 +203,6 @@ typedef void(*func)();
 
 #define INIT_X					SCREEN_WIDTH - 62
 #define INIT_Y					12
-
-
 
 #define TILE_WIDTH				50
 #define TILE_HEIGHT				50
@@ -412,4 +415,89 @@ enum CharName {
 	ROGUE,
 	RANGER
 };
+
+
+struct gameData_t {
+	gameData_t() {
+		mod_state = MOD_DOWN;
+		hover = false;
+		message = "";
+		color = { 255, 255, 255 };
+		x = 0;
+		y = 0;
+		start_x = 0;
+		start_y = 0;
+		prev_x = -1;
+		prev_y = -1;
+		MouseDown = false;
+		MouseUp = false;
+		MouseRight = false;
+		msg_timeout = 0;
+		quit = false;
+		void(*click_handler)(int index) = NULL;
+		ab = NOPE;
+	}
+	bool hover;
+	MOD mod_state;
+	std::string message;
+	SDL_Color color;
+	int x, y, start_x, start_y;
+	int prev_x, prev_y;
+	bool MouseDown;
+	bool MouseUp;
+	bool MouseRight;
+	int msg_timeout = 0;
+	bool quit = false;
+	void(*click_handler)(int index) = NULL;
+	std::queue<std::string> msg_queue;
+	AbilityState ab = NOPE;
+};
+
+struct rwLock {
+	std::mutex readWriteLock;
+	int numReaders = 0;
+	int numWriters = 0;
+	bool writerReq = false;
+	std::condition_variable waitingReaders;
+	std::condition_variable waitingWriters;
+
+	void readLock() {
+		std::unique_lock<std::mutex> lock(readWriteLock);
+		waitingReaders.wait(lock, [this] {return !writerReq && numWriters == 0; });
+		++numReaders;
+	}
+
+	void readUnlock() {
+		std::unique_lock<std::mutex> lock(readWriteLock);
+		--numReaders;
+		if (numReaders == 0 && numWriters > 0) {
+			lock.unlock();
+			waitingWriters.notify_one();
+		}
+	}
+	void writeLock() {
+		std::unique_lock<std::mutex> lock(readWriteLock);
+		++numWriters;
+		waitingWriters.wait(lock, [this] {return !writerReq && numReaders == 0; });
+		--numWriters;
+		writerReq = true;
+	}
+	void writeUnlock() {
+		std::unique_lock<std::mutex> lock(readWriteLock);
+		if (numWriters > 0) {
+			lock.unlock();
+			waitingWriters.notify_one();
+		}
+		else {
+			writerReq = false;
+			lock.unlock();
+			waitingReaders.notify_all();
+		}
+	}
+};
+//Data structure to control the game data
+extern gameData_t gameData;
+//Protects gamedata
+extern rwLock gameLock;
+
 #endif

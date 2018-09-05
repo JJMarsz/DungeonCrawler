@@ -3,7 +3,6 @@
 #include "Quest.h"
 #include "Room.h"
 
-std::queue<std::string> msg_queue;
 //initialize every encounter
 EncounterList::EncounterList() {
 	//trap setup
@@ -118,10 +117,10 @@ void basicTrap() {
 			}
 
 		}
-		msg_queue.push("The party didn't notice a trap and was blindsided!");
+		gameData.msg_queue.push("The party didn't notice a trap and was blindsided!");
 	}
 	else {
-		msg_queue.push("The party expertly dodged a trap.");
+		gameData.msg_queue.push("The party expertly dodged a trap.");
 	}
 
 }
@@ -132,7 +131,7 @@ void bossReveal() {
 	//just reveal boss
 	Tile* bosstile = current_dungeon.getBoss();
 	current_dungeon.scoutTile(bosstile->getX() + bosstile->getY()*current_dungeon.getWidth(), false);
-	msg_queue.push("A scroll informs you where the boss is within the dungeon.");
+	gameData.msg_queue.push("A scroll informs you where the boss is within the dungeon.");
 }
 
 void mobReveal() {
@@ -141,11 +140,11 @@ void mobReveal() {
 		if (!current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())
 			&& !current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())) {
 			current_dungeon.scoutTile(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth(), false);
-			msg_queue.push("The party finds a note written by someone detailing where some enemies might be.");
+			gameData.msg_queue.push("The party finds a note written by someone detailing where some enemies might be.");
 			return;
 		}
 	}
-	msg_queue.push("The party finds redundant information about some enemies.");
+	gameData.msg_queue.push("The party finds redundant information about some enemies.");
 }
 
 void lootReveal() {
@@ -154,11 +153,11 @@ void lootReveal() {
 		if (!current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())
 			&& !current_dungeon.getVisited(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())) {
 			current_dungeon.scoutTile(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth(), false);
-			msg_queue.push("The party discovers a treasure map that leads somewhere within this dungeon!");
+			gameData.msg_queue.push("The party discovers a treasure map that leads somewhere within this dungeon!");
 			return;
 		}
 	}
-	msg_queue.push("The party found info on loot that was already uncovered.");
+	gameData.msg_queue.push("The party found info on loot that was already uncovered.");
 }
 
 void choiceReveal() {
@@ -167,11 +166,11 @@ void choiceReveal() {
 		if (!current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())
 			&& !current_dungeon.getVisited(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())) {
 			current_dungeon.scoutTile(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth(), false);
-			msg_queue.push("The party finds a clue pertaining towards a mystical object within the dungeon.");
+			gameData.msg_queue.push("The party finds a clue pertaining towards a mystical object within the dungeon.");
 			return;
 		}
 	}
-	msg_queue.push("The party finds info on a mystical object that they already dealt with.");
+	gameData.msg_queue.push("The party finds info on a mystical object that they already dealt with.");
 }
 
 void trapReveal() {
@@ -180,11 +179,11 @@ void trapReveal() {
 		if (!current_dungeon.getScouted(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth()) 
 			&& !current_dungeon.getVisited(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth())) {
 			current_dungeon.scoutTile(list->at(i)->getX() + list->at(i)->getY()*current_dungeon.getWidth(), false);
-			msg_queue.push("The party finds blueprints for a trap built within the dungeon.");
+			gameData.msg_queue.push("The party finds blueprints for a trap built within the dungeon.");
 			return;
 		}
 	}
-	msg_queue.push("The party finds blueprints on a trap that was already passed.");
+	gameData.msg_queue.push("The party finds blueprints on a trap that was already passed.");
 }
 
 void areaReveal() {
@@ -229,7 +228,7 @@ void areaReveal() {
 	}
 	srand(time(NULL));
 	if (options.size() == 0) {
-		msg_queue.push("You found a map that detailed an area you already visited.");
+		gameData.msg_queue.push("You found a map that detailed an area you already visited.");
 		return;
 	}
 
@@ -240,7 +239,7 @@ void areaReveal() {
 	current_dungeon.scoutTile(x + 1 + y * width, true);
 	current_dungeon.scoutTile(x + (y+1) * width, true);
 	current_dungeon.scoutTile(x + 1 + (y+1) * width, true);
-	msg_queue.push("You found a map that details an area within the dungeon!");
+	gameData.msg_queue.push("You found a map that details an area within the dungeon!");
 	return;
 }
 
@@ -249,7 +248,7 @@ void areaReveal() {
 void well() {
 	//heals or damages
 	state = CHOOSE;
-	msg_queue.push("The party sees a well in this erie room. It beckons for someone to drink from it.");
+	gameData.msg_queue.push("The party sees a well in this erie room. It beckons for someone to drink from it.");
 	for (int i = 0; i < 4; i++) {
 		choiceButtons[i].setHandler(wellHandler);
 	}
@@ -259,7 +258,7 @@ void well() {
 void mysticObelisk() {
 	//gain an xp or loose an xp
 	state = CHOOSE;
-	msg_queue.push("The party comes across a large obelisk. It calls for one of the party members.");
+	gameData.msg_queue.push("The party comes across a large obelisk. It calls for one of the party members.");
 	for (int i = 0; i < 4; i++) {
 		choiceButtons[i].setHandler(obHandler);
 	}
@@ -268,7 +267,7 @@ void mysticObelisk() {
 void magicChest() {
 	//gain gold or take dmg
 	state = CHOOSE;
-	msg_queue.push("The party comes across a regular chest. It sits there, patiently.");
+	gameData.msg_queue.push("The party comes across a regular chest. It sits there, patiently.");
 	for (int i = 0; i < 4; i++) {
 		choiceButtons[i].setHandler(chestHandler);
 	}
@@ -277,7 +276,7 @@ void magicChest() {
 void ancientTome() {
 	//gain +1 in highest stat
 	state = CHOOSE;
-	msg_queue.push("The party comes across an ancient tome. It's contents are limitless.");
+	gameData.msg_queue.push("The party comes across an ancient tome. It's contents are limitless.");
 	for (int i = 0; i < 4; i++) {
 		choiceButtons[i].setHandler(tomeHandler);
 	}
@@ -285,7 +284,7 @@ void ancientTome() {
 
 void testStr() {
 	state = CHOOSE;
-	msg_queue.push("The party comes across a feat of strength. Completeing it could be rewarding.");
+	gameData.msg_queue.push("The party comes across a feat of strength. Completeing it could be rewarding.");
 	for (int i = 0; i < 4; i++) {
 		choiceButtons[i].setHandler(strHandler);
 	}
@@ -293,7 +292,7 @@ void testStr() {
 
 void testDex() {
 	state = CHOOSE;
-	msg_queue.push("The party comes across a timed trial. Those dexterous enough may be able to complete it.");
+	gameData.msg_queue.push("The party comes across a timed trial. Those dexterous enough may be able to complete it.");
 	for (int i = 0; i < 4; i++) {
 		choiceButtons[i].setHandler(dexHandler);
 	}
@@ -301,7 +300,7 @@ void testDex() {
 
 void testCon() {
 	state = CHOOSE;
-	msg_queue.push("The party comes across a test of fortitude. Resist it's poisen with great constitution to reap the rewards.");
+	gameData.msg_queue.push("The party comes across a test of fortitude. Resist it's poisen with great constitution to reap the rewards.");
 	for (int i = 0; i < 4; i++) {
 		choiceButtons[i].setHandler(conHandler);
 	}
@@ -309,7 +308,7 @@ void testCon() {
 
 void testInt() {
 	state = CHOOSE;
-	msg_queue.push("The party comes across a puzzle requiring great intelligence. Solving it could be beneficial.");
+	gameData.msg_queue.push("The party comes across a puzzle requiring great intelligence. Solving it could be beneficial.");
 	for (int i = 0; i < 4; i++) {
 		choiceButtons[i].setHandler(intHandler);
 	}
@@ -317,7 +316,7 @@ void testInt() {
 
 void testWis() {
 	state = CHOOSE;
-	msg_queue.push("The party comes across a test only suitable for the wise. Can solving it render a positive outcome?");
+	gameData.msg_queue.push("The party comes across a test only suitable for the wise. Can solving it render a positive outcome?");
 	for (int i = 0; i < 4; i++) {
 		choiceButtons[i].setHandler(wisHandler);
 	}
@@ -325,7 +324,7 @@ void testWis() {
 
 void testCha() {
 	state = CHOOSE;
-	msg_queue.push("The party comes across a humonoid statue. Convince it that it is alive with great charisma to receive it's reward.");
+	gameData.msg_queue.push("The party comes across a humonoid statue. Convince it that it is alive with great charisma to receive it's reward.");
 	for (int i = 0; i < 4; i++) {
 		choiceButtons[i].setHandler(chaHandler);
 	}
@@ -345,7 +344,7 @@ void goldLoot() {
 	int roll = rand() % 20 + 1;
 	//automatic fail
 	if (roll == 1) {
-		msg_queue.push("There doesn't seem to be anything here.");
+		gameData.msg_queue.push("There doesn't seem to be anything here.");
 		return;
 	}
 	int x = gParty->getX();
@@ -359,18 +358,18 @@ void goldLoot() {
 		roll += 5;
 	if (roll + highest_wis > highDC) {
 		gold = (rand() % 6) * 5 + 20;
-		msg_queue.push("The party finds some gold lying around.");
+		gameData.msg_queue.push("The party finds some gold lying around.");
 	}
 	else if (roll + highest_wis > medDC) {
 		gold = (rand() % 8) * 5 + 40;
-		msg_queue.push("The party uncovers a good amount of gold.");
+		gameData.msg_queue.push("The party uncovers a good amount of gold.");
 	}
 	else if (roll + highest_wis > lowDC) {
 		gold = (rand() % 10) * 5 + 60;
-		msg_queue.push("The party discovers a trove of gold!");
+		gameData.msg_queue.push("The party discovers a trove of gold!");
 	}
 	else {
-		msg_queue.push("There doesn't seem to be anything here.");
+		gameData.msg_queue.push("There doesn't seem to be anything here.");
 	}
 
 	switch (current_quests[quest_index].getDiff()) {

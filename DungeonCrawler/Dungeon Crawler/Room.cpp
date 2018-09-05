@@ -318,7 +318,7 @@ void Room::checkState() {
 		delete room;
 		room = NULL;
 		r = 1275;
-		ab = NOPE;
+		gameData.ab = NOPE;
 		chars.resetList();
 		quests.resetList();
 	}
@@ -327,6 +327,6 @@ void Room::checkState() {
 		delete room;
 		room = NULL;
 		r = 1275;
-		ab = NOPE;
+		gameData.ab = NOPE;
 	}
 }

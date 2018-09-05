@@ -12,7 +12,6 @@ TTF_Font *msg_font = NULL;
 SDL_Window* gWindow = NULL;
 
 ScreenState state;
-AbilityState ab = NOPE;
 int r = 1000;
 
 /* SDL functions */
@@ -1416,7 +1415,7 @@ void drawDungeonMenu() {
 		if (health_ratio < 0)
 			health_ratio = 0;
 		healthboxSST.render(70 + 120*i, SCREEN_HEIGHT - 60, &healthBoxClips[health_ratio]);
-		if ((ab == PEEK && (i == 2)) || (ab == SCOUT && (i == 1)))
+		if ((gameData.ab == PEEK && (i == 2)) || (gameData.ab == SCOUT && (i == 1)))
 			dungeonButtonSST.setColor(50, 200, 255);
 		dungeonButtons[i].render();
 		dungeonButtonSST.setColor(255, 255, 255);

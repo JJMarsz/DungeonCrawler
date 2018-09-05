@@ -252,7 +252,7 @@ void questReject(int index) {
 
 void wellHandler(int index) {
 	state = DUNGEON;
-	msg_queue.pop();
+	gameData.msg_queue.pop();
 	int DC = 8;
 	std::string name;
 
@@ -270,15 +270,15 @@ void wellHandler(int index) {
 		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
 			gParty->getChar(index)->heal(gParty->getChar(index)->getMaxHP() / 2);
-			msg_queue.push("The well replenishes the health of the " + name + ".");
+			gameData.msg_queue.push("The well replenishes the health of the " + name + ".");
 		}
 		else {
 			gParty->getChar(index)->damage(gParty->getChar(index)->getHP() / 2);
-			msg_queue.push("The well turns hostile and harms the " + name + ".");
+			gameData.msg_queue.push("The well turns hostile and harms the " + name + ".");
 		}
 		break;
 	case 3:
-		msg_queue.push("The party rejects the well's calling.");
+		gameData.msg_queue.push("The party rejects the well's calling.");
 		break;
 	}
 }
@@ -286,7 +286,7 @@ void wellHandler(int index) {
 void obHandler(int index) {
 
 	state = DUNGEON;
-	msg_queue.pop();
+	gameData.msg_queue.pop();
 	int DC = 8;
 	std::string name;
 
@@ -304,22 +304,22 @@ void obHandler(int index) {
 		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
 			gParty->getChar(index)->addXP(1);
-			msg_queue.push("The obelisk accepts the courage of the " + name + ".");
+			gameData.msg_queue.push("The obelisk accepts the courage of the " + name + ".");
 		}
 		else {
 			gParty->getChar(index)->subXP(1);
-			msg_queue.push("The obelisk glows red and weakens the " + name + ".");
+			gameData.msg_queue.push("The obelisk glows red and weakens the " + name + ".");
 		}
 		break;
 	case 3:
-		msg_queue.push("The party denies the power of the obelisk.");
+		gameData.msg_queue.push("The party denies the power of the obelisk.");
 		break;
 	}
 }
 
 void chestHandler(int index) {
 	state = DUNGEON;
-	msg_queue.pop();
+	gameData.msg_queue.pop();
 	int DC = 8;
 	std::string name;
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
@@ -336,21 +336,21 @@ void chestHandler(int index) {
 		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
 			gParty->addGold(100 + current_quests[quest_index].getDiff()*50);
-			msg_queue.push("The chest opens revealing its riches to the " + name + ".");
+			gameData.msg_queue.push("The chest opens revealing its riches to the " + name + ".");
 		}
 		else {
 			gParty->getChar(index)->damage(gParty->getChar(index)->getHP() / 2);
-			msg_queue.push("The chest was a mimic! It damages the " + name + " before the party can fend it off.");
+			gameData.msg_queue.push("The chest was a mimic! It damages the " + name + " before the party can fend it off.");
 		}
 		break;
 	case 3:
-		msg_queue.push("The party lets the chest be.");
+		gameData.msg_queue.push("The party lets the chest be.");
 		break;
 	}
 }
 void tomeHandler(int index) {
 	state = DUNGEON;
-	msg_queue.pop();
+	gameData.msg_queue.pop();
 	int DC = 10;
 	std::string name;
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
@@ -367,21 +367,21 @@ void tomeHandler(int index) {
 		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
 			gParty->getChar(index)->setMaxHP((gParty->getChar(index)->getMaxHP()*115)/100);
-			msg_queue.push("The tome teaches the " + name + " how to be more resiliant.");
+			gameData.msg_queue.push("The tome teaches the " + name + " how to be more resiliant.");
 		}
 		else {
 			gParty->getChar(index)->setMaxHP((gParty->getChar(index)->getMaxHP() * 85) / 100);
-			msg_queue.push("The tome upsets the " + name + " as they become a bit more fragile.");
+			gameData.msg_queue.push("The tome upsets the " + name + " as they become a bit more fragile.");
 		}
 		break;
 	case 3:
-		msg_queue.push("The party lets the book rest.");
+		gameData.msg_queue.push("The party lets the book rest.");
 		break;
 	}
 }
 void strHandler(int index) {
 	state = DUNGEON;
-	msg_queue.pop();
+	gameData.msg_queue.pop();
 	int DC = 15;
 	std::string name;
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
@@ -399,21 +399,21 @@ void strHandler(int index) {
 		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
 			gParty->getChar(index)->setStr(gParty->getChar(index)->getStr()+1);
-			msg_queue.push("The feat was completed! The " + name + " grows in strength!");
+			gameData.msg_queue.push("The feat was completed! The " + name + " grows in strength!");
 		}
 		else {
 			gParty->getChar(index)->setStr(gParty->getChar(index)->getStr() - 1);
-			msg_queue.push("The feat was too difficult for the " + name + ". They grow weaker.");
+			gameData.msg_queue.push("The feat was too difficult for the " + name + ". They grow weaker.");
 		}
 		break;
 	case 3:
-		msg_queue.push("The party leaves the feat of strength uncompleted.");
+		gameData.msg_queue.push("The party leaves the feat of strength uncompleted.");
 		break;
 	}
 }
 void dexHandler(int index) {
 	state = DUNGEON;
-	msg_queue.pop();
+	gameData.msg_queue.pop();
 	int DC = 15;
 	std::string name;
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
@@ -431,21 +431,21 @@ void dexHandler(int index) {
 		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
 			gParty->getChar(index)->setDex(gParty->getChar(index)->getDex() + 1);
-			msg_queue.push("The " + name + " was fast enough to complete the trial. Their agility grows!");
+			gameData.msg_queue.push("The " + name + " was fast enough to complete the trial. Their agility grows!");
 		}
 		else {
 			gParty->getChar(index)->setDex(gParty->getChar(index)->getDex() - 1);
-			msg_queue.push("The " + name + " wasn't quick enough. They feel demoralized and less dexterous.");
+			gameData.msg_queue.push("The " + name + " wasn't quick enough. They feel demoralized and less dexterous.");
 		}
 		break;
 	case 3:
-		msg_queue.push("The party leaves the trial un tested.");
+		gameData.msg_queue.push("The party leaves the trial un tested.");
 		break;
 	}
 }
 void conHandler(int index) {
 	state = DUNGEON;
-	msg_queue.pop();
+	gameData.msg_queue.pop();
 	int DC = 15;
 	std::string name;
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
@@ -463,21 +463,21 @@ void conHandler(int index) {
 		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
 			gParty->getChar(index)->setCon(gParty->getChar(index)->getCon() + 1);
-			msg_queue.push("The " + name + " resists the poisen of the trial! They feel their fortitude strengthen!");
+			gameData.msg_queue.push("The " + name + " resists the poisen of the trial! They feel their fortitude strengthen!");
 		}
 		else {
 			gParty->getChar(index)->setCon(gParty->getChar(index)->getCon() - 1);
-			msg_queue.push("The " + name + " feels quesy and probably should see a doctor. They don't feel as resiliant anymore.");
+			gameData.msg_queue.push("The " + name + " feels quesy and probably should see a doctor. They don't feel as resiliant anymore.");
 		}
 		break;
 	case 3:
-		msg_queue.push("The party leaves the poisen on the table. As one should.");
+		gameData.msg_queue.push("The party leaves the poisen on the table. As one should.");
 		break;
 	}
 }
 void intHandler(int index) {
 	state = DUNGEON;
-	msg_queue.pop();
+	gameData.msg_queue.pop();
 	int DC = 15;
 	std::string name;
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
@@ -495,21 +495,21 @@ void intHandler(int index) {
 		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
 			gParty->getChar(index)->setInt(gParty->getChar(index)->getInt() + 1);
-			msg_queue.push("After a few attempts, the " + name + " completes the puzzle and feels much smarter!");
+			gameData.msg_queue.push("After a few attempts, the " + name + " completes the puzzle and feels much smarter!");
 		}
 		else {
 			gParty->getChar(index)->setInt(gParty->getChar(index)->getInt() - 1);
-			msg_queue.push("The " + name + " fails the puzzle to many times and now doesn't feel more smarter.");
+			gameData.msg_queue.push("The " + name + " fails the puzzle to many times and now doesn't feel more smarter.");
 		}
 		break;
 	case 3:
-		msg_queue.push("The party leaves the puzzle unsolved.");
+		gameData.msg_queue.push("The party leaves the puzzle unsolved.");
 		break;
 	}
 }
 void wisHandler(int index) {
 	state = DUNGEON;
-	msg_queue.pop();
+	gameData.msg_queue.pop();
 	int DC = 15;
 	std::string name;
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
@@ -527,21 +527,21 @@ void wisHandler(int index) {
 		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
 			gParty->getChar(index)->setWis(gParty->getChar(index)->getWis() + 1);
-			msg_queue.push("Using their vast wisdom gained over the years, the " + name + " out smarts the test and grows wiser!");
+			gameData.msg_queue.push("Using their vast wisdom gained over the years, the " + name + " out smarts the test and grows wiser!");
 		}
 		else {
 			gParty->getChar(index)->setWis(gParty->getChar(index)->getWis() - 1);
-			msg_queue.push("Clearly the " + name + " was not meant for this. Their wisdom depreciates.");
+			gameData.msg_queue.push("Clearly the " + name + " was not meant for this. Their wisdom depreciates.");
 		}
 		break;
 	case 3:
-		msg_queue.push("The party leaves the test alone. Speaking of which, why is there a test here anyways?");
+		gameData.msg_queue.push("The party leaves the test alone. Speaking of which, why is there a test here anyways?");
 		break;
 	}
 }
 void chaHandler(int index) {
 	state = DUNGEON;
-	msg_queue.pop();
+	gameData.msg_queue.pop();
 	int DC = 15;
 	std::string name;
 	std::chrono::milliseconds ms = std::chrono::duration_cast< std::chrono::milliseconds >(
@@ -559,15 +559,15 @@ void chaHandler(int index) {
 		name = gParty->getChar(index)->getName();
 		if (roll > DC) {
 			gParty->getChar(index)->setCha(gParty->getChar(index)->getCha() + 1);
-			msg_queue.push("The " + name + " manages to convince a statue of it's sentience. This boosts their self confidence.");
+			gameData.msg_queue.push("The " + name + " manages to convince a statue of it's sentience. This boosts their self confidence.");
 		}
 		else {
 			gParty->getChar(index)->setCha(gParty->getChar(index)->getCha() - 1);
-			msg_queue.push("The " + name + " talked with a non-living statue. Their self confidence diminishes.");
+			gameData.msg_queue.push("The " + name + " talked with a non-living statue. Their self confidence diminishes.");
 		}
 		break;
 	case 3:
-		msg_queue.push("The party leaves the statue to figure out it's sentience by itself.");
+		gameData.msg_queue.push("The party leaves the statue to figure out it's sentience by itself.");
 		break;
 	}
 }
@@ -577,20 +577,20 @@ void rest(int index) {
 		if (gParty->useRest()) {
 			for (int i = 0; i < 3; i++)
 				gParty->getChar(i)->heal(gParty->getChar(i)->getMaxHP() / 4);
-			ab = REST;
+			gameData.ab = REST;
 		}
 	}
 }
 
 void peek(int index) {
 	if(gParty->checkPeek())
-		ab = PEEK;
+		gameData.ab = PEEK;
 }
 
 void scout(int index) {
 	//reveal a 2x2 or 3x3 area of the map
 	if(gParty->checkScout())
-		ab = SCOUT;
+		gameData.ab = SCOUT;
 }
 
 void endTurnHandler(int index) {
@@ -850,11 +850,11 @@ void moveButton(int index) {
 		moveBFS(currUnit->getRMO()%room->getWidth(), currUnit->getRMO()/room->getWidth(), currUnit->getMoveLeft(), currUnit->getMove());
 	else
 		moveBFS(currUnit->getRMO() % room->getWidth(), currUnit->getRMO() / room->getWidth(), currUnit->getMoveLeft(), 0);
-	ab = MOVE;
+	gameData.ab = MOVE;
 	if (currUnit->getType() == CHARACTER)
-		click_handler = currUnit->getAb("Move", FREE)->getClickHandler();
+		gameData.click_handler = currUnit->getAb("Move", FREE)->getClickHandler();
 	else
-		click_handler = abMap["Move"].getClickHandler();
+		gameData.click_handler = abMap["Move"].getClickHandler();
 }
 
 void greatAxeButton(int index) {
@@ -862,9 +862,9 @@ void greatAxeButton(int index) {
 	if (!curr->getAction())
 		return;
 	room->clearRange();
-	ab = ATTACK;
+	gameData.ab = ATTACK;
 	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1, false);
-	click_handler = curr->getAb("Greataxe", ACTION)->getClickHandler();
+	gameData.click_handler = curr->getAb("Greataxe", ACTION)->getClickHandler();
 }
 
 void longSwordButton(int index) {
@@ -872,9 +872,9 @@ void longSwordButton(int index) {
 	if (!curr->getAction())
 		return;
 	room->clearRange();
-	ab = ATTACK;
+	gameData.ab = ATTACK;
 	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1, false);
-	click_handler = curr->getAb("Longsword", ACTION)->getClickHandler();
+	gameData.click_handler = curr->getAb("Longsword", ACTION)->getClickHandler();
 }
 
 void morningStarButton(int index) {
@@ -882,9 +882,9 @@ void morningStarButton(int index) {
 	if (!curr->getAction())
 		return;
 	room->clearRange();
-	ab = ATTACK;
+	gameData.ab = ATTACK;
 	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1, false);
-	click_handler = curr->getAb("Morningstar", ACTION)->getClickHandler();
+	gameData.click_handler = curr->getAb("Morningstar", ACTION)->getClickHandler();
 }
 
 void daggerButton(int index) {
@@ -892,11 +892,10 @@ void daggerButton(int index) {
 	if (!curr->getAction())
 		return;
 	room->clearRange();
-	ab = ATTACK;
+	gameData.ab = ATTACK;
 	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), 1, false);
 	sneakAttackColor(curr->getRMO());
-
-	click_handler = curr->getAb("Dagger", ACTION)->getClickHandler();
+	gameData.click_handler = curr->getAb("Dagger", ACTION)->getClickHandler();
 }
 
 void bowButton(int index) {
@@ -904,10 +903,10 @@ void bowButton(int index) {
 	if (!curr->getAction())
 		return;
 	room->clearRange();
-	ab = ATTACK;
+	gameData.ab = ATTACK;
 	rangeColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth(), curr->getAb("Bow", ACTION)->getLength(), false);
 	LOSColor(curr->getRMO() % room->getWidth(), curr->getRMO() / room->getWidth());
-	click_handler = curr->getAb("Bow", ACTION)->getClickHandler();
+	gameData.click_handler = curr->getAb("Bow", ACTION)->getClickHandler();
 }
 
 /* Used primarily for testing */

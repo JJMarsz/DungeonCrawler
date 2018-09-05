@@ -82,9 +82,6 @@ private:
 	std::vector<void(*)()> choiceList;
 };
 
-
-extern std::queue<std::string> msg_queue;
-
 void handleEncounter();
 //handler defenitions
 

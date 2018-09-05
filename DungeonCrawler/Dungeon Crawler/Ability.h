@@ -24,7 +24,7 @@ enum AbilityIcons {
 //each individual ability
 class Ability {
 public:
-	Ability();
+	Ability() {};
 	Ability(std::string name_, std::string info_, AbilityType type_, int cd, int l, int dice, int dmg, void(*button)(int index), void(*click)(int index), SDL_Rect* icon_);
 	std::string getName() { return name; }
 	std::string getInfo() { return info; }
@@ -66,7 +66,6 @@ void loadAbilityMap();
 
 //maintains every ability used in game
 extern std::unordered_map<std::string, Ability> abMap;
-extern void(*click_handler)(int index);
 extern std::vector<int> getPath(int end, int start);
 //ability click handlers
 void moveClick(int index);

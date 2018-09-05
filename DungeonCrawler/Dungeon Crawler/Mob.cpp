@@ -467,7 +467,7 @@ int Mob::attack(int index) {
 		if (distance != 1) {
 			//move towards target
 			moveButton(0);
-			ab = NOPE;
+			gameData.ab = NOPE;
 			int RMO_target = getBestRMO(party[target_index]->getRMO());
 			if (RMO_target == -1) {
 				//cannot reach anymob, revert to using manhatten dist
@@ -521,7 +521,7 @@ int Mob::attack(int index) {
 			//now we have a target index, clear the range and commence moving
 			room->clearRange();
 			moveButton(0);
-			ab = NOPE;
+			gameData.ab = NOPE;
 			//use highlights to move mob accordingly
 			switch (room->getTile(target_RMO%width, target_RMO / width)->color) {
 			case YELLOW:
